@@ -1,0 +1,293 @@
+import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientLoacationScreen.dart';
+import 'package:dwelleasy_ghana/core/constant/appColors.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class Engineerdetiles extends StatefulWidget {
+  const Engineerdetiles({super.key});
+
+  @override
+  State<Engineerdetiles> createState() => _EngineerdetilesState();
+}
+
+class _EngineerdetilesState extends State<Engineerdetiles> {
+  Future<void> makeCall(String number) async {
+    final Uri uri = Uri(scheme: 'tel', path: number);
+
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.backgroungBg,
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroungBg,
+        centerTitle: true,
+        title: Column(
+          children: [
+            Text(
+              "Engineer Details",
+              style: GoogleFonts.outfit(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: Color(0xff000000),
+                letterSpacing: -0.64,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              "Your Assigned Service Engineer",
+              style: GoogleFonts.parkinsans(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w500,
+                color: Color(0xff000000),
+                letterSpacing: -0.56,
+              ),
+            ),
+          ],
+        ),
+        leading: Center(
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              height: 44.h,
+              width: 44.w,
+              padding: EdgeInsets.only(left: 5.w),
+              margin: EdgeInsets.only(left: 16.w),
+              decoration: BoxDecoration(
+                color: AppColors.buttonText,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: AppColors.buttonBg,
+                  size: 15.sp,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.only(left: 16.w, right: 16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 72.h),
+            Center(
+              child: Column(
+                children: [
+                  Container(
+                    height: 113.h,
+                    width: 113.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.buttonText,
+                        width: 3.w,
+                      ),
+                      image: DecorationImage(
+                        image: AssetImage("assets/ClientImage/engineer.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15.h),
+                  Text(
+                    "Dakarai",
+                    style: GoogleFonts.outfit(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.buttonText,
+                      letterSpacing: -0.72,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    "AC Repair Specialist",
+                    style: GoogleFonts.parkinsans(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.buttonText,
+                      letterSpacing: -0.48,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    "⭐ 4.8 Rating",
+                    style: GoogleFonts.parkinsans(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.buttonText,
+                      letterSpacing: -0.48,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 30.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(left: 15.w, top: 17.h, bottom: 23.h),
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(color: AppColors.buttonBg, width: 2.w),
+                ),
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Service Visit Details",
+                    style: GoogleFonts.parkinsans(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.buttonText,
+                      letterSpacing: -0.64,
+                    ),
+                  ),
+                  SizedBox(height: 13.sp),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Arrival Time: ",
+                          style: GoogleFonts.parkinsans(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12.sp,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.48,
+                          ),
+                        ),
+                        TextSpan(
+                          text: " 2:00 PM",
+                          style: GoogleFonts.parkinsans(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12.sp,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.48,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Phone: ",
+                          style: GoogleFonts.parkinsans(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12.sp,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.48,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "  +44 9876543210",
+                          style: GoogleFonts.parkinsans(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12.sp,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.48,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Status: ",
+                          style: GoogleFonts.parkinsans(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12.sp,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.48,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "  On the way",
+                          style: GoogleFonts.parkinsans(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12.sp,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.48,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 25.h),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.buttonBg,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.circular(100.r),
+                  ),
+                ),
+                onPressed: () {
+                  makeCall("9876543210");
+                },
+                child: Text(
+                  "Call Engineer",
+                  style: GoogleFonts.outfit(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.buttonText,
+                    letterSpacing: -0.64,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xff6CE227),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.circular(100.r),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Clientlocationscreen(),
+                    ),
+                  );
+                },
+                child: Text(
+                  "Track Engineer",
+                  style: GoogleFonts.outfit(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.buttonText,
+                    letterSpacing: -0.64,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,388 @@
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA3MTE0MzMzNjRlNTQwYmE3MzM5NmIiLCJ1c2VyVHlwZSI6ImVtcGxveWVlIiwiaWF0IjoxNzgwMzkyOTcxLCJleHAiOjE4MTE5Mjg5NzF9.NGDdbHdY5zPRI8FCF5UogBG_C11pxObRmTiH1JQib3I
+# @url =  http://localhost:4567
+# @url =  http://192.168.1.43:4567
+# @url =  https://qnr9g6df-4567.inc1.devtunnels.ms
+@url =  https://dwell.themediaradar.com
+
+//Register for employee
+###
+GET {{url}}/api/v1/employee/get-services HTTP/1.1
+Content-type: application/json
+
+
+//Register for employee
+###
+POST {{url}}/api/v1/employee/register HTTP/1.1
+Content-type: application/json
+
+{
+    "fullName": "User",
+    "email": "user@gmail.com",
+    "phone": "787878787",
+    "serviceId": "6a070df0545bbad2ff184c4a",
+    "password": "123456",
+    "deviceId": "abcdef"
+}
+
+
+//registerVerify
+###
+POST {{url}}/api/v1/employee/register-verify HTTP/1.1
+Content-type: application/json
+
+{
+    "token": "huqcEx3tNllWahTSKpaDxsiecUT6Dndw0WRco6yp",
+    "otp": "123456"
+}
+
+//login
+###
+POST {{url}}/api/v1/employee/login HTTP/1.1
+Content-type: application/json
+
+{
+    "email": "sajiv@gmail.com",
+    "password": "123456",
+    "deviceId": ""
+}
+
+//verifyUser
+###
+POST {{url}}/api/v1/employee/login-verify HTTP/1.1
+Content-type: application/json
+
+{
+    "token": "uGLbpRNhaRP6rywh1wcLQoWg8mKWRWngQXem76rt",
+    "otp": "123456"
+}
+
+//forgotPassword
+###
+POST {{url}}/api/v1/employee/forgot-password HTTP/1.1
+Content-type: application/json
+
+{
+    "email": "sajiv@gmail.comss"
+}
+
+//forgotPasswordVerify
+###
+POST {{url}}/api/v1/employee/forgot-password-verify HTTP/1.1
+Content-type: application/json
+
+{
+    "token": "2LdVWneINEQiuYAazy9EV7Jn0nBJwOGUv6f15A4o",
+    "otp": "123456",
+    "password": "12345678",
+    "confirmPassword": "12345678"
+}
+
+//get-profile
+###
+GET {{url}}/api/v1/employee/get-profile HTTP/1.1
+Content-type: application/json
+Authorization: {{token}}
+
+//update-profile
+###
+PUT {{url}}/api/v1/employee/update-profile HTTP/1.1
+Content-type: application/json
+Authorization: {{token}}
+
+{
+    "fullName": "Sajivddin",
+    "phone": "9508937828",
+    "experience": "2",
+    "city": "Jaipur",
+    "serviceId": "6a070df0545bbad2ff184c4a",
+    "availability": "Evening",
+    "address": "Jhotwara Kanta",
+    "image": ""
+}
+
+//create-leave-request
+###
+POST  {{url}}/api/v1/employee/create-leave-request HTTP/1.1
+Content-type: application/json
+Authorization: {{token}}
+
+{
+    "leaveDate": "1778697000000",
+    "reason": "I am not healthy"
+}
+
+### Get My Leave Requests
+GET {{url}}/api/v1/employee/get-my-leave-requests?page=1&limit=10 HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+# {
+#     "page": 1,
+#     "limit": 10,
+#     "status": "" // "pending", "approved", "rejected"
+# }
+
+### create-ticket
+POST {{url}}/api/v1/employee/create-ticket HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "subject": "abbbb",
+  "description": "abc"
+}
+
+
+### get-tickets
+GET {{url}}/api/v1/employee/get-tickets?page=1&limit=10 HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+
+### Get Assign Count
+GET {{url}}/api/v1/employee/get-assign-count HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+
+### Get Assigned Tickets
+GET {{url}}/api/v1/employee/get-assigned-requests?page=1&limit=10 HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+
+### Get Pending Tickets
+GET {{url}}/api/v1/employee/get-pending-requests?page=1&limit=10 HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+
+### Get Completed Tickets
+GET {{url}}/api/v1/employee/get-completed-requests?page=1&limit=10 HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+
+### Accept Ticket
+POST {{url}}/api/v1/employee/accept-request HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "requestId":"6a192e048b0ca59fa83600ec"
+}
+
+
+### Complete Ticket
+POST {{url}}/api/v1/employee/complete-request HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "requestId":"6a192e048b0ca59fa83600ec",
+    "remark":"Issue completed successfully.",
+    "image":""
+}
+
+
+### Send Message To Admin
+POST {{url}}/api/v1/employee/send-message HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "requestId":"6a192e048b0ca59fa83600ec",
+    "message":"Issue completed successfully."
+}
+
+### Get Assigned Tickets
+GET {{url}}/api/v1/employee/get-assigned-requests?page=1&limit=10&today=true HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+
+
+
+//////////////////////////////////////////////////////////
+//Register for client
+###
+POST {{url}}/api/v1/user/register HTTP/1.1
+Content-type: application/json
+
+{
+      "fullName": "Julkarnen",
+      "email": "zn01@gmail.com",
+      "phone": "98776593211",
+      "password": "123456",
+      "deviceId": ""
+}
+
+//login
+###
+POST {{url}}/api/v1/user/login HTTP/1.1
+Content-type: application/json
+
+{
+    "email": "zn01@gmail.com",
+      "password": "123456",
+      "deviceId": ""
+}
+
+
+//forgot-password
+###
+POST {{url}}/api/v1/user/forgot-password HTTP/1.1
+Content-type: application/json
+
+{
+    "email": "zn01@gmail.com"
+}
+
+//forgot-password-verify
+###
+POST {{url}}/api/v1/user/forgot-password-verify HTTP/1.1
+Content-type: application/json
+
+{
+    "token": "T42xozAVLFN4siqBYu9OpEQCJq9xnnFsF2m67FMi",
+    "otp": "123456",
+    "password": "12345678",
+    "confirmPassword": "12345678"
+}
+
+
+//profileGet
+###
+GET  {{url}}/api/v1/user/get-profile HTTP/1.1
+Content-type: application/json
+Authorization: {{token}}
+
+//update-profile
+###
+PUT {{url}}/api/v1/user/update-profile HTTP/1.1
+Content-type: application/json
+Authorization: {{token}}
+
+{
+  "fullName": "user",
+  "phone": "9877659321",
+  "address": "ram raj",
+  "image": ""
+}
+
+//get-plan
+###
+GET {{url}}/api/v1/user/get-plan HTTP/1.1
+Content-type: application/json
+Authorization: {{token}}
+
+
+//get-plan
+###
+GET {{url}}/api/v1/user/get-service-list HTTP/1.1
+Content-type: application/json
+Authorization: {{token}}
+
+//get-plan
+###
+GET {{url}}/api/v1/user/get-plan?serviceId=6a1533cfeb673d1da4ac7429 HTTP/1.1
+Content-type: application/json
+Authorization: {{token}}
+
+
+
+### Create Plan Request
+POST {{url}}/api/v1/user/create-plan-request HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "personalInformation": {
+    "fullName": "John Doe",
+    "email": "johndoe@example.com",
+    "phoneNumber": "08012345678",
+    "alternativePhoneNumber": "08087654321",
+    "nationalId": "A123456789",
+    "propertyAddress": "12 Allen Avenue, Lagos"
+  },
+
+  "propertyDetails": {
+    "bedrooms": "3",
+    "bathrooms": 2,
+    "acUnits": 4,
+    "propertyType": "Detached House",
+    "propertyAge": "5-10 years"
+  },
+
+  "planDetails": {
+    "serviceId": "6a1533cfeb673d1da4ac7429",
+    "planId": "6a13e0c9f21d4d293554e8b0"
+  },
+
+  "paymentAndBilling": {
+    "paymentMethod": "Mobile Money (MTN)",
+    "mobileMoneyNumber": "08012345678",
+    "preferredBillingDate": 15,
+    "howDidYouHearAboutUs": "Facebook"
+  },
+
+  "declaration": {
+    "informationAccurate": true,
+    "planStartsAfter14Days": true,
+    "agreeTermsAndConditions": true,
+    "noPreExistingFaults": true,
+    "electronicSignature": "John Doe",
+    "date": "2026-05-26"
+  },
+  "paymentMethod": "cash"
+}
+
+
+### get-my-plan-request
+GET {{url}}/api/v1/user/get-my-plan-request?page=1&limit=10 HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+### get-my-plan-request-service
+GET {{url}}/api/v1/user/get-my-plan-request-service HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+### create-service-rquest
+POST {{url}}/api/v1/user/create-service-rquest HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "serviceId": "6a1533cfeb673d1da4ac7429",
+  "description": "abc",
+  "preferredDate": 1779878482000
+}
+
+
+### get-service-request
+GET {{url}}/api/v1/user/get-service-request?page=1&limit=10 HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+
+### create-ticket
+POST {{url}}/api/v1/user/create-ticket HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "subject": "abbbb",
+  "description": "abc"
+}
+
+
+### get-tickets
+GET {{url}}/api/v1/user/get-tickets?page=1&limit=10 HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+### get-assigned-requests
+GET {{url}}/api/v1/user/get-service-requests?page=1&limit=10&status= HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
