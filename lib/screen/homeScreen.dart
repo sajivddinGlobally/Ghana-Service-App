@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
+import 'package:dwelleasy_ghana/data/provider/getNotificationProvider.dart';
 import 'package:dwelleasy_ghana/data/provider/getProfileProvider.dart';
 import 'package:dwelleasy_ghana/screen/Drawer/MyDrawerScreen.dart';
 import 'package:dwelleasy_ghana/screen/EditProfileScreen.dart';
@@ -255,6 +256,12 @@ class _HomescreenState extends ConsumerState<Homescreen> {
   Widget build(BuildContext context) {
     final profileState = ref.watch(getProfileProvider);
     final assignCountState = ref.watch(getAssignCountProvider);
+    final notificationState = ref.watch(getNotificationProvider);
+    final unreadCount = notificationState.maybeWhen(
+      data: (data) =>
+          data.data?.list?.where((item) => item.isRead == false).length ?? 0,
+      orElse: () => 0,
+    );
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       appBar: profileState.when(
@@ -363,23 +370,55 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                       CupertinoPageRoute(
                         builder: (context) => Notificationscreen(),
                       ),
-                    );
+                    ).then((value) {
+                      ref.invalidate(getNotificationProvider);
+                    });
                   },
-                  child: CircleAvatar(
-                    radius: 20.r,
-                    backgroundColor: Colors.transparent,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: const Color(0xffF2D701)),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      CircleAvatar(
+                        radius: 20.r,
+                        backgroundColor: Colors.transparent,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: const Color(0xffF2D701)),
+                          ),
+                          alignment: Alignment.center,
+                          child: Icon(
+                            Icons.notifications_none,
+                            color: const Color(0xffF2D701),
+                            size: 20.sp,
+                          ),
+                        ),
                       ),
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.notifications_none,
-                        color: const Color(0xffF2D701),
-                        size: 20.sp,
-                      ),
-                    ),
+                      if (unreadCount > 0)
+                        Positioned(
+                          right: -2,
+                          top: -5,
+                          child: Container(
+                            padding: EdgeInsets.all(4.w),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 18.w,
+                              minHeight: 18.h,
+                            ),
+                            child: Text(
+                              unreadCount > 99 ? "99+" : unreadCount.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),

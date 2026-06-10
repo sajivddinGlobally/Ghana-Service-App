@@ -8,6 +8,7 @@ import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/customeDrawer.dar
 import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/provider/serviceReminderProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/serviceReminderScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotification.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotificationProvider/clientNotificationProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotificationSettingScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/clientPaymentHistory/paymentHistoryScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createService.dart';
@@ -222,6 +223,14 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
     final clientProfileState = ref.watch(clientProfileProvider);
     final getPlanServiceState = ref.watch(getPlanServiceProvider);
     final reminderState = ref.watch(clientGetServiceRemindersProvider);
+    final clientNotificationState = ref.watch(clientNotificationProvider);
+    final unReadCount = clientNotificationState.maybeWhen(
+      data: (data) {
+        return data.data?.list?.where((item) => item.isRead == false).length ??
+            0;
+      },
+      orElse: () => 0,
+    );
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: clientProfileState.when(
@@ -321,27 +330,59 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
                 padding: EdgeInsets.only(top: 10.h, right: 16.w),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(50.r),
-                  onTap: () {
+                  onTap: () async {
                     Navigator.push(
                       context,
                       CupertinoPageRoute(
                         builder: (context) => Clientnotification(),
                       ),
-                    );
+                    ).then((_) {
+                      ref.invalidate(clientNotificationProvider);
+                    });
                   },
-                  child: Container(
-                    width: 40.w,
-                    height: 40.h,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xffF2D701)),
-                    ),
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.notifications_none,
-                      color: const Color(0xffF2D701),
-                      size: 20.sp,
-                    ),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        width: 40.w,
+                        height: 40.h,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: const Color(0xffF2D701)),
+                        ),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.notifications_none,
+                          color: const Color(0xffF2D701),
+                          size: 20.sp,
+                        ),
+                      ),
+                      if (unReadCount > 0)
+                        Positioned(
+                          right: -2,
+                          top: -5,
+                          child: Container(
+                            padding: EdgeInsets.all(3.w),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 18.w,
+                              minHeight: 18.h,
+                            ),
+                            child: Text(
+                              unReadCount > 99 ? "99+" : "$unReadCount",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),

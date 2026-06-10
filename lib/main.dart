@@ -2,9 +2,11 @@ import 'dart:developer';
 import 'package:dwelleasy_ghana/clientScreen.dart/ClientHomeScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/ClientWelcome.dart';
 import 'package:dwelleasy_ghana/core/utils/key.dart';
+import 'package:dwelleasy_ghana/firebase_options.dart';
 import 'package:dwelleasy_ghana/screen/homeScreen.dart';
 import 'package:dwelleasy_ghana/screen/welComeScreen.dart';
 import 'package:dwelleasy_ghana/selectRolScreen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +16,7 @@ import 'package:hive_flutter/adapters.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Hive.initFlutter();
   await Hive.openBox("employeeBox");
   await Hive.openBox("clientBox");

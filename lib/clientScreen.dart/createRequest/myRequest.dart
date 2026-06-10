@@ -319,9 +319,7 @@ class RequestBody extends ConsumerWidget {
       separatorBuilder: (_, __) => SizedBox(height: 18.h),
       itemBuilder: (context, index) {
         final item = data[index];
-
         Color statusColor;
-
         switch (type) {
           case "pending":
             statusColor = const Color(0xffFDEBB3);
@@ -401,12 +399,12 @@ class RequestBody extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   CupertinoPageRoute(
-                    //     builder: (context) => EmployeeDetails(item.id),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => EmployeeDetails(item.id),
+                      ),
+                    );
                     if (type != "pending") {
                       Navigator.push(
                         context,

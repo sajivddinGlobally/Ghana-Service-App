@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CForgotPassBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CForgotPassResModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/CGetMyPlanRequestModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CGetPlanModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CLoginBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CProfileModel.dart';
@@ -15,6 +16,7 @@ import 'package:dwelleasy_ghana/data/ClientModel/CloginResModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/clientCreateTicketBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/clientCreateTicketResModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/clientGetTicketModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/clientNotificationModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createPlanReqiestBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createPlanRequestResModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestBodyModel.dart';
@@ -35,12 +37,14 @@ import 'package:dwelleasy_ghana/data/model/getAssignCountModel.dart';
 import 'package:dwelleasy_ghana/data/model/getAssigneRequestModel.dart';
 import 'package:dwelleasy_ghana/data/model/getCompleteRequestModel.dart';
 import 'package:dwelleasy_ghana/data/model/getMyLeaveModel.dart';
+import 'package:dwelleasy_ghana/data/model/getNotificationModel.dart';
 import 'package:dwelleasy_ghana/data/model/getPendingRequestModel.dart';
 import 'package:dwelleasy_ghana/data/model/getProfileModel.dart';
 import 'package:dwelleasy_ghana/data/model/getServiceResModel.dart';
 import 'package:dwelleasy_ghana/data/model/getTicketModel.dart';
 import 'package:dwelleasy_ghana/data/model/loginBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/loginResModel.dart';
+import 'package:dwelleasy_ghana/data/model/readNotificationModel.dart';
 import 'package:dwelleasy_ghana/data/model/registerBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/registerResModel.dart';
 import 'package:dwelleasy_ghana/data/model/requestCompleteBodyModel.dart';
@@ -140,6 +144,12 @@ abstract class ApiStateNetwork {
   @GET("/api/v1/employee/get-assigned-requests?page=1&limit=10&today=true")
   Future<TodayAssignRequestModel> todayAssignReqeust();
 
+  @GET("/api/v1/employee/get-notification?page=1&limit=10")
+  Future<GetNotificationModel> getNotification();
+
+  @POST("/api/v1/employee/read-notification")
+  Future<ReadNotificationModel> readNotification();
+
   ////////////////////////////////  Client (user) ////////////////////////////
   ////////////////////////////////////////////////////////////////////////
   @POST("/api/v1/user/register")
@@ -222,4 +232,13 @@ abstract class ApiStateNetwork {
 
   @GET("/api/v1/user/get-messages?requestId")
   Future<GetServiceReminderResponseModel> getMessage();
+
+  @GET("/api/v1/user/get-notification?page=1&limit=10")
+  Future<ClientNotificationModel> clientGetNotification();
+
+  @GET("/api/v1/user/get-my-plan-request?page=1&limit=10")
+  Future<CGetMyPlanRequestModel> clientGetMyPlanRequest();
+
+  @POST("/api/v1/user/read-notification")
+  Future<ReadNotificationModel> clientReadNotification();
 }

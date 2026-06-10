@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "284234720950",
+    "project_id": "dwell-easy-ghana-e888d",
+    "storage_bucket": "dwell-easy-ghana-e888d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284234720950:android:ad9c8f2dea16dbd874a817",
+        "android_client_info": {
+          "package_name": "com.example.dwelleasy_ghana"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5VmapSVNJ0PcsVW5TIblw0d4dl4MVmB0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

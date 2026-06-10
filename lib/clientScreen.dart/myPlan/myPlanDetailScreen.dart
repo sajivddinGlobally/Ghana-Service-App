@@ -1,11 +1,15 @@
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/CGetMyPlanRequestModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 class MyPlanDetailScreen extends StatefulWidget {
-  const MyPlanDetailScreen({super.key});
+  final ListElement data;
+  const MyPlanDetailScreen({super.key, required this.data});
 
   @override
   State<MyPlanDetailScreen> createState() => _MyPlanDetailScreenState();
@@ -14,6 +18,7 @@ class MyPlanDetailScreen extends StatefulWidget {
 class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
   @override
   Widget build(BuildContext context) {
+    final planData = widget.data;
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: AppBar(
@@ -69,7 +74,8 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Full Home Bundle (Premium)",
+                    // "Full Home Bundle (Premium)",
+                    "${planData.planDetails?.serviceId?.name ?? "N/A"} (${planData.planDetails?.planId?.tier ?? ""})",
                     style: GoogleFonts.outfit(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
@@ -91,7 +97,8 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                       ),
                       Spacer(),
                       Text(
-                        "Plumbing + Electrical + AC",
+                        // "Plumbing + Electrical + AC",
+                        planData.planDetails?.planId?.name ?? "N/A",
                         style: GoogleFonts.parkinsans(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
@@ -114,7 +121,12 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                       ),
                       Spacer(),
                       Text(
-                        "01 Jan 2026",
+                        // "01 Jan 2026",
+                        DateFormat('dd MMMM yyyy').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                            planData.planDetails?.planId?.date ?? 0,
+                          ),
+                        ),
                         style: GoogleFonts.parkinsans(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
@@ -160,7 +172,10 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                       ),
                       Spacer(),
                       Text(
-                        "6 / Unlimited",
+                        // "6 / Unlimited",
+                        planData.planDetails?.planId?.isUnlimited == true
+                            ? "Unlimited"
+                            : "${planData.planDetails?.planId?.callLimit ?? 0}",
                         style: GoogleFonts.parkinsans(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
@@ -180,7 +195,8 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                       color: Color.fromARGB(51, 108, 226, 39),
                     ),
                     child: Text(
-                      "Active",
+                      // "Active",
+                      planData.status?.name ?? "",
                       style: GoogleFonts.outfit(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
