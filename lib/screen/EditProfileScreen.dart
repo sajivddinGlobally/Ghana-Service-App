@@ -328,7 +328,7 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w400,
                                   color: Color.fromRGBO(255, 255, 255, 0.5),
-                                  letterSpacing: -0.56
+                                  letterSpacing: -0.56,
                                 ),
                               ),
                             ),

@@ -57,6 +57,8 @@ class Data {
   String? city;
   String? experience;
   String? image;
+  int? totalRatings;
+  int? averageRating;
 
   Data({
     this.id,
@@ -81,6 +83,8 @@ class Data {
     this.city,
     this.experience,
     this.image,
+    this.averageRating,
+    this.totalRatings
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -108,6 +112,8 @@ class Data {
     city: json["city"],
     experience: json["experience"],
     image: json["image"],
+    averageRating: json['averageRating'],
+    totalRatings: json['totalRatings'],
   );
 
   Map<String, dynamic> toJson() => {
@@ -133,6 +139,8 @@ class Data {
     "city": city,
     "experience": experience,
     "image": image,
+    "totalRatings" : totalRatings,
+    "averageRating" :averageRating,
   };
 }
 

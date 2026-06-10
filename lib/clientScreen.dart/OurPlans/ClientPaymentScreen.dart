@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:dwelleasy_ghana/clientScreen.dart/ClientHomeScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientOurPlanProvider/createPlanServiceRequestProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
@@ -32,11 +31,12 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
   String? selectedPayment;
 
   List<String> paymentList = [
-    "Mobile Money (MTN)",
-    "Mobile Money (Vodafone)",
-    "Mobile Money (Airteltigo)",
-    "Bank Transfer",
-    "Cash (Office Only)",
+    // "Mobile Money (MTN)",
+    // "Mobile Money (Vodafone)",
+    // "Mobile Money (Airteltigo)",
+    // "Bank Transfer",
+    // "Cash (Office Only)",
+    "cash",
   ];
   void showPaymentDialog() {
     showDialog(
@@ -244,7 +244,7 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                             fontSize: 12.sp,
                             color: AppColors.buttonText,
                             fontWeight: FontWeight.w500,
-                            letterSpacing: -0.48
+                            letterSpacing: -0.48,
                           ),
                         ),
                         TextSpan(
@@ -253,7 +253,7 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                             fontSize: 12.sp,
                             color: AppColors.buttonText,
                             fontWeight: FontWeight.w400,
-                            letterSpacing: -0.48
+                            letterSpacing: -0.48,
                           ),
                         ),
                       ],
@@ -269,7 +269,7 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                             fontSize: 12.sp,
                             color: AppColors.buttonText,
                             fontWeight: FontWeight.w500,
-                            letterSpacing: -0.48
+                            letterSpacing: -0.48,
                           ),
                         ),
                         TextSpan(
@@ -278,7 +278,7 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                             fontSize: 12.sp,
                             color: AppColors.buttonText,
                             fontWeight: FontWeight.w400,
-                            letterSpacing: -0.48
+                            letterSpacing: -0.48,
                           ),
                         ),
                       ],
@@ -294,7 +294,7 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                             fontSize: 12.sp,
                             color: AppColors.buttonText,
                             fontWeight: FontWeight.w500,
-                            letterSpacing: -0.48
+                            letterSpacing: -0.48,
                           ),
                         ),
                         TextSpan(
@@ -304,7 +304,7 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                             fontSize: 12.sp,
                             color: AppColors.buttonText,
                             fontWeight: FontWeight.w400,
-                            letterSpacing: 0.48
+                            letterSpacing: 0.48,
                           ),
                         ),
                       ],

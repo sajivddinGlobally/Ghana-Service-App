@@ -8,10 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../createRequest/createRequestProvider/employeeDetail.dart';
 
-
 class Servicereminderscreen extends ConsumerStatefulWidget {
-
-  const Servicereminderscreen( {super.key});
+  const Servicereminderscreen({super.key});
 
   @override
   ConsumerState<Servicereminderscreen> createState() =>
@@ -19,7 +17,6 @@ class Servicereminderscreen extends ConsumerStatefulWidget {
 }
 
 class _ServicereminderscreenState extends ConsumerState<Servicereminderscreen> {
-
   List<Map<String, dynamic>> name = [
     {
       "text": "Living Room AC",
@@ -36,10 +33,7 @@ class _ServicereminderscreenState extends ConsumerState<Servicereminderscreen> {
   ];
   @override
   Widget build(BuildContext context) {
-
-    final detailsAsync =
-    ref.watch(clientGetServiceRemindersProvider);
-
+    final reminderState = ref.watch(clientGetServiceRemindersProvider);
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: AppBar(toolbarHeight: 0, backgroundColor: AppColors.backgroungBg),
@@ -108,24 +102,61 @@ class _ServicereminderscreenState extends ConsumerState<Servicereminderscreen> {
             ),
             SizedBox(height: 37.h),
             Expanded(
-              child: detailsAsync.when(
-                loading: () => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                error: (error, stack) => Center(
-                  child: Text(error.toString()),
-                ),
+              child: reminderState.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stack) => Center(child: Text(error.toString())),
                 data: (response) {
                   final reminders = response.data ?? [];
 
+                  if (reminders.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.event_busy_outlined,
+                            size: 80.sp,
+                            color: AppColors.buttonBg,
+                          ),
+
+                          SizedBox(height: 20.h),
+
+                          Text(
+                            "No Service Reminders",
+                            style: GoogleFonts.outfit(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.buttonText,
+                            ),
+                          ),
+
+                          SizedBox(height: 8.h),
+
+                          Text(
+                            "You don't have any upcoming\nservice reminders at the moment.",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                   return ListView.builder(
                     itemCount: reminders.length,
                     itemBuilder: (context, index) {
                       final item = reminders[index];
-
                       return Container(
                         margin: EdgeInsets.only(bottom: 16.h),
-                        padding: EdgeInsets.all(16.w),
+                        padding: EdgeInsets.only(
+                          left: 10.w,
+                          right: 10.w,
+                          top: 18.h,
+                          bottom: 18.h,
+                        ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.r),
                           border: Border.all(color: AppColors.buttonBg),
@@ -139,12 +170,14 @@ class _ServicereminderscreenState extends ConsumerState<Servicereminderscreen> {
                                   style: GoogleFonts.outfit(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w500,
+                                    color: Color(0xff000000),
+                                    letterSpacing: -0.64,
                                   ),
                                 ),
                                 const Spacer(),
                                 Container(
                                   height: 24.h,
-                                  padding: EdgeInsets.symmetric(horizontal: 12.w),
+                                  width: 109.w,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100.r),
                                     color: AppColors.buttonBg,
@@ -152,6 +185,12 @@ class _ServicereminderscreenState extends ConsumerState<Servicereminderscreen> {
                                   child: Center(
                                     child: Text(
                                       item.status ?? "",
+                                      style: GoogleFonts.parkinsans(
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xff000000),
+                                        letterSpacing: -0.56,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -162,18 +201,35 @@ class _ServicereminderscreenState extends ConsumerState<Servicereminderscreen> {
 
                             Container(
                               width: double.infinity,
-                              padding: EdgeInsets.all(13.w),
+                              padding: EdgeInsets.only(
+                                left: 13.w,
+                                top: 13.h,
+                                bottom: 14.h,
+                              ),
                               decoration: BoxDecoration(
-                                border: Border.all(color: const Color(0xffB6B6B6)),
+                                border: Border.all(color: Color(0xffB6B6B6)),
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Last Service Date"),
+                                  Text(
+                                    "Last Service Date",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xff838383),
+                                      letterSpacing: -0.48,
+                                    ),
+                                  ),
                                   SizedBox(height: 8.h),
                                   Text(
                                     formatDate(item.lastServiceDate),
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: -0.5,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -183,18 +239,35 @@ class _ServicereminderscreenState extends ConsumerState<Servicereminderscreen> {
 
                             Container(
                               width: double.infinity,
-                              padding: EdgeInsets.all(13.w),
+                              padding: EdgeInsets.only(
+                                left: 13.w,
+                                top: 13.h,
+                                bottom: 14.h,
+                              ),
                               decoration: BoxDecoration(
-                                border: Border.all(color: const Color(0xffB6B6B6)),
+                                border: Border.all(color: Color(0xffB6B6B6)),
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Next Due Date"),
+                                  Text(
+                                    "Next Due Date",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xff838383),
+                                      letterSpacing: -0.48,
+                                    ),
+                                  ),
                                   SizedBox(height: 8.h),
                                   Text(
                                     formatDate(item.nextDueDate),
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: -0.64,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -206,7 +279,7 @@ class _ServicereminderscreenState extends ConsumerState<Servicereminderscreen> {
                   );
                 },
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -216,8 +289,8 @@ class _ServicereminderscreenState extends ConsumerState<Servicereminderscreen> {
   String formatDate(int? timestamp) {
     if (timestamp == null) return "";
 
-    return DateFormat('dd MMMM yyyy').format(
-      DateTime.fromMillisecondsSinceEpoch(timestamp),
-    );
+    return DateFormat(
+      'dd MMMM yyyy',
+    ).format(DateTime.fromMillisecondsSinceEpoch(timestamp));
   }
 }

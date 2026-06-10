@@ -86,46 +86,30 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                     left: 0,
                     right: 0,
                     child: Center(
-                      child: Container(
-                        height: 113.h,
-                        width: 113.w,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey,
-                          border: Border.all(
-                            color: Color(0xff04254E),
-                            width: 3.w,
-                          ),
-                        ),
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                            child: ClipOval(
-                              child: Image.network(
-                                data.data?.image ?? "",
-                                height: 113.h,
-                                width: 113.w,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Container(
+                            height: 113.h,
+                            width: 113.w,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey,
+                              border: Border.all(
+                                color: Color(0xff04254E),
+                                width: 3.w,
+                              ),
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 5.w, right: 5.w),
+                                child: ClipOval(
+                                  child: Image.network(
+                                    data.data?.image ?? "",
                                     height: 113.h,
                                     width: 113.w,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.grey,
-                                    ),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.person,
-                                        color: Colors.white,
-                                        size: 35.sp,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
                                       return Container(
                                         height: 113.h,
                                         width: 113.w,
@@ -134,17 +118,39 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                           color: Colors.grey,
                                         ),
                                         child: Center(
-                                          child: CircularProgressIndicator(
-                                            color: AppColors.buttonBg,
-                                            strokeWidth: 1.5.w,
+                                          child: Icon(
+                                            Icons.person,
+                                            color: Colors.white,
+                                            size: 35.sp,
                                           ),
                                         ),
                                       );
                                     },
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return Container(
+                                            height: 113.h,
+                                            width: 113.w,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.grey,
+                                            ),
+                                            child: Center(
+                                              child: CircularProgressIndicator(
+                                                color: AppColors.buttonBg,
+                                                strokeWidth: 1.5.w,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
@@ -282,7 +288,9 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "4.9",
+                                        // "4.9",
+                                        data.data?.totalRatings.toString() ??
+                                            "0",
                                         style: GoogleFonts.outfit(
                                           fontSize: 21.w,
                                           fontWeight: FontWeight.w600,

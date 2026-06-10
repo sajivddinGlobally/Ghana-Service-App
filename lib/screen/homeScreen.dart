@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/data/provider/getProfileProvider.dart';
 import 'package:dwelleasy_ghana/screen/Drawer/MyDrawerScreen.dart';
@@ -47,7 +46,6 @@ class _MyBottomNavState extends ConsumerState<MyBottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    final profileState = ref.watch(getProfileProvider);
     return WillPopScope(
       onWillPop: () async {
         if (currentIndex != 0) {
@@ -523,51 +521,47 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 16.w),
-                  Container(
-                    padding: EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: Color(0xffF2D701),
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.menu,
-                        color: Color(0xff04254E),
-                        size: 22.sp,
-                      ),
-                    ),
-                  ),
+                  // SizedBox(width: 16.w),
+                  // Container(
+                  //   padding: EdgeInsets.all(14),
+                  //   decoration: BoxDecoration(
+                  //     color: Color(0xffF2D701),
+                  //     borderRadius: BorderRadius.circular(4.r),
+                  //   ),
+                  //   child: Center(
+                  //     child: Icon(
+                  //       Icons.menu,
+                  //       color: Color(0xff04254E),
+                  //       size: 22.sp,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
             SizedBox(height: 24.h),
             SizedBox(
               height: 160.h,
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
+              child: ListView(
                 scrollDirection: Axis.horizontal,
-                itemCount: employee.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
+                children: [
+                  InkWell(
                     onTap: () {
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) =>
-                              Yourschedulescreen(isShowBack: true),
+                          builder: (context) => Assignedscreen(),
                         ),
                       );
                     },
                     child: Container(
-                      // width: 365.w,
                       margin: EdgeInsets.only(left: 12.w, right: 10.w),
                       child: Stack(
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(20.r),
                             child: Image.asset(
-                              employee[index]["image"],
+                              "assets/WhatsApp Image 2026-05-07 at 12.12.29 PM.jpeg",
                               width: 365.w,
                               height: 159.h,
                               fit: BoxFit.cover,
@@ -580,21 +574,21 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  employee[index]["name"],
+                                  "Welcome, Employee",
                                   style: GoogleFonts.outfit(
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.w600,
-                                    color: employee[index]["colors1"],
+                                    color: AppColors.buttonText,
                                     letterSpacing: -0.80,
                                   ),
                                 ),
                                 SizedBox(height: 4.h),
                                 Text(
-                                  employee[index]["time"],
+                                  "Here is your job\n summary for today",
                                   style: GoogleFonts.outfit(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w500,
-                                    color: employee[index]["colors2"],
+                                    color: AppColors.buttonText,
                                     letterSpacing: -0.56,
                                   ),
                                 ),
@@ -605,15 +599,15 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                                     horizontal: 40.w,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: employee[index]["colors3"],
+                                    color: AppColors.buttonText,
                                     borderRadius: BorderRadius.circular(50.r),
                                   ),
                                   child: Text(
-                                    employee[index]["detiles"],
+                                    "View Job",
                                     style: GoogleFonts.outfit(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w500,
-                                      color: employee[index]["colors4"],
+                                      color: AppColors.buttonBg,
                                       letterSpacing: -0.56,
                                     ),
                                   ),
@@ -624,8 +618,83 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                         ],
                       ),
                     ),
-                  );
-                },
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) =>
+                              Yourschedulescreen(isShowBack: true),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(left: 12.w, right: 10.w),
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20.r),
+                            child: Image.asset(
+                              "assets/emaployee_image.jpeg",
+                              width: 365.w,
+                              height: 159.h,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Positioned(
+                            left: 15.w,
+                            top: 16.h,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Today's Shift",
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.buttonBg,
+                                    letterSpacing: -0.80,
+                                  ),
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(
+                                  "Time:9:00 AM -1:00 PM",
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.buttonBg,
+                                    letterSpacing: -0.56,
+                                  ),
+                                ),
+                                SizedBox(height: 12.h),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 10.h,
+                                    horizontal: 40.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.buttonBg,
+                                    borderRadius: BorderRadius.circular(50.r),
+                                  ),
+                                  child: Text(
+                                    "View Schedule",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.buttonText,
+                                      letterSpacing: -0.56,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 33.h),

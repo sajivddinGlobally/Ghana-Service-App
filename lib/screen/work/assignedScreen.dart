@@ -130,7 +130,7 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
                               fontSize: 20.sp,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
-                              letterSpacing: -0.72
+                              letterSpacing: -0.72,
                             ),
                           ),
 
@@ -143,7 +143,7 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
                               fontSize: 13.sp,
                               fontWeight: FontWeight.w400,
                               color: Colors.white70,
-                              letterSpacing: -0.56
+                              letterSpacing: -0.56,
                             ),
                           ),
                         ],
@@ -244,6 +244,9 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
                                 CupertinoPageRoute(
                                   builder: (context) => Detilesscreen(
                                     requestId: data.data!.list![index].id ?? "",
+                                    userName: "",
+                                    userPhone: "",
+                                    service: "",
                                   ),
                                 ),
                               );

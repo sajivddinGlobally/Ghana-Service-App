@@ -78,107 +78,97 @@ class _ClientnotificationState extends State<Clientnotification> {
                 padding: EdgeInsets.zero,
                 itemCount: 4,
                 itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Engineerdetiles(),
+                  return Container(
+                    padding: EdgeInsets.only(
+                      left: 10.w,
+                      top: 6.h,
+                      bottom: 6.h,
+                      right: 10.w,
+                    ),
+                    margin: EdgeInsets.only(bottom: 16.h),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                          color: AppColors.buttonBg,
+                          width: 2.w,
                         ),
-                      );
-                    },
-                    child: Container(
-                      padding: EdgeInsets.only(
-                        left: 10.w,
-                        top: 6.h,
-                        bottom: 6.h,
-                        right: 10.w,
                       ),
-                      margin: EdgeInsets.only(bottom: 16.h),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Row(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 36.w,
+                          height: 36.h,
+                          decoration: BoxDecoration(
                             color: AppColors.buttonBg,
-                            width: 2.w,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(child: Image.asset("assets/💼.png")),
+                        ),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Engineer Assigned",
+                              style: GoogleFonts.outfit(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.64,
+                              ),
+                            ),
+                            Text(
+                              "Your AC Repair request has been acce..",
+                              style: GoogleFonts.outfit(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.64,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: "Engineer: ",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: -0.56,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: "Jomo",
+                                    style: GoogleFonts.parkinsans(
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.buttonText,
+                                      fontSize: 13.sp,
+                                      letterSpacing: -0.56,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Text(
+                          "2 mins ago",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.56,
                           ),
                         ),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Row(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 36.w,
-                            height: 36.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.buttonBg,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(child: Image.asset("assets/💼.png")),
-                          ),
-                          SizedBox(width: 10.w),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Engineer Assigned",
-                                style: GoogleFonts.outfit(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.buttonText,
-                                  letterSpacing: -0.64,
-                                ),
-                              ),
-                              Text(
-                                "Your AC Repair request has been acce..",
-                                style: GoogleFonts.outfit(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.buttonText,
-                                  letterSpacing: -0.64,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: "Engineer: ",
-                                      style: GoogleFonts.parkinsans(
-                                        fontSize: 13.sp,
-                                        fontWeight: FontWeight.w600,
-                                        letterSpacing: -0.56,
-                                        color: AppColors.buttonText,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: "Jomo",
-                                      style: GoogleFonts.parkinsans(
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.buttonText,
-                                        fontSize: 13.sp,
-                                        letterSpacing: -0.56,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Spacer(),
-                          Text(
-                            "2 mins ago",
-                            style: GoogleFonts.parkinsans(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.buttonText,
-                              letterSpacing: -0.56,
-                            ),
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
                   );
                 },

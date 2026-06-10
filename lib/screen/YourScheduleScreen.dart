@@ -1,11 +1,12 @@
 import 'dart:developer' show log;
-
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/screen/detilesScreen.dart';
 import 'package:dwelleasy_ghana/screen/quickMessageScreen.dart';
 import 'package:dwelleasy_ghana/screen/quickMessageScreenDetiles.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getAssignRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/getCompleteRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/todayAssignRequestProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,7 +28,8 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
   String? loadingRequestId;
   @override
   Widget build(BuildContext context) {
-    final assignRequestState = ref.watch(getAssignRequestProvider);
+    final todayAssignRequest = ref.watch(todayAssignRequestProvider);
+    final completeRequestState = ref.watch(getCompleteRequestProvider);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       body: Column(
@@ -111,6 +113,9 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                     setState(() {
                       select = 0;
                     });
+                    ref
+                        .read(todayAssignRequestProvider.notifier)
+                        .getTodayAssignRequest();
                   },
                   child: Container(
                     margin: EdgeInsets.only(left: 16.w),
@@ -145,11 +150,14 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
               ),
               SizedBox(width: 10.w),
               Expanded(
-                child: GestureDetector( 
+                child: GestureDetector(
                   onTap: () {
                     setState(() {
                       select = 1;
                     });
+                    ref
+                        .read(getCompleteRequestProvider.notifier)
+                        .getCompleteRequests();
                   },
                   child: Container(
                     margin: EdgeInsets.only(right: 16.w),
@@ -185,283 +193,477 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
             ],
           ),
           SizedBox(height: 20.h),
-          assignRequestState.when(
-            data: (data) {
-              if (data.data?.list == null || data.data!.list!.isEmpty) {
-                return Expanded(
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 90.h,
-                            width: 90.w,
-                            decoration: BoxDecoration(
-                              color: const Color(0xff34383D),
-                              shape: BoxShape.circle,
-                              border: Border.all(
+          if (select == 0)
+            todayAssignRequest.when(
+              data: (todayData) {
+                if (todayData.data?.list == null ||
+                    todayData.data!.list!.isEmpty) {
+                  return Expanded(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.w),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 90.h,
+                              width: 90.w,
+                              decoration: BoxDecoration(
+                                color: const Color(0xff34383D),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: const Color(0xffF2D701),
+                                  width: 2,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.assignment_turned_in_outlined,
+                                size: 45.sp,
                                 color: const Color(0xffF2D701),
-                                width: 2,
                               ),
                             ),
-                            child: Icon(
-                              Icons.assignment_turned_in_outlined,
-                              size: 45.sp,
-                              color: const Color(0xffF2D701),
+
+                            SizedBox(height: 20.h),
+
+                            Text(
+                              "No Today Jobs",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.outfit(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                letterSpacing: -0.72,
+                              ),
                             ),
-                          ),
 
-                          SizedBox(height: 20.h),
+                            SizedBox(height: 10.h),
 
-                          Text(
-                            "No Assign Jobs",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.outfit(
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                              letterSpacing: -0.72,
+                            Text(
+                              "You don't have any assign work requests yet.",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white70,
+                                letterSpacing: -0.56,
+                              ),
                             ),
-                          ),
-
-                          SizedBox(height: 10.h),
-
-                          Text(
-                            "You don't have any assign work requests yet.",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.parkinsans(
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white70,
-                              letterSpacing: -0.56,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }
-              return Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: data.data?.list?.length,
-                  itemBuilder: (context, index) {
-                    final assign = data.data!.list![index];
-                    final preferredDate = DateTime.fromMillisecondsSinceEpoch(
-                      assign.preferredDate ?? 0,
-                    );
+                  );
+                }
+                return Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: todayData.data?.list?.length,
+                    itemBuilder: (context, index) {
+                      final assign = todayData.data!.list![index];
+                      final preferredDate = DateTime.fromMillisecondsSinceEpoch(
+                        assign.preferredDate ?? 0,
+                      );
 
-                    final formattedDate = DateFormat(
-                      "dd MMM yyyy",
-                    ).format(preferredDate);
+                      final formattedDate = DateFormat(
+                        "dd MMM yyyy",
+                      ).format(preferredDate);
 
-                    return Container(
-                      margin: EdgeInsets.only(
-                        left: 16.w,
-                        right: 16.w,
-                        bottom: 16.h,
-                      ),
-                      padding: EdgeInsets.only(
-                        top: 15.h,
-                        left: 15.w,
-                        right: 15.w,
-                        bottom: 13.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xff34383D),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
+                      return Container(
+                        margin: EdgeInsets.only(
+                          left: 16.w,
+                          right: 16.w,
+                          bottom: 16.h,
+                        ),
+                        padding: EdgeInsets.only(
+                          top: 15.h,
+                          left: 15.w,
+                          right: 15.w,
+                          bottom: 13.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff34383D),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
 
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 🔥 Date
-                          Text(
-                            // "20 Apr 2025",
-                            formattedDate,
-                            style: GoogleFonts.parkinsans(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18.sp,
-                              color: Colors.white,
-                              letterSpacing: -0.72,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 🔥 Date
+                            Text(
+                              // "20 Apr 2025",
+                              formattedDate,
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18.sp,
+                                color: Colors.white,
+                                letterSpacing: -0.72,
+                              ),
                             ),
-                          ),
 
-                          SizedBox(height: 14.h),
+                            SizedBox(height: 14.h),
 
-                          // 🔥 Time
-                          Text(
-                            "Time: 9:00 AM - 1:00 PM",
-                            style: GoogleFonts.parkinsans(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.sp,
-                              color: Colors.white,
-                              letterSpacing: -0.64,
+                            // 🔥 Time
+                            Text(
+                              "Time: 9:00 AM - 1:00 PM",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.sp,
+                                color: Colors.white,
+                                letterSpacing: -0.64,
+                              ),
                             ),
-                          ),
 
-                          SizedBox(height: 10.h),
-                          Text(
-                            "Area: Thema",
-                            style: GoogleFonts.parkinsans(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.sp,
-                              color: Colors.white,
-                              letterSpacing: -0.64,
+                            SizedBox(height: 10.h),
+                            Text(
+                              "Area: Thema",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.sp,
+                                color: Colors.white,
+                                letterSpacing: -0.64,
+                              ),
                             ),
-                          ),
 
-                          SizedBox(height: 10.h),
-
-                          // 🔥 Service
-                          Text(
-                            // "Service: AC Repair",
-                            "Service: ${assign.serviceId?.name ?? ""}",
-                            style: GoogleFonts.parkinsans(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.sp,
-                              color: Colors.white,
-                              letterSpacing: -0.64,
+                            SizedBox(height: 10.h),
+                            Text(
+                              // "Service: AC Repair",
+                              "Service: ${assign.serviceId?.name ?? ""}",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.sp,
+                                color: Colors.white,
+                                letterSpacing: -0.64,
+                              ),
                             ),
-                          ),
 
-                          SizedBox(height: 14.h),
-                          InkWell(
-                            onTap: () async {
-                              setState(() {
-                                loadingRequestId = assign.id;
-                              });
-                              try {
-                                final acceptService = ref.read(
-                                  authServiceProvider,
-                                );
-                                final res = await acceptService.acceptRequest(
-                                  requestId: data.data!.list?[index].id ?? "",
-                                );
-                                if (res == true) {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   CupertinoPageRoute(
-                                  //     builder: (context) =>
-                                  //         Quickmessagescreen(),
-                                  //   ),
-                                  // );
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) => Detilesscreen(
-                                        requestId:
-                                            data.data!.list?[index].id ?? "",
-                                      ),
-                                    ),
-                                  );
-                                }
-                              } catch (e, st) {
-                                log(e.toString());
-                              } finally {
+                            SizedBox(height: 14.h),
+                            InkWell(
+                              onTap: () async {
                                 setState(() {
-                                  loadingRequestId = null;
+                                  loadingRequestId = assign.id;
                                 });
-                              }
-                            },
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 10.h,
-                                    horizontal: 34.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff6CE227),
-                                    borderRadius: BorderRadius.circular(50.r),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: loadingRequestId == assign.id
-                                      ? Center(
-                                          child: SizedBox(
-                                            width: 20,
-                                            height: 20.h,
-                                            child: Center(
-                                              child: CircularProgressIndicator(
-                                                color: Colors.white,
-                                                strokeWidth: 1.w,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : Text(
-                                          "Approve",
-                                          style: GoogleFonts.outfit(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: const Color(0xff04254E),
-                                            letterSpacing: -0.56,
-                                          ),
-                                        ),
-                                ),
-                                SizedBox(width: 10.w),
-                                InkWell(
-                                  onTap: () {
+                                try {
+                                  final acceptService = ref.read(
+                                    authServiceProvider,
+                                  );
+                                  final res = await acceptService.acceptRequest(
+                                    requestId:
+                                        todayData.data!.list?[index].id ?? "",
+                                  );
+                                  if (res.code == 0 && res.error == false) {
                                     Navigator.push(
                                       context,
                                       CupertinoPageRoute(
-                                        builder: (context) =>
-                                            Quickmessagescreendetiles(
-                                              requestID: data
-                                                  .data!
-                                                  .list![index]
-                                                  .id
-                                                  .toString(),
-                                            ),
+                                        builder: (context) => Detilesscreen(
+                                          requestId:
+                                              todayData.data!.list?[index].id ??
+                                              "",
+                                          userName:
+                                              res.data?.userId?.fullName ??
+                                              "N/A",
+                                          userPhone:
+                                              res.data?.userId?.phone ?? "N/A",
+                                          service:
+                                              res
+                                                  .data
+                                                  ?.serviceId
+                                                  ?.planDetails
+                                                  ?.serviceId
+                                                  ?.name ??
+                                              "N/A",
+                                        ),
                                       ),
                                     );
-                                  },
-                                  child: Container(
+                                  }
+                                } catch (e, st) {
+                                  log(e.toString());
+                                } finally {
+                                  setState(() {
+                                    loadingRequestId = null;
+                                  });
+                                }
+                              },
+                              child: Row(
+                                children: [
+                                  Container(
                                     padding: EdgeInsets.symmetric(
                                       vertical: 10.h,
-                                      horizontal: 19.w,
+                                      horizontal: 34.w,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xffF2D701),
+                                      color: const Color(0xff6CE227),
                                       borderRadius: BorderRadius.circular(50.r),
                                     ),
                                     alignment: Alignment.center,
-                                    child: Text(
-                                      "Send Message",
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: const Color(0xff04254E),
-                                        letterSpacing: -0.56,
+                                    child: loadingRequestId == assign.id
+                                        ? Center(
+                                            child: SizedBox(
+                                              width: 20,
+                                              height: 20.h,
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                      strokeWidth: 1.w,
+                                                    ),
+                                              ),
+                                            ),
+                                          )
+                                        : Text(
+                                            "Approve",
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: const Color(0xff04254E),
+                                              letterSpacing: -0.56,
+                                            ),
+                                          ),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) =>
+                                              Quickmessagescreendetiles(
+                                                requestID: todayData
+                                                    .data!
+                                                    .list![index]
+                                                    .id
+                                                    .toString(),
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.h,
+                                        horizontal: 19.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xffF2D701),
+                                        borderRadius: BorderRadius.circular(
+                                          50.r,
+                                        ),
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "Send Message",
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: const Color(0xff04254E),
+                                          letterSpacing: -0.56,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+              error: (error, stackTrace) {
+                log(error.toString());
+                return Center(child: Text("Something went wrong"));
+              },
+              loading: () => SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 2,
+                child: Center(
+                  child: CircularProgressIndicator(color: AppColors.buttonBg),
                 ),
-              );
-            },
-            error: (error, stackTrace) {
-              log(error.toString());
-              return Center(child: Text("Something went wrong"));
-            },
-            loading: () => SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 2,
-              child: Center(
-                child: CircularProgressIndicator(color: AppColors.buttonBg),
+              ),
+            )
+          else
+            completeRequestState.when(
+              data: (completeData) {
+                if (completeData.data?.list == null ||
+                    completeData.data!.list!.isEmpty) {
+                  return Expanded(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.w),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 90.h,
+                              width: 90.w,
+                              decoration: BoxDecoration(
+                                color: const Color(0xff34383D),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: const Color(0xffF2D701),
+                                  width: 2,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.assignment_turned_in_outlined,
+                                size: 45.sp,
+                                color: const Color(0xffF2D701),
+                              ),
+                            ),
+
+                            SizedBox(height: 20.h),
+
+                            Text(
+                              "No Complete Jobs",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.outfit(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                letterSpacing: -0.72,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+
+                            Text(
+                              "You don't have any assign work requests yet.",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white70,
+                                letterSpacing: -0.56,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: completeData.data?.list?.length,
+                    itemBuilder: (context, index) {
+                      final assign = completeData.data!.list![index];
+                      final preferredDate = DateTime.fromMillisecondsSinceEpoch(
+                        assign.preferredDate ?? 0,
+                      );
+
+                      final formattedDate = DateFormat(
+                        "dd MMM yyyy",
+                      ).format(preferredDate);
+
+                      return Container(
+                        margin: EdgeInsets.only(
+                          left: 16.w,
+                          right: 16.w,
+                          bottom: 16.h,
+                        ),
+                        padding: EdgeInsets.only(
+                          top: 15.h,
+                          left: 15.w,
+                          right: 15.w,
+                          bottom: 13.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff34383D),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 🔥 Date
+                            Text(
+                              // "20 Apr 2025",
+                              formattedDate,
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18.sp,
+                                color: Colors.white,
+                                letterSpacing: -0.72,
+                              ),
+                            ),
+
+                            SizedBox(height: 14.h),
+
+                            // 🔥 Time
+                            Text(
+                              "Time: 9:00 AM - 1:00 PM",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.sp,
+                                color: Colors.white,
+                                letterSpacing: -0.64,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+                            Text(
+                              "Area: Thema",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.sp,
+                                color: Colors.white,
+                                letterSpacing: -0.64,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+
+                            // 🔥 Service
+                            Text(
+                              // "Service: AC Repair",
+                              "Service: ${assign.serviceId?.name ?? ""}",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.sp,
+                                color: Colors.white,
+                                letterSpacing: -0.64,
+                              ),
+                            ),
+                            SizedBox(height: 14.h),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10.h,
+                                horizontal: 34.w,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xff6CE227),
+                                borderRadius: BorderRadius.circular(50.r),
+                              ),
+                              child: Text(
+                                assign.status ?? "",
+                                style: GoogleFonts.outfit(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xff04254E),
+                                  letterSpacing: -0.56,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+              error: (error, stackTrace) {
+                log(error.toString());
+                return Center(child: Text("Something went wrong"));
+              },
+              loading: () => SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 2,
+                child: Center(
+                  child: CircularProgressIndicator(color: AppColors.buttonBg),
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

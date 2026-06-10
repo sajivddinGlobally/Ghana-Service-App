@@ -19,8 +19,21 @@ import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestBodyModel.d
 import 'package:dwelleasy_ghana/data/ClientModel/getMyPlanRequestServiceModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceDetailsModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceListModel.dart';
-import 'package:dwelleasy_ghana/data/ClientModel/getServiceRequestModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/getServiceRequestModel.dart'
+    hide
+        PropertyDetails,
+        PersonalInformation,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
 import 'package:dwelleasy_ghana/data/model/acceptRequestBodyModel.dart';
+import 'package:dwelleasy_ghana/data/model/acceptRequestResModel.dart'
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
 import 'package:dwelleasy_ghana/data/model/createLeaveRequestBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/createLeaveRequestResModel.dart';
 import 'package:dwelleasy_ghana/data/model/createTicketBodyModel.dart';
@@ -38,6 +51,7 @@ import 'package:dwelleasy_ghana/data/model/loginBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/registerBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/requestCompleteBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/sendMessageBodyModel.dart';
+import 'package:dwelleasy_ghana/data/model/todayAssignRequestModel.dart';
 import 'package:dwelleasy_ghana/data/model/updateProfileBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/updateProfileResModel.dart';
 import 'package:dwelleasy_ghana/data/model/verifyOrCreatePasswordBody.dart';
@@ -45,7 +59,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 
 import '../../data/model/addRatingRequestModel.dart';
-import '../../data/model/getServiceRequestDetailsModel.dart';
+import '../../data/model/getServiceRequestDetailsModel.dart'
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
 import '../../data/model/serviceReminderResponseModel.dart';
 
 class AuthService {
@@ -343,20 +363,34 @@ class AuthService {
     }
   }
 
-  Future<bool> acceptRequest({required String requestId}) async {
+  Future<TodayAssignRequestModel> todayAssignRequest() async {
+    try {
+      final response = await api.todayAssignReqeust();
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      return throw Exception(response.message);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<AcceptRequestResModel> acceptRequest({
+    required String requestId,
+  }) async {
     try {
       final body = AcceptRequestBodyModel(requestId: requestId);
       final response = await api.acceptRequest(body);
       if (response.code == 0 && response.error == false) {
         log(response.message ?? "Login Success");
         showSuccessSnackBar(response.message ?? "Sucess");
-        return true;
+        return response;
       }
-      return false;
+      return throw Exception(response.message);
     } catch (e, st) {
       log("ERROR => $e");
       log("STACK TRACE => $st");
-      return false;
+      return throw Exception(e);
     }
   }
 
@@ -733,14 +767,15 @@ class AuthService {
     }
   }
 
-  Future<GetServiceRequestModel> clientGetServiceRequest() async {
+  Future<GetServiceRequestModel> clientGetServiceRequest(String status) async {
     try {
-      final response = await api.clientGetServiceRequest();
+      final response = await api.clientGetServiceRequest(status);
       if (response.code == 0 && response.error == false) {
         return response;
       }
       return throw Exception(response.message);
-    } catch (e) {
+    } catch (e, st) {
+      log(st.toString());
       throw Exception(e.toString());
     }
   }
@@ -780,7 +815,6 @@ class AuthService {
     }
   }
 
-
   Future<GetServiceRequestDetailsModel> clientGetServiceRequestDetails({
     required String serviceRequestId,
   }) async {
@@ -799,9 +833,6 @@ class AuthService {
     }
   }
 
-
-
-
   Future<GetServiceReminderResponseModel> clientGetServiceReminders() async {
     try {
       final response = await api.clientGetServiceReminders();
@@ -814,8 +845,6 @@ class AuthService {
     }
   }
 
-
-  //
   // Future<bool> reportIssue({
   //   required String serviceRequestId,
   //   required String issueType,
@@ -866,36 +895,24 @@ class AuthService {
   // }
   //
 
-
-
-
-
-Future<bool> sendMessageHelp({
-  required String requestId,
-  required String message,
-}) async {
-  try {
-    final body = SendMessageRequest(
-      requestId: '',
-      message: ''
-
-    );
-    final response = await api.sendMessageHelp(body);
-    // if (response.code == 0 && response.error == false) {
-    //   log(response.message ?? "Login Success");
-    //   return true;
-    // }
-    return false;
-  } catch (e, st) {
-    log("ERROR => $e");
-    log("STACK TRACE => $st");
-    return false;
+  Future<bool> sendMessageHelp({
+    required String requestId,
+    required String message,
+  }) async {
+    try {
+      final body = SendMessageRequest(requestId: '', message: '');
+      final response = await api.sendMessageHelp(body);
+      // if (response.code == 0 && response.error == false) {
+      //   log(response.message ?? "Login Success");
+      //   return true;
+      // }
+      return false;
+    } catch (e, st) {
+      log("ERROR => $e");
+      log("STACK TRACE => $st");
+      return false;
+    }
   }
-}
-
-
-
-
 
   Future<GetServiceReminderResponseModel> getMessage() async {
     try {
@@ -908,6 +925,4 @@ Future<bool> sendMessageHelp({
       throw Exception(e.toString());
     }
   }
-
-
 }

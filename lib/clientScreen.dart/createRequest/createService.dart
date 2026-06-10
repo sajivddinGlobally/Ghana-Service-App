@@ -174,12 +174,25 @@ class _CreateServiceState extends ConsumerState<CreateService> {
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.buttonText,
                               ),
-                              items: data.data?.map((item) {
+                              // items: data.data?.map((item) {
+                              //   return DropdownMenuItem<String>(
+                              //     value: item.id,
+                              //     child: Padding(
+                              //       padding: EdgeInsets.only(left: 8.w),
+                              //       child: Text(
+                              //         "${item.name ?? "N/A"} (${item.tier ?? "N/A"})",
+                              //       ),
+                              //     ),
+                              //   );
+                              // }).toList(),
+                              items: (data.data ?? []).map((item) {
                                 return DropdownMenuItem<String>(
-                                  value: item.id,
+                                  value: item.requestId,
                                   child: Padding(
                                     padding: EdgeInsets.only(left: 8.w),
-                                    child: Text(item.name ?? "N/A"),
+                                    child: Text(
+                                      "${item.name ?? "N/A"} (${item.tier ?? "N/A"})",
+                                    ),
                                   ),
                                 );
                               }).toList(),
@@ -400,7 +413,7 @@ class _CreateServiceState extends ConsumerState<CreateService> {
                     fontSize: 29.sp,
                     fontWeight: FontWeight.w500,
                     color: AppColors.buttonText,
-                    letterSpacing: -0.64
+                    letterSpacing: -0.64,
                   ),
                 ),
                 SizedBox(height: 16.h),
@@ -412,7 +425,7 @@ class _CreateServiceState extends ConsumerState<CreateService> {
                     fontWeight: FontWeight.w500,
                     height: 1.5,
                     color: AppColors.buttonText,
-                    letterSpacing: -0.56
+                    letterSpacing: -0.56,
                   ),
                 ),
                 SizedBox(height: 25.h),
@@ -429,11 +442,18 @@ class _CreateServiceState extends ConsumerState<CreateService> {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                      Navigator.push(
+                      // Navigator.pushReplacement(
+                      //   context,
+                      //   CupertinoPageRoute(
+                      //     builder: (context) => Myrequest(isShowBack: true),
+                      //   ),
+                      // );
+                      Navigator.pushAndRemoveUntil(
                         context,
                         CupertinoPageRoute(
                           builder: (context) => Myrequest(isShowBack: true),
                         ),
+                        (route) => route.isFirst,
                       );
                     },
                     child: Text(
@@ -442,7 +462,7 @@ class _CreateServiceState extends ConsumerState<CreateService> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: Color(0xFF04254E),
-                        letterSpacing: -0.64
+                        letterSpacing: -0.64,
                       ),
                     ),
                   ),

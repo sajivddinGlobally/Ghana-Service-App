@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/screen/detilesScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getAssignRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/getPendingRequestProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -270,6 +271,9 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                                 CupertinoPageRoute(
                                   builder: (context) => Detilesscreen(
                                     requestId: data.data!.list![index].id ?? "",
+                                    userName: "",
+                                    userPhone: "",
+                                    service: "",
                                   ),
                                 ),
                               );

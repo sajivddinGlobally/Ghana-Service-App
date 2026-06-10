@@ -57,11 +57,12 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
   ];
 
   List<String> paymentmethordList = [
-    "Mobile Money (MTN)",
-    "Mobile Money (Vodafone)",
-    "Mobile Money (AirtelTigo)",
-    "Bank Transfer",
-    "Cash (office only)",
+    // "Mobile Money (MTN)",
+    // "Mobile Money (Vodafone)",
+    // "Mobile Money (AirtelTigo)",
+    // "Bank Transfer",
+    // "Cash (office only)",
+    "cash",
   ];
   List<String> facebookList = [
     "Facebook",

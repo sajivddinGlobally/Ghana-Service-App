@@ -47,6 +47,7 @@ import 'package:dwelleasy_ghana/data/model/requestCompleteBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/requestCompleteResModel.dart';
 import 'package:dwelleasy_ghana/data/model/sendMessageBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/sendMessageResModel.dart';
+import 'package:dwelleasy_ghana/data/model/todayAssignRequestModel.dart';
 import 'package:dwelleasy_ghana/data/model/updateProfileBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/updateProfileResModel.dart';
 import 'package:dwelleasy_ghana/data/model/uploadImageResModel.dart';
@@ -136,6 +137,9 @@ abstract class ApiStateNetwork {
     @Body() RequestCompleteBodyModel body,
   );
 
+  @GET("/api/v1/employee/get-assigned-requests?page=1&limit=10&today=true")
+  Future<TodayAssignRequestModel> todayAssignReqeust();
+
   ////////////////////////////////  Client (user) ////////////////////////////
   ////////////////////////////////////////////////////////////////////////
   @POST("/api/v1/user/register")
@@ -187,7 +191,9 @@ abstract class ApiStateNetwork {
   );
 
   @GET("/api/v1/user/get-service-request?page=1&limit=10")
-  Future<GetServiceRequestModel> clientGetServiceRequest();
+  Future<GetServiceRequestModel> clientGetServiceRequest(
+    @Query("status") String status,
+  );
 
   @POST("/api/v1/user/create-ticket")
   Future<ClientCreateTicketResModel> clientCreateTicket(
