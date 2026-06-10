@@ -1,11 +1,10 @@
 import 'dart:developer';
-
+import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/getRatingProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'createRequestProvider/employeeDetail.dart';
 
 class EmployeeDetails extends ConsumerStatefulWidget {
@@ -23,6 +22,7 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
     final detailsAsync = ref.watch(
       serviceRequestDetailsProvider(widget.requestId),
     );
+    final getRatingState = ref.watch(getRatingProvider(widget.requestId));
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: AppBar(
@@ -107,7 +107,7 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                       height: 113.w,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.grey,
+                        color: Colors.grey.shade100,
                         border: Border.all(
                           color: AppColors.buttonText,
                           width: 3.w,
@@ -120,6 +120,16 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                           width: 113.w,
                           height: 113.h,
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 113.w,
+                              height: 113.w,
+                              color: Colors.grey.shade100,
+                              child: Center(
+                                child: Icon(Icons.person, size: 40.sp),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -128,8 +138,7 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                   Center(
                     child: Text(
                       // employee.serviceId?.name ?? "N/A",
-                      employee!.serviceId?.planDetails?.serviceId?.name ??
-                          "N/A",
+                      employee?.employeeId?.fullName ?? "N/A",
                       // "Dakarai",
                       style: GoogleFonts.outfit(
                         fontSize: 18.sp,
@@ -142,7 +151,7 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                   SizedBox(height: 8.h),
                   Center(
                     child: Text(
-                      employee.serviceId?.planDetails?.serviceId?.name ?? "N/A",
+                      employee?.employeeId?.serviceId ?? "N/A",
                       // "AC Repair Specialist",
                       style: GoogleFonts.parkinsans(
                         fontSize: 12.sp,
@@ -156,7 +165,7 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                   SizedBox(height: 8.h),
                   Center(
                     child: Text(
-                      "⭐ ${employee.employeeId?.averageRating ?? 0} Rating",
+                      "⭐ ${employee?.employeeId?.averageRating ?? 0} Rating",
                       style: GoogleFonts.parkinsans(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
@@ -206,7 +215,7 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                               ),
                               TextSpan(
                                 text:
-                                    "${employee.employeeId?.experience ?? "N/A"} Years",
+                                    "${employee?.employeeId?.experience ?? "N/A"} Years",
                                 style: GoogleFonts.outfit(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
@@ -255,7 +264,7 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                                 ),
                               ),
                               TextSpan(
-                                text: "Accra",
+                                text: "${employee?.employeeId?.city ?? ""}",
                                 style: GoogleFonts.outfit(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
@@ -270,74 +279,90 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                     ),
                   ),
                   SizedBox(height: 16.h),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 14.h,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: Colors.white,
-                      border: Border(
-                        left: BorderSide(
-                          color: AppColors.buttonText,
-                          width: 2.w,
+                  getRatingState.when(
+                    data: (data) {
+                      return Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 14.h,
                         ),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Client Reviews",
-                          style: GoogleFonts.outfit(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.buttonText,
-                            letterSpacing: -0.64,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          color: Colors.white,
+                          border: Border(
+                            left: BorderSide(
+                              color: AppColors.buttonText,
+                              width: 2.w,
+                            ),
                           ),
                         ),
-                        SizedBox(height: 10.h),
-                        Divider(color: AppColors.buttonText, height: 1),
-                        SizedBox(height: 10.h),
-                        ListView.builder(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: 4,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Excellent service, very professional.",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.buttonText,
-                                    letterSpacing: -0.56,
-                                  ),
-                                ),
-                                SizedBox(height: 8.h),
-                                Text(
-                                  "⭐ 5 - Rajesh",
-                                  style: GoogleFonts.parkinsans(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.buttonText,
-                                    letterSpacing: -0.48,
-                                    height: 1,
-                                  ),
-                                ),
-                                SizedBox(height: 10.h),
-                                Divider(color: AppColors.buttonText, height: 1),
-                                SizedBox(height: 10.h),
-                              ],
-                            );
-                          },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Client Reviews",
+                              style: GoogleFonts.outfit(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.64,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            Divider(color: AppColors.buttonText, height: 1),
+                            SizedBox(height: 10.h),
+                            ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: 4,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Excellent service, very professional.",
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.buttonText,
+                                        letterSpacing: -0.56,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    Text(
+                                      "⭐ 5 - Rajesh",
+                                      style: GoogleFonts.parkinsans(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.buttonText,
+                                        letterSpacing: -0.48,
+                                        height: 1,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Divider(
+                                      color: AppColors.buttonText,
+                                      height: 1,
+                                    ),
+                                    SizedBox(height: 10.h),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                      ],
+                      );
+                    },
+                    error: (error, stackTrace) {
+                      log(stackTrace.toString());
+                      return Center(child: Text(error.toString()));
+                    },
+                    loading: () => Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.buttonBg,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20.h),

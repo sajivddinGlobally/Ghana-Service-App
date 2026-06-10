@@ -22,6 +22,7 @@ import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestBodyModel.d
 import 'package:dwelleasy_ghana/data/ClientModel/getMyPlanRequestServiceModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceDetailsModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceListModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/getRatingModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getServiceRequestModel.dart'
     hide
         PersonalInformation,
@@ -987,6 +988,19 @@ class AuthService {
   Future<ReadNotificationModel> clientReadNotification() async {
     try {
       final response = await api.clientReadNotification();
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      return throw Exception(response.message);
+    } catch (e, st) {
+      log(st.toString());
+      throw Exception(e.toString());
+    }
+  }
+
+   Future<GetRatingModel> clientGetRating({required String requstId}) async {
+    try {
+      final response = await api.clientGetRating(requstId);
       if (response.code == 0 && response.error == false) {
         return response;
       }

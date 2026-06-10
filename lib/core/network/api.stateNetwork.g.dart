@@ -1304,6 +1304,33 @@ class _ApiStateNetwork implements ApiStateNetwork {
     return _value;
   }
 
+  @override
+  Future<GetRatingModel> clientGetRating(String requestId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'requestId': requestId};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<GetRatingModel>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/v1/user/get-employee-rating',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late GetRatingModel _value;
+    try {
+      _value = GetRatingModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

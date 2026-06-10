@@ -24,6 +24,7 @@ import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestResModel.da
 import 'package:dwelleasy_ghana/data/ClientModel/getMyPlanRequestServiceModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceDetailsModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceListModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/getRatingModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getServiceRequestModel.dart';
 import 'package:dwelleasy_ghana/data/model/acceptRequestBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/acceptRequestResModel.dart';
@@ -241,4 +242,7 @@ abstract class ApiStateNetwork {
 
   @POST("/api/v1/user/read-notification")
   Future<ReadNotificationModel> clientReadNotification();
+
+  @GET("/api/v1/user/get-employee-rating")
+  Future<GetRatingModel> clientGetRating(@Query('requestId') String requestId);
 }

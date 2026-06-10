@@ -3,6 +3,7 @@ import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/engineerDet
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/getServiceRequestProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/employeeDetails.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
+import 'package:dwelleasy_ghana/screen/pendingRequestDetailScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -93,9 +94,6 @@ class _MyrequestState extends ConsumerState<Myrequest>
 
   @override
   Widget build(BuildContext context) {
-    final getServiceRequestState = ref.watch(
-      getServiceRequestProvider(statusList[selectedTab]),
-    );
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -399,18 +397,25 @@ class RequestBody extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => EmployeeDetails(item.id),
-                      ),
-                    );
-                    if (type != "pending") {
+                    if (type == "pending") {
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) =>
-                              Engineerdetiles(requestId: item.id),
+                          builder: (context) => PendingRequestDetailScreen(),
+                        ),
+                      );
+                    } else if (type == "in_progress") {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (_) => Engineerdetiles(requestId: item.id),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (_) => EmployeeDetails(item.id),
                         ),
                       );
                     }
