@@ -110,7 +110,7 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
       emailController.text = profileData.data?.email ?? "";
       experienceController.text = profileData.data?.experience ?? "";
       cityController.text = profileData.data?.city ?? "";
-      selectedService = profileData.data?.id;
+      selectedService = profileData.data?.serviceId?.id ?? "";
       selectedAvailabity = profileData.data?.availability ?? "";
       addressController.text = profileData.data?.address ?? "";
       existingImage = profileData.data?.image ?? "";
@@ -305,14 +305,21 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
                         ),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
-                            // value: selectedService,
                             value:
-                                data.data?.any(
-                                      (e) => e.id == selectedService,
-                                    ) ==
-                                    true
+                                (selectedService != null &&
+                                    data.data?.any(
+                                          (e) => e.id == selectedService,
+                                        ) ==
+                                        true)
                                 ? selectedService
                                 : null,
+                            // value:
+                            //     data.data?.any(
+                            //           (e) => e.id == selectedService,
+                            //         ) ==
+                            //         true
+                            //     ? selectedService
+                            //     : null,
                             isExpanded: true,
                             dropdownColor: AppColors.scaffoldBg,
                             icon: Icon(
@@ -336,7 +343,6 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
                               fontWeight: FontWeight.w400,
                               color: Colors.white,
                             ),
-
                             items: data.data?.map((item) {
                               return DropdownMenuItem<String>(
                                 value: item.id,
@@ -346,7 +352,6 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
                                 ),
                               );
                             }).toList(),
-
                             onChanged: (value) {
                               setState(() {
                                 selectedService = value;
