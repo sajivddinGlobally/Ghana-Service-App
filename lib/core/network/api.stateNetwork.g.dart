@@ -571,6 +571,33 @@ class _ApiStateNetwork implements ApiStateNetwork {
   }
 
   @override
+  Future<TodayAssignRequestModel> todayAssignReqeust() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<TodayAssignRequestModel>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/v1/employee/get-assigned-requests?page=1&limit=10&today=true',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late TodayAssignRequestModel _value;
+    try {
+      _value = TodayAssignRequestModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<CRegisterResModel> clientRegister(CRegisterBodyModel body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -914,9 +941,9 @@ class _ApiStateNetwork implements ApiStateNetwork {
   }
 
   @override
-  Future<GetServiceRequestModel> clientGetServiceRequest() async {
+  Future<GetServiceRequestModel> clientGetServiceRequest(String status) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'status': status};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<GetServiceRequestModel>(

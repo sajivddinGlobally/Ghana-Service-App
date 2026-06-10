@@ -13,7 +13,16 @@ import 'package:image_picker/image_picker.dart';
 
 class Completejobscreen extends ConsumerStatefulWidget {
   final String requestID;
-  const Completejobscreen({super.key, required this.requestID});
+  final String userName;
+  final String userPhone;
+  final String service;
+  const Completejobscreen({
+    super.key,
+    required this.requestID,
+    required this.userName,
+    required this.userPhone,
+    required this.service,
+  });
 
   @override
   ConsumerState<Completejobscreen> createState() => _CompletejobscreenState();
@@ -135,7 +144,8 @@ class _CompletejobscreenState extends ConsumerState<Completejobscreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "AC Repair Service",
+                      // "AC Repair Service",
+                      widget.service,
                       style: GoogleFonts.outfit(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
@@ -145,7 +155,7 @@ class _CompletejobscreenState extends ConsumerState<Completejobscreen> {
                     ),
                     SizedBox(height: 19.h),
                     Text(
-                      "Client: Peter",
+                      "Client: ${widget.userName}",
                       style: GoogleFonts.outfit(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,

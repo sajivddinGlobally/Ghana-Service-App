@@ -10,14 +10,22 @@ import 'package:image_picker/image_picker.dart';
 
 class Detilesscreen extends StatefulWidget {
   final String requestId;
-  const Detilesscreen({super.key,required this.requestId});
+  final String userName;
+  final String userPhone;
+  final String service;
+  const Detilesscreen({
+    super.key,
+    required this.requestId,
+    required this.userName,
+    required this.userPhone,
+    required this.service,
+  });
 
   @override
   State<Detilesscreen> createState() => _DetilesscreenState();
 }
 
 class _DetilesscreenState extends State<Detilesscreen> {
-
   void showLocationDialog() {
     showDialog(
       context: context,
@@ -132,6 +140,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
       },
     );
   }
+
   List<File> _image = [];
   final ImagePicker picker = ImagePicker();
   Future<void> getImagesFromGallery() async {
@@ -143,6 +152,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
       });
     }
   }
+
   /// 📸 Camera Image
   Future<void> getImageFromCamera() async {
     final XFile? pickedFile = await picker.pickImage(
@@ -154,6 +164,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
       });
     }
   }
+
   void showImagePicker() {
     showCupertinoModalPopup(
       context: context,
@@ -223,7 +234,8 @@ class _DetilesscreenState extends State<Detilesscreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      "AC Repair Service",
+                      // "AC Repair Service",
+                      widget.service,
                       style: GoogleFonts.outfit(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w500,
@@ -253,7 +265,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                     ),
                     SizedBox(height: 16.h),
                     Text(
-                      "Client: John Doe",
+                      "Client: ${widget.userName}",
                       style: GoogleFonts.outfit(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
@@ -263,7 +275,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                     ),
                     SizedBox(height: 14.h),
                     Text(
-                      "Phone: +44-9876543210",
+                      "Phone: ${widget.userPhone}",
                       style: GoogleFonts.outfit(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
@@ -429,8 +441,12 @@ class _DetilesscreenState extends State<Detilesscreen> {
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) =>
-                          Completejobscreen(requestID: widget.requestId),
+                      builder: (context) => Completejobscreen(
+                        requestID: widget.requestId,
+                        userName: widget.userName,
+                        userPhone: widget.userPhone,
+                        service: widget.service,
+                      ),
                     ),
                   );
                 },

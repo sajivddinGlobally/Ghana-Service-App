@@ -5,6 +5,8 @@ import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientOurPlanDetilesS
 import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientQuickQuoteScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/newPlanDetailScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/customeDrawer.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/provider/serviceReminderProvider.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/serviceReminderScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotification.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotificationSettingScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/clientPaymentHistory/paymentHistoryScreen.dart';
@@ -22,6 +24,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ClientMyBottomNav extends ConsumerStatefulWidget {
@@ -213,10 +216,12 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
       "subtitleColor": Colors.white,
     },
   ];
+
   @override
   Widget build(BuildContext context) {
     final clientProfileState = ref.watch(clientProfileProvider);
     final getPlanServiceState = ref.watch(getPlanServiceProvider);
+    final reminderState = ref.watch(clientGetServiceRemindersProvider);
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: clientProfileState.when(
@@ -433,164 +438,124 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(left: 16.w, right: 16.w),
-          child: Column(
-            children: [
-              // SizedBox(height: 20.h),
-              // InkWell(
-              //   onTap: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => Clientourplandetilesscreen(),
-              //       ),
-              //     );
-              //   },
-              //   child: Container(
-              //     height: 48.h,
-              //     width: double.infinity,
-              //     decoration: BoxDecoration(
-              //       color: AppColors.buttonBg,
-              //       borderRadius: BorderRadius.circular(10.r),
-              //     ),
-              //     child: Center(
-              //       child: Text(
-              //         "Our Plans",
-              //         style: GoogleFonts.outfit(
-              //           fontSize: 22.sp,
-              //           fontWeight: FontWeight.w500,
-              //           color: AppColors.buttonText,
-              //           letterSpacing: -0.2,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              SizedBox(height: 20.h),
-              getPlanServiceState.when(
-                data: (data) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    // itemCount: planList.length,
-                    itemCount: data.data?.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 20.h),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(12.r),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => NewPlanDetailScreen(
-                                  id: data.data![index].id.toString(),
-                                ),
-                              ),
-                            );
-                          },
-                          child: Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadiusGeometry.circular(
-                                  12.r,
-                                ),
-                                child: Image.asset(
-                                  planList[index]['image'],
-                                  width: double.infinity,
-                                  height: 159.h,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Positioned(
-                                left: 15.w,
-                                top: 0.h,
-                                bottom: 0,
-                                child: Container(
-                                  width: 190.w,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        // planList[index]['title'],
-                                        data.data?[index].name ?? "",
-                                        style: GoogleFonts.outfit(
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: planList[index]['titleColor'],
-                                          letterSpacing: -0.80,
-                                        ),
-                                      ),
-                                      SizedBox(height: 5.h),
-                                      // RichText(
-                                      //   text: TextSpan(
-                                      //     children: [
-                                      //       TextSpan(
-                                      //         text:
-                                      //             // planList[index]['subtitle1'],
-                                      //             data
-                                      //                 .data?[index]
-                                      //                 .description ??
-                                      //             "",
-                                      //         style: GoogleFonts.parkinsans(
-                                      //           fontSize: 12.sp,
-                                      //           fontWeight: FontWeight.w600,
-                                      //           color:
-                                      //               planList[index]['subtitleColor'],
-                                      //           letterSpacing: -0.54,
-                                      //         ),
-                                      //       ),
-                                      //       // TextSpan(
-                                      //       //   text:
-                                      //       //       planList[index]['subtitle2'],
-                                      //       //   style: GoogleFonts.parkinsans(
-                                      //       //     fontSize: 12.sp,
-                                      //       //     fontWeight: FontWeight.w500,
-                                      //       //     color:
-                                      //       //         planList[index]['subtitleColor'],
-                                      //       //     height: 1.4,
-                                      //       //   ),
-                                      //       // ),
-                                      //     ],
-                                      //   ),
-                                      // ),
-                                      Text(
-                                        data.data![index].description ?? "",
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.parkinsans(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color:
-                                              planList[index]['subtitleColor'],
-                                          letterSpacing: -0.48,
-                                        ),
-                                      ),
-                                    ],
+          child: clientProfileState.when(
+            data: (profileData) {
+              final isActivePlan = profileData.data?.isActive ?? false;
+
+              if (isActivePlan) {
+                return const ActivePlans();
+              }
+              return Column(
+                children: [
+                  getPlanServiceState.when(
+                    data: (data) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        // itemCount: planList.length,
+                        itemCount: data.data?.length,
+                        itemBuilder: (context, index) {
+                          final imageData = planList[index % planList.length];
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: 20.h),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(12.r),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => NewPlanDetailScreen(
+                                      id: data.data![index].id.toString(),
+                                    ),
                                   ),
-                                ),
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      12.r,
+                                    ),
+                                    child: Image.asset(
+                                      // planList[index]['image'],
+                                      imageData['image'],
+                                      width: double.infinity,
+                                      height: 159.h,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 15.w,
+                                    top: 0.h,
+                                    bottom: 0,
+                                    child: Container(
+                                      width: 190.w,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            // planList[index]['title'],
+                                            data.data?[index].name ?? "",
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 20.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: imageData['titleColor'],
+                                              letterSpacing: -0.80,
+                                            ),
+                                          ),
+                                          SizedBox(height: 5.h),
+
+                                          Text(
+                                            data.data![index].description ?? "",
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.parkinsans(
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: imageData['subtitleColor'],
+                                              letterSpacing: -0.48,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        },
                       );
                     },
-                  );
-                },
-                error: (error, stackTrace) {
-                  log(stackTrace.toString());
-                  return Center(child: Text("Something went wrong"));
-                },
-                loading: () => Center(
-                  child: CircularProgressIndicator(color: AppColors.buttonBg),
-                ),
+                    error: (error, stackTrace) {
+                      log(stackTrace.toString());
+                      return Center(child: Text("Something went wrong"));
+                    },
+                    loading: () => Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.buttonBg,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                ],
+              );
+            },
+            error: (error, stackTrace) {
+              log(stackTrace.toString());
+              return Center(child: Text("Something went wrong"));
+            },
+            loading: () => SizedBox(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 2,
+              child: Center(
+                child: CircularProgressIndicator(color: AppColors.buttonBg),
               ),
-              SizedBox(height: 20.h),
-              ActivePlans(),
-              SizedBox(height: 30.h),
-            ],
+            ),
           ),
         ),
       ),
@@ -598,16 +563,17 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
   }
 }
 
-class ActivePlans extends StatefulWidget {
+class ActivePlans extends ConsumerStatefulWidget {
   const ActivePlans({super.key});
 
   @override
-  State<ActivePlans> createState() => _ActivePlansState();
+  ConsumerState<ActivePlans> createState() => _ActivePlansState();
 }
 
-class _ActivePlansState extends State<ActivePlans> {
+class _ActivePlansState extends ConsumerState<ActivePlans> {
   @override
   Widget build(BuildContext context) {
+    final reminderState = ref.watch(clientGetServiceRemindersProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -781,154 +747,197 @@ class _ActivePlansState extends State<ActivePlans> {
           ),
         ),
         SizedBox(height: 25.h),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(color: AppColors.buttonBg, width: 1.w),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Home AC Units",
-                    style: GoogleFonts.outfit(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF000000),
-                      letterSpacing: -0.56,
-                    ),
+        reminderState.when(
+          data: (data) {
+            String formatDate(int? timestamp) {
+              if (timestamp == null) return "";
+
+              return DateFormat(
+                'dd MMMM yyyy',
+              ).format(DateTime.fromMillisecondsSinceEpoch(timestamp));
+            }
+
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: 1,
+              itemBuilder: (context, index) {
+                return Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 16.h,
+                    horizontal: 12.w,
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 5.h,
-                      horizontal: 25.w,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.r),
-                      color: AppColors.buttonBg,
-                    ),
-                    child: Text(
-                      "Due Soon",
-                      style: GoogleFonts.parkinsans(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF000000),
-                        letterSpacing: -0.56,
-                      ),
-                    ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(color: AppColors.buttonBg, width: 1.w),
                   ),
-                ],
-              ),
-              SizedBox(height: 15.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 14.h,
-                        horizontal: 12.w,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6.r),
-                        border: Border.all(
-                          color: Color(0xFFB6B6B6),
-                          width: 1.w,
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Last Service Date",
-                            style: GoogleFonts.parkinsans(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF838383),
-                              letterSpacing: -0.56,
-                            ),
-                          ),
-                          SizedBox(height: 6.h),
-                          Text(
-                            "12 January 2026",
-                            style: GoogleFonts.parkinsans(
+                            // "Home AC Units",
+                            data.data![index].serviceName ?? "N/A",
+                            style: GoogleFonts.outfit(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w500,
                               color: Color(0xFF000000),
                               letterSpacing: -0.56,
                             ),
                           ),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 5.h,
+                              horizontal: 25.w,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.r),
+                              color: AppColors.buttonBg,
+                            ),
+                            child: Text(
+                              // "Due Soon",
+                              data.data![index].status ?? "",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF000000),
+                                letterSpacing: -0.56,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                  ),
-                  SizedBox(width: 20.w),
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 14.h,
-                        horizontal: 12.w,
+                      SizedBox(height: 15.h),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 14.h,
+                                horizontal: 12.w,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6.r),
+                                border: Border.all(
+                                  color: Color(0xFFB6B6B6),
+                                  width: 1.w,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Last Service Date",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF838383),
+                                      letterSpacing: -0.56,
+                                    ),
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  Text(
+                                    // "12 January 2026",
+                                    formatDate(
+                                      data.data![index].lastServiceDate,
+                                    ),
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF000000),
+                                      letterSpacing: -0.56,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 20.w),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 14.h,
+                                horizontal: 12.w,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6.r),
+                                border: Border.all(
+                                  color: Color(0xFFB6B6B6),
+                                  width: 1.w,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Next Due Date",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF838383),
+                                      letterSpacing: -0.48,
+                                    ),
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  Text(
+                                    // "12 July 2026",
+                                    formatDate(data.data![index].nextDueDate),
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF000000),
+                                      letterSpacing: -0.64,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6.r),
-                        border: Border.all(
-                          color: Color(0xFFB6B6B6),
-                          width: 1.w,
+                      SizedBox(height: 14.h),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.infinity, 45.h),
+                          backgroundColor: AppColors.buttonBg,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(54.r),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => Servicereminderscreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "View All",
+                          style: GoogleFonts.outfit(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF04254E),
+                            letterSpacing: -0.56,
+                          ),
                         ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Next Due Date",
-                            style: GoogleFonts.parkinsans(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF838383),
-                              letterSpacing: -0.48,
-                            ),
-                          ),
-                          SizedBox(height: 6.h),
-                          Text(
-                            "12 July 2026",
-                            style: GoogleFonts.parkinsans(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF000000),
-                              letterSpacing: -0.64,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-              SizedBox(height: 14.h),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 45.h),
-                  backgroundColor: AppColors.buttonBg,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(54.r),
-                  ),
-                ),
-                onPressed: () {},
-                child: Text(
-                  "View All",
-                  style: GoogleFonts.outfit(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF04254E),
-                    letterSpacing: -0.56,
-                  ),
-                ),
-              ),
-            ],
+                );
+              },
+            );
+          },
+          error: (error, stackTrace) {
+            log(stackTrace.toString());
+            return Center(child: Text(error.toString()));
+          },
+          loading: () => Center(
+            child: CircularProgressIndicator(color: AppColors.buttonBg),
           ),
         ),
         SizedBox(height: 25.h),

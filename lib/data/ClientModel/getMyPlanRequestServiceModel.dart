@@ -37,21 +37,33 @@ class GetMyPlanRequestServiceModel {
 }
 
 class Datum {
+    String? requestId;
     String? id;
     String? name;
+    String? tier;
+    int? priceMonthly;
 
     Datum({
+        this.requestId,
         this.id,
         this.name,
+        this.tier,
+        this.priceMonthly,
     });
 
     factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+        requestId: json["requestId"],
         id: json["_id"],
         name: json["name"],
+        tier: json["tier"],
+        priceMonthly: json["priceMonthly"],
     );
 
     Map<String, dynamic> toJson() => {
+        "requestId": requestId,
         "_id": id,
         "name": name,
+        "tier": tier,
+        "priceMonthly": priceMonthly,
     };
 }

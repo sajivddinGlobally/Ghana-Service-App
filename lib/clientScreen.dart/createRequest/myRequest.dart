@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/engineerDetailScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/getServiceRequestProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/employeeDetails.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
@@ -18,7 +18,8 @@ class Myrequest extends ConsumerStatefulWidget {
   ConsumerState<Myrequest> createState() => _MyrequestState();
 }
 
-class _MyrequestState extends ConsumerState<Myrequest> {
+class _MyrequestState extends ConsumerState<Myrequest>
+    with SingleTickerProviderStateMixin {
   final pendingList = [
     {
       "title": "AC Repair",
@@ -65,9 +66,36 @@ class _MyrequestState extends ConsumerState<Myrequest> {
       "color": const Color(0xffCFE2BE),
     },
   ];
+  int selectedTab = 0;
+
+  final statusList = ["pending", "in_progress", "completed"];
+  late TabController _tabController;
+  @override
+  void initState() {
+    super.initState();
+
+    _tabController = TabController(length: 3, vsync: this);
+
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        setState(() {
+          selectedTab = _tabController.index;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final getServiceRequestState = ref.watch(getServiceRequestProvider);
+    final getServiceRequestState = ref.watch(
+      getServiceRequestProvider(statusList[selectedTab]),
+    );
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -119,6 +147,12 @@ class _MyrequestState extends ConsumerState<Myrequest> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: TabBar(
+                controller: _tabController,
+                onTap: (index) {
+                  setState(() {
+                    selectedTab = index;
+                  });
+                },
                 labelPadding: EdgeInsets.zero,
                 splashBorderRadius: BorderRadius.circular(10.r),
                 indicator: BoxDecoration(),
@@ -145,48 +179,95 @@ class _MyrequestState extends ConsumerState<Myrequest> {
             ),
           ),
         ),
-        body: getServiceRequestState.when(
-          data: (data) {
 
-            return TabBarView(
-              children: [
-                buildServiceList(
-                  data.data?.list
-                          ?.where((e) => e.status?.toLowerCase() == "pending")
-                          .toList() ??
-                      [],
-                  "pending",
-                ),
-
-                buildServiceList(
-                  data.data?.list
-                          ?.where(
-                            (e) => e.status?.toLowerCase() == "in_progress",
-                          )
-                          .toList() ??
-                      [],
-                  "in_progress",
-                ),
-
-                buildServiceList(
-                  data.data?.list
-                          ?.where((e) => e.status?.toLowerCase() == "completed")
-                          .toList() ??
-                      [],
-                  "completed",
-                ),
-              ],
-            );
-          },
-          error: (error, stackTrace) {
-            log(error.toString());
-            return Center(child: Text("Something went wrong"));
-          },
-          loading: () => Center(
-            child: CircularProgressIndicator(color: AppColors.buttonBg),
-          ),
+        // body: getServiceRequestState.when(
+        //   data: (data) {
+        //     return TabBarView(
+        //       children: [
+        //         buildServiceList(
+        //           data.data?.list
+        //                   ?.where((e) => e.status?.toLowerCase() == "pending")
+        //                   .toList() ??
+        //               [],
+        //           "pending",
+        //         ),
+        //         buildServiceList(
+        //           data.data?.list
+        //                   ?.where(
+        //                     (e) => e.status?.toLowerCase() == "in_progress",
+        //                   )
+        //                   .toList() ??
+        //               [],
+        //           "in_progress",
+        //         ),
+        //         buildServiceList(
+        //           data.data?.list
+        //                   ?.where((e) => e.status?.toLowerCase() == "completed")
+        //                   .toList() ??
+        //               [],
+        //           "completed",
+        //         ),
+        //       ],
+        //     );
+        //   },
+        //   error: (error, stackTrace) {
+        //     log(error.toString());
+        //     return Center(child: Text("Something went wrong"));
+        //   },
+        //   loading: () => Center(
+        //     child: CircularProgressIndicator(color: AppColors.buttonBg),
+        //   ),
+        // ),
+        // body: getServiceRequestState.when(
+        //   data: (data) {
+        //     return buildServiceList(
+        //       data.data?.list ?? [],
+        //       statusList[selectedTab],
+        //     );
+        //   },
+        //   error: (error, stackTrace) {
+        //     log(error.toString());
+        //     return Center(child: Text("Something went wrong"));
+        //   },
+        //   loading: () => Center(
+        //     child: CircularProgressIndicator(color: AppColors.buttonBg),
+        //   ),
+        // ),
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            RequestBody(status: "pending"),
+            RequestBody(status: "in_progress"),
+            RequestBody(status: "completed"),
+          ],
         ),
       ),
+    );
+  }
+}
+
+class RequestBody extends ConsumerWidget {
+  final String status;
+
+  const RequestBody({super.key, required this.status});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(getServiceRequestProvider(status));
+
+    return state.when(
+      data: (data) {
+        return buildServiceList(data.data?.list ?? [], status);
+      },
+      error: (error, stackTrace) {
+        log(error.toString());
+        return const Center(child: Text("Something went wrong"));
+      },
+      loading: () {
+        return Center(
+          child: CircularProgressIndicator(color: AppColors.buttonBg),
+        );
+      },
     );
   }
 
@@ -273,7 +354,7 @@ class _MyrequestState extends ConsumerState<Myrequest> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                item.serviceId?.name ?? "N/A",
+                item.serviceId?.planDetails?.serviceId?.name ?? "N/A",
                 style: GoogleFonts.outfit(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
@@ -320,12 +401,21 @@ class _MyrequestState extends ConsumerState<Myrequest> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => EmployeeDetails(item.id),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   CupertinoPageRoute(
+                    //     builder: (context) => EmployeeDetails(item.id),
+                    //   ),
+                    // );
+                    if (type != "pending") {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) =>
+                              Engineerdetiles(requestId: item.id),
+                        ),
+                      );
+                    }
                   },
                   child: Text(
                     "View Details",
