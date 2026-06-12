@@ -1,21 +1,21 @@
 import 'package:dwelleasy_ghana/core/apiService/apiService.dart';
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
-import 'package:dwelleasy_ghana/data/model/getAssigneRequestModel.dart';
+import 'package:dwelleasy_ghana/data/model/todayPendngRequestModel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AssignRequestNotifier
-    extends StateNotifier<AsyncValue<GetAssignedRequestsModel>> {
+class PendingRequestNotifier
+    extends StateNotifier<AsyncValue<TodayPendingRequestModel>> {
   final AuthService authService;
 
-  AssignRequestNotifier(this.authService) : super(const AsyncValue.loading()) {
-    getAssignRequests();
+  PendingRequestNotifier(this.authService) : super(const AsyncValue.loading()) {
+    pendingRequest();
   }
 
-  Future<void> getAssignRequests() async {
+  Future<void> pendingRequest() async {
     try {
       state = const AsyncValue.loading();
 
-      final response = await authService.getAssignRequestList();
+      final response = await authService.pendingRequest();
 
       state = AsyncValue.data(response);
     } catch (e, st) {
@@ -24,12 +24,11 @@ class AssignRequestNotifier
   }
 }
 
-final getAssignRequestProvider =
+final pendingRequestProvider =
     StateNotifierProvider.autoDispose<
-      AssignRequestNotifier,
-      AsyncValue<GetAssignedRequestsModel>
+      PendingRequestNotifier,
+      AsyncValue<TodayPendingRequestModel>
     >((ref) {
       final authService = ref.read(authServiceProvider);
-
-      return AssignRequestNotifier(authService);
+      return PendingRequestNotifier(authService);
     });

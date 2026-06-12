@@ -331,6 +331,10 @@ class RequestBody extends ConsumerWidget {
             statusColor = const Color(0xffCFE2BE);
             break;
 
+          case "assigned":
+            statusColor = const Color(0xffCFE2BE);
+            break;
+
           default:
             statusColor = Colors.grey.shade300;
         }
@@ -350,7 +354,15 @@ class RequestBody extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                item.serviceId?.planDetails?.serviceId?.name ?? "N/A",
+                item.serviceId?.planDetails?.planId?.name ?? "N/A",
+                style: GoogleFonts.outfit(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xff0A2A5E),
+                ),
+              ),
+              Text(
+                item.description ?? "N/A",
                 style: GoogleFonts.outfit(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
@@ -397,11 +409,12 @@ class RequestBody extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () {
-                    if (type == "pending") {
+                    if (type == "pending" || type == "assigned") {
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) => PendingRequestDetailScreen(),
+                          builder: (context) =>
+                              PendingRequestDetailScreen(requestId: item.id),
                         ),
                       );
                     } else if (type == "in_progress") {

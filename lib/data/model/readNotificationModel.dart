@@ -38,16 +38,32 @@ class ReadNotificationModel {
 
 class Data {
     bool? acknowledged;
+    int? modifiedCount;
+    int? matchedCount;
+    dynamic upsertedId;
+    int? upsertedCount;
 
     Data({
         this.acknowledged,
+        this.modifiedCount,
+        this.matchedCount,
+        this.upsertedId,
+        this.upsertedCount,
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         acknowledged: json["acknowledged"],
+        modifiedCount: json["modifiedCount"],
+        matchedCount: json["matchedCount"],
+        upsertedId: json["upsertedId"],
+        upsertedCount: json["upsertedCount"],
     );
 
     Map<String, dynamic> toJson() => {
         "acknowledged": acknowledged,
+        "modifiedCount": modifiedCount,
+        "matchedCount": matchedCount,
+        "upsertedId": upsertedId,
+        "upsertedCount": upsertedCount,
     };
 }

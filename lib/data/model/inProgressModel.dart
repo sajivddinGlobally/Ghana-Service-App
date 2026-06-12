@@ -1,27 +1,27 @@
 // To parse this JSON data, do
 //
-//     final getPendingRequestsModel = getPendingRequestsModelFromJson(jsonString);
+//     final inProgressModel = inProgressModelFromJson(jsonString);
 
 import 'dart:convert';
 
-GetPendingRequestsModel getPendingRequestsModelFromJson(String str) => GetPendingRequestsModel.fromJson(json.decode(str));
+InProgressModel inProgressModelFromJson(String str) => InProgressModel.fromJson(json.decode(str));
 
-String getPendingRequestsModelToJson(GetPendingRequestsModel data) => json.encode(data.toJson());
+String inProgressModelToJson(InProgressModel data) => json.encode(data.toJson());
 
-class GetPendingRequestsModel {
+class InProgressModel {
     String? message;
     int? code;
     bool? error;
     Data? data;
 
-    GetPendingRequestsModel({
+    InProgressModel({
         this.message,
         this.code,
         this.error,
         this.data,
     });
 
-    factory GetPendingRequestsModel.fromJson(Map<String, dynamic> json) => GetPendingRequestsModel(
+    factory InProgressModel.fromJson(Map<String, dynamic> json) => InProgressModel(
         message: json["message"],
         code: json["code"],
         error: json["error"],
@@ -74,9 +74,9 @@ class ListElement {
     String? description;
     int? preferredDate;
     String? priority;
-    dynamic completedAt;
-    dynamic image;
-    dynamic remark;
+    int? completedAt;
+    String? image;
+    String? remark;
     String? status;
     bool? isDisable;
     bool? isDeleted;
@@ -298,8 +298,8 @@ class Declaration {
     bool? agreeTermsAndConditions;
     bool? noPreExistingFaults;
     String? electronicSignature;
-    String? signature;
     DateTime? date;
+    String? signature;
 
     Declaration({
         this.informationAccurate,
@@ -307,8 +307,8 @@ class Declaration {
         this.agreeTermsAndConditions,
         this.noPreExistingFaults,
         this.electronicSignature,
-        this.signature,
         this.date,
+        this.signature,
     });
 
     factory Declaration.fromJson(Map<String, dynamic> json) => Declaration(
@@ -317,8 +317,8 @@ class Declaration {
         agreeTermsAndConditions: json["agreeTermsAndConditions"],
         noPreExistingFaults: json["noPreExistingFaults"],
         electronicSignature: json["electronicSignature"],
-        signature: json["signature"],
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
+        signature: json["signature"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -327,8 +327,8 @@ class Declaration {
         "agreeTermsAndConditions": agreeTermsAndConditions,
         "noPreExistingFaults": noPreExistingFaults,
         "electronicSignature": electronicSignature,
-        "signature": signature,
         "date": date?.toIso8601String(),
+        "signature": signature,
     };
 }
 

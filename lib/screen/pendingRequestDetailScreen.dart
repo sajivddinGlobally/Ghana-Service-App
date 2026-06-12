@@ -1,21 +1,31 @@
+import 'dart:developer';
+
+import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/employeeDetail.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/getRatingProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class PendingRequestDetailScreen extends StatefulWidget {
-  const PendingRequestDetailScreen({super.key});
+class PendingRequestDetailScreen extends ConsumerStatefulWidget {
+  final String requestId;
+  const PendingRequestDetailScreen({super.key, required this.requestId});
 
   @override
-  State<PendingRequestDetailScreen> createState() =>
+  ConsumerState<PendingRequestDetailScreen> createState() =>
       _PendingRequestDetailScreenState();
 }
 
 class _PendingRequestDetailScreenState
-    extends State<PendingRequestDetailScreen> {
+    extends ConsumerState<PendingRequestDetailScreen> {
   @override
   Widget build(BuildContext context) {
+    final detailsAsync = ref.watch(
+      serviceRequestDetailsProvider(widget.requestId),
+    );
+    final getRatingState = ref.watch(getRatingProvider(widget.requestId));
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: AppBar(
@@ -75,24 +85,328 @@ class _PendingRequestDetailScreenState
         ),
         centerTitle: true,
       ),
-      body: Container(
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Column(
-          children: [
-            Icon(Icons.person_search, size: 50.sp, color: AppColors.buttonBg),
-            SizedBox(height: 10.h),
-            Text("Waiting for Engineer Assignment"),
-            SizedBox(height: 6.h),
-            Text(
-              "We are finding the best available engineer for your request.",
-              textAlign: TextAlign.center,
+      body: detailsAsync.when(
+        data: (data) {
+          final status = data.data?.status?.toLowerCase() ?? "";
+
+          if (status == "pending") {
+            return Center(
+              child: Container(
+                margin: EdgeInsets.all(16.w),
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.person_search,
+                      size: 50.sp,
+                      color: AppColors.buttonBg,
+                    ),
+                    SizedBox(height: 10.h),
+                    Text(
+                      "Waiting for Engineer Assignment",
+                      style: GoogleFonts.outfit(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 6.h),
+                    Text(
+                      "We are finding the best available engineer for your request.",
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+          return Padding(
+            padding: EdgeInsets.only(left: 16.w, right: 16.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 72.h),
+                Center(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 113.h,
+                        width: 113.w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.buttonText,
+                            width: 3.w,
+                          ),
+                        ),
+                        child: ClipOval(
+                          child:
+                              (data.data?.employeeId?.image != null &&
+                                  data.data!.employeeId!.image!.isNotEmpty)
+                              ? Image.network(
+                                  data.data!.employeeId!.image!,
+                                  fit: BoxFit.cover,
+                                  width: 113.w,
+                                  height: 113.h,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(
+                                      Icons.person,
+                                      size: 60.sp,
+                                      color: Colors.grey,
+                                    );
+                                  },
+                                )
+                              : Icon(
+                                  Icons.person,
+                                  size: 60.sp,
+                                  color: Colors.grey,
+                                ),
+                        ),
+                      ),
+                      SizedBox(height: 15.h),
+                      Text(
+                        // "Dakarai",
+                        data.data?.employeeId?.fullName ?? "N/A",
+                        style: GoogleFonts.outfit(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.buttonText,
+                          letterSpacing: -0.72,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        "AC Repair Specialist",
+                        // data.data.serviceId.
+                        style: GoogleFonts.parkinsans(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.buttonText,
+                          letterSpacing: -0.48,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        // "⭐ 4.8 Rating",
+                        "⭐ ${data.data?.employeeId?.averageRating ?? 0} Rating",
+                        style: GoogleFonts.parkinsans(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.buttonText,
+                          letterSpacing: -0.48,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30.h),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(left: 15.w, top: 17.h, bottom: 23.h),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      left: BorderSide(color: AppColors.buttonBg, width: 2.w),
+                    ),
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Service Visit Details",
+                        style: GoogleFonts.parkinsans(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.buttonText,
+                          letterSpacing: -0.64,
+                        ),
+                      ),
+                      SizedBox(height: 13.sp),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Arrival Time: ",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12.sp,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.48,
+                              ),
+                            ),
+                            TextSpan(
+                              text: " 2:00 PM",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12.sp,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.48,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Phone: ",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12.sp,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.48,
+                              ),
+                            ),
+                            TextSpan(
+                              text:
+                                  "  ${data.data?.employeeId?.phone ?? "N/A"}",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12.sp,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.48,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Status: ",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12.sp,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.48,
+                              ),
+                            ),
+                            TextSpan(
+                              // text: "  On the way",
+                              text: "  ${data.data!.status ?? ""}",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12.sp,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.48,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                getRatingState.when(
+                  data: (data) {
+                    final completeJob = data.data?.completeJob ?? 0;
+                    return Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 14.h,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: Colors.white,
+                        border: Border(
+                          left: BorderSide(
+                            color: AppColors.buttonText,
+                            width: 2.w,
+                          ),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Client Reviews",
+                            style: GoogleFonts.outfit(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.buttonText,
+                              letterSpacing: -0.64,
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          Divider(color: AppColors.buttonText, height: 1),
+                          SizedBox(height: 10.h),
+                          ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            // itemCount: 4,
+                            itemCount: data.data?.retingList?.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    // "Excellent service, very professional.",
+                                    data.data?.retingList?[index].message ?? "",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.buttonText,
+                                      letterSpacing: -0.56,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    // "⭐ 5 - Rajesh",
+                                    "${data.data?.retingList?[index].rating ?? 0}- ${data.data?.retingList?[index].userId?.fullName ?? ""}",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.buttonText,
+                                      letterSpacing: -0.48,
+                                      height: 1,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  Divider(
+                                    color: AppColors.buttonText,
+                                    height: 1,
+                                  ),
+                                  SizedBox(height: 10.h),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  error: (error, stackTrace) {
+                    log(stackTrace.toString());
+                    return Center(child: Text(error.toString()));
+                  },
+                  loading: () => Center(
+                    child: CircularProgressIndicator(color: AppColors.buttonBg),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+              ],
             ),
-          ],
+          );
+        },
+        loading: () => const Center(
+          child: CircularProgressIndicator(color: AppColors.buttonBg),
         ),
+
+        error: (error, stackTrace) {
+          log(stackTrace.toString());
+          return Center(child: Text(error.toString()));
+        },
       ),
     );
   }

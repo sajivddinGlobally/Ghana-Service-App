@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/data/provider/getProfileProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/jobDoneProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +21,7 @@ class _MyperformancescreenState extends ConsumerState<Myperformancescreen> {
   @override
   Widget build(BuildContext context) {
     final profileState = ref.watch(getProfileProvider);
+    final jobDoneState = ref.watch(jobDoneProvider);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       appBar: AppBar(
@@ -76,6 +80,7 @@ class _MyperformancescreenState extends ConsumerState<Myperformancescreen> {
           return Padding(
             padding: EdgeInsets.only(left: 16.w, right: 16.w),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 64.h),
                 Container(
@@ -177,7 +182,7 @@ class _MyperformancescreenState extends ConsumerState<Myperformancescreen> {
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        "92% ⏱",
+                        "${data.data?.averageRating ?? 0} ⏱",
                         style: GoogleFonts.outfit(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
@@ -204,124 +209,142 @@ class _MyperformancescreenState extends ConsumerState<Myperformancescreen> {
                   ),
                 ),
                 SizedBox(height: 16.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 15.h,
-                    horizontal: 20.w,
-                  ),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Color(0xff34383D),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Jobs Completed",
-                        style: GoogleFonts.outfit(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffFFFFFF),
-                          letterSpacing: -0.56,
-                        ),
+                jobDoneState.when(
+                  data: (data) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 15.h,
+                        horizontal: 20.w,
                       ),
-                      SizedBox(height: 10.h),
-                      Row(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Color(0xff34383D),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "128 ✅",
+                            "Jobs Completed",
                             style: GoogleFonts.outfit(
-                              fontSize: 14.sp,
+                              fontSize: 13.sp,
                               fontWeight: FontWeight.w500,
                               color: Color(0xffFFFFFF),
                               letterSpacing: -0.56,
                             ),
                           ),
-                          Spacer(),
-                          Container(
-                            width: 120.w,
-                            height: 22.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.buttonBg,
-                              borderRadius: BorderRadius.circular(50.r),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Lifetime",
-                                style: GoogleFonts.parkinsans(
-                                  fontSize: 11.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff000000),
+                          SizedBox(height: 10.h),
+                          Row(
+                            children: [
+                              Text(
+                                "${data.data} ✅",
+                                style: GoogleFonts.outfit(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xffFFFFFF),
                                   letterSpacing: -0.56,
                                 ),
                               ),
-                            ),
+                              Spacer(),
+                              Container(
+                                width: 120.w,
+                                height: 22.h,
+                                decoration: BoxDecoration(
+                                  color: AppColors.buttonBg,
+                                  borderRadius: BorderRadius.circular(50.r),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Lifetime",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 11.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff000000),
+                                      letterSpacing: -0.56,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    );
+                  },
+                  error: (error, stackTrace) {
+                    log(error.toString());
+                    return Text(error.toString());
+                  },
+                  loading: () => Center(
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 1.5,
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(height: 16.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 15.h,
-                    horizontal: 20.w,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color(0xff34383D),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Bonus Earned",
-                        style: GoogleFonts.outfit(
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffFFFFFF),
-                          fontSize: 13.sp,
-                          letterSpacing: -0.56,
-                        ),
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        children: [
-                          Text(
-                            "GHS : 450 ",
-                            style: GoogleFonts.outfit(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xffFFFFFF),
-                              letterSpacing: -0.56,
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            width: 120.w,
-                            height: 22.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.buttonBg,
-                              borderRadius: BorderRadius.circular(50.r),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "This Month",
-                                style: GoogleFonts.parkinsans(
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff000000),
-                                  fontSize: 11.sp,
-                                  letterSpacing: -0.48,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   padding: EdgeInsets.symmetric(
+                //     vertical: 15.h,
+                //     horizontal: 20.w,
+                //   ),
+                //   decoration: BoxDecoration(
+                //     color: Color(0xff34383D),
+                //     borderRadius: BorderRadius.circular(10.r),
+                //   ),
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text(
+                //         "Bonus Earned",
+                //         style: GoogleFonts.outfit(
+                //           fontWeight: FontWeight.w500,
+                //           color: Color(0xffFFFFFF),
+                //           fontSize: 13.sp,
+                //           letterSpacing: -0.56,
+                //         ),
+                //       ),
+                //       SizedBox(height: 10.h),
+                //       Row(
+                //         children: [
+                //           Text(
+                //             "GHS : 450 ",
+                //             style: GoogleFonts.outfit(
+                //               fontSize: 14.sp,
+                //               fontWeight: FontWeight.w500,
+                //               color: Color(0xffFFFFFF),
+                //               letterSpacing: -0.56,
+                //             ),
+                //           ),
+                //           Spacer(),
+                //           Container(
+                //             width: 120.w,
+                //             height: 22.h,
+                //             decoration: BoxDecoration(
+                //               color: AppColors.buttonBg,
+                //               borderRadius: BorderRadius.circular(50.r),
+                //             ),
+                //             child: Center(
+                //               child: Text(
+                //                 "This Month",
+                //                 style: GoogleFonts.parkinsans(
+                //                   fontWeight: FontWeight.w400,
+                //                   color: Color(0xff000000),
+                //                   fontSize: 11.sp,
+                //                   letterSpacing: -0.48,
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           );

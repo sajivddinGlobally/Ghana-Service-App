@@ -117,7 +117,7 @@ class ListElement {
         ? null
         : Declaration.fromJson(json["declaration"]),
     id: json["_id"],
-    userId: userIdValues.map[json["userId"]]!,
+    userId: userIdValues.map[json["userId"]],
     paymentMethod: paymentMethodValues.map[json["paymentMethod"]]!,
     status: listStatusValues.map[json["status"]]!,
     adminRemark: adminRemarkValues.map[json["adminRemark"]]!,
@@ -195,7 +195,7 @@ class Declaration {
     agreeTermsAndConditions: json["agreeTermsAndConditions"],
     noPreExistingFaults: json["noPreExistingFaults"],
     electronicSignature:
-        electronicSignatureValues.map[json["electronicSignature"]]!,
+        electronicSignatureValues.map[json["electronicSignature"]],
     date: json["date"] == null ? null : DateTime.parse(json["date"]),
   );
 
@@ -233,11 +233,11 @@ class PaymentAndBilling {
 
   factory PaymentAndBilling.fromJson(Map<String, dynamic> json) =>
       PaymentAndBilling(
-        paymentMethod: paymentMethodValues.map[json["paymentMethod"]]!,
+        paymentMethod: paymentMethodValues.map[json["paymentMethod"]],
         mobileMoneyNumber: json["mobileMoneyNumber"],
         preferredBillingDate: json["preferredBillingDate"],
         howDidYouHearAboutUs:
-            howDidYouHearAboutUsValues.map[json["howDidYouHearAboutUs"]]!,
+            howDidYouHearAboutUsValues.map[json["howDidYouHearAboutUs"]],
       );
 
   Map<String, dynamic> toJson() => {
@@ -283,12 +283,12 @@ class PersonalInformation {
 
   factory PersonalInformation.fromJson(Map<String, dynamic> json) =>
       PersonalInformation(
-        fullName: fullNameValues.map[json["fullName"]]!,
-        email: emailValues.map[json["email"]]!,
+        fullName: fullNameValues.map[json["fullName"]],
+        email: emailValues.map[json["email"]],
         phoneNumber: json["phoneNumber"],
         alternativePhoneNumber: json["alternativePhoneNumber"],
-        nationalId: nationalIdValues.map[json["nationalId"]]!,
-        propertyAddress: propertyAddressValues.map[json["propertyAddress"]]!,
+        nationalId: nationalIdValues.map[json["nationalId"]],
+        propertyAddress: propertyAddressValues.map[json["propertyAddress"]],
       );
 
   Map<String, dynamic> toJson() => {
@@ -403,7 +403,7 @@ class PlanId {
     id: idValues.map[json["_id"]]!,
     serviceId: serviceIdEnumValues.map[json["serviceId"]]!,
     name: json["name"],
-    tier:json["tier"],
+    tier: json["tier"],
     description: descriptionValues.map[json["description"]]!,
     priceMonthly: json["priceMonthly"],
     currency: currencyValues.map[json["currency"]]!,
@@ -424,7 +424,7 @@ class PlanId {
     year: json["year"],
     createdAt: json["createdAt"],
     updatedAt: json["updatedAt"],
-    slug: json["slug"]
+    slug: json["slug"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -450,7 +450,7 @@ class PlanId {
     "year": year,
     "createdAt": createdAt,
     "updatedAt": updatedAt,
-    "slug":slug,
+    "slug": slug,
   };
 }
 

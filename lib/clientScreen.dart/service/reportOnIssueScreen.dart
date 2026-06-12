@@ -1,18 +1,32 @@
+import 'dart:developer' show log;
+
+import 'package:dwelleasy_ghana/clientScreen.dart/ClientHomeScreen.dart';
+import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Reportonissue extends StatefulWidget {
-  const Reportonissue({super.key});
+class Reportonissue extends ConsumerStatefulWidget {
+  final String requestId;
+
+  const Reportonissue({super.key, required this.requestId});
 
   @override
-  State<Reportonissue> createState() => _ReportonissueState();
+  ConsumerState<Reportonissue> createState() => _ReportonissueState();
 }
 
-class _ReportonissueState extends State<Reportonissue> {
+class _ReportonissueState extends ConsumerState<Reportonissue> {
+  final issueController = TextEditingController();
   int selectedIndex = -1;
+  bool isssue = false;
+  final List<String> issueTypes = [
+    "Work not completed properly",
+    "Engineer behavior issue",
+    "Other service issues",
+  ];
   Widget issueItem(String title, int index) {
     bool isSelected = selectedIndex == index;
 
@@ -115,9 +129,17 @@ class _ReportonissueState extends State<Reportonissue> {
 
               SizedBox(height: 10.h),
 
-              issueItem("Work not completed properly", 0),
-              issueItem("Engineer behavior issue", 1),
-              issueItem("Other service issues", 2),
+              // issueItem("Work not completed properly", 0),
+              // issueItem("Engineer behavior issue", 1),
+              // issueItem("Other service issues", 2),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: issueTypes.length,
+                itemBuilder: (context, index) {
+                  return issueItem(issueTypes[index], index);
+                },
+              ),
 
               SizedBox(height: 24.h),
 
@@ -131,6 +153,7 @@ class _ReportonissueState extends State<Reportonissue> {
               ),
               SizedBox(height: 10.h),
               TextField(
+                controller: issueController,
                 style: GoogleFonts.outfit(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w400,
@@ -174,16 +197,73 @@ class _ReportonissueState extends State<Reportonissue> {
                       borderRadius: BorderRadius.circular(100.r),
                     ),
                   ),
-                  onPressed: () {},
-                  child: Text(
-                    "Submit Report",
-                    style: GoogleFonts.outfit(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.buttonText,
-                      fontSize: 16.sp,
-                      letterSpacing: -0.3,
-                    ),
-                  ),
+                  onPressed: () async {
+                    if (selectedIndex == -1) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Please select an issue type"),
+                        ),
+                      );
+                      return;
+                    }
+
+                    if (issueController.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Please describe the issue"),
+                        ),
+                      );
+                      return;
+                    }
+                    setState(() {
+                      isssue = true;
+                    });
+                    try {
+                      final service = ref.read(authServiceProvider);
+                      log("Loading Start");
+
+                      final isSucess = await service.reportIssue(
+                        serviceRequestId: widget.requestId,
+                        issueType: issueTypes[selectedIndex],
+                        description: issueController.text.trim(),
+                      );
+                      if (isSucess) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => ClientMyBottomNav(),
+                          ),
+                          (route) => false,
+                        );
+                      }
+                    } catch (e) {
+                      log(e.toString());
+                    } finally {
+                      setState(() {
+                        isssue = false;
+                      });
+                    }
+                  },
+                  child: isssue
+                      ? Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 1.4,
+                            ),
+                          ),
+                        )
+                      : Text(
+                          "Submit Report",
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.buttonText,
+                            fontSize: 16.sp,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
                 ),
               ),
               SizedBox(height: 10.h),

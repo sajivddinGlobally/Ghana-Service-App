@@ -103,7 +103,7 @@ class ListElement {
 
     factory ListElement.fromJson(Map<String, dynamic> json) => ListElement(
         id: json["_id"],
-        userId: userIdValues.map[json["userId"]]!,
+        userId: userIdValues.map[json["userId"]],
         title: json["title"],
         message: json["message"],
         isRead: json["isRead"],

@@ -1,27 +1,27 @@
 // To parse this JSON data, do
 //
-//     final getPendingRequestsModel = getPendingRequestsModelFromJson(jsonString);
+//     final getActivePlanModel = getActivePlanModelFromJson(jsonString);
 
 import 'dart:convert';
 
-GetPendingRequestsModel getPendingRequestsModelFromJson(String str) => GetPendingRequestsModel.fromJson(json.decode(str));
+GetActivePlanModel getActivePlanModelFromJson(String str) => GetActivePlanModel.fromJson(json.decode(str));
 
-String getPendingRequestsModelToJson(GetPendingRequestsModel data) => json.encode(data.toJson());
+String getActivePlanModelToJson(GetActivePlanModel data) => json.encode(data.toJson());
 
-class GetPendingRequestsModel {
+class GetActivePlanModel {
     String? message;
     int? code;
     bool? error;
     Data? data;
 
-    GetPendingRequestsModel({
+    GetActivePlanModel({
         this.message,
         this.code,
         this.error,
         this.data,
     });
 
-    factory GetPendingRequestsModel.fromJson(Map<String, dynamic> json) => GetPendingRequestsModel(
+    factory GetActivePlanModel.fromJson(Map<String, dynamic> json) => GetActivePlanModel(
         message: json["message"],
         code: json["code"],
         error: json["error"],
@@ -65,146 +65,6 @@ class Data {
 }
 
 class ListElement {
-    Rating? rating;
-    Issue? issue;
-    String? id;
-    UserId? userId;
-    ListServiceId? serviceId;
-    String? requestNumber;
-    String? description;
-    int? preferredDate;
-    String? priority;
-    dynamic completedAt;
-    dynamic image;
-    dynamic remark;
-    String? status;
-    bool? isDisable;
-    bool? isDeleted;
-    int? date;
-    int? month;
-    int? year;
-    int? createdAt;
-    int? updatedAt;
-    String? employeeId;
-
-    ListElement({
-        this.rating,
-        this.issue,
-        this.id,
-        this.userId,
-        this.serviceId,
-        this.requestNumber,
-        this.description,
-        this.preferredDate,
-        this.priority,
-        this.completedAt,
-        this.image,
-        this.remark,
-        this.status,
-        this.isDisable,
-        this.isDeleted,
-        this.date,
-        this.month,
-        this.year,
-        this.createdAt,
-        this.updatedAt,
-        this.employeeId,
-    });
-
-    factory ListElement.fromJson(Map<String, dynamic> json) => ListElement(
-        rating: json["rating"] == null ? null : Rating.fromJson(json["rating"]),
-        issue: json["issue"] == null ? null : Issue.fromJson(json["issue"]),
-        id: json["_id"],
-        userId: json["userId"] == null ? null : UserId.fromJson(json["userId"]),
-        serviceId: json["serviceId"] == null ? null : ListServiceId.fromJson(json["serviceId"]),
-        requestNumber: json["requestNumber"],
-        description: json["description"],
-        preferredDate: json["preferredDate"],
-        priority: json["priority"],
-        completedAt: json["completedAt"],
-        image: json["image"],
-        remark: json["remark"],
-        status: json["status"],
-        isDisable: json["isDisable"],
-        isDeleted: json["isDeleted"],
-        date: json["date"],
-        month: json["month"],
-        year: json["year"],
-        createdAt: json["createdAt"],
-        updatedAt: json["updatedAt"],
-        employeeId: json["employeeId"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "rating": rating?.toJson(),
-        "issue": issue?.toJson(),
-        "_id": id,
-        "userId": userId?.toJson(),
-        "serviceId": serviceId?.toJson(),
-        "requestNumber": requestNumber,
-        "description": description,
-        "preferredDate": preferredDate,
-        "priority": priority,
-        "completedAt": completedAt,
-        "image": image,
-        "remark": remark,
-        "status": status,
-        "isDisable": isDisable,
-        "isDeleted": isDeleted,
-        "date": date,
-        "month": month,
-        "year": year,
-        "createdAt": createdAt,
-        "updatedAt": updatedAt,
-        "employeeId": employeeId,
-    };
-}
-
-class Issue {
-    dynamic issueType;
-    dynamic description;
-    dynamic reportedAt;
-
-    Issue({
-        this.issueType,
-        this.description,
-        this.reportedAt,
-    });
-
-    factory Issue.fromJson(Map<String, dynamic> json) => Issue(
-        issueType: json["issueType"],
-        description: json["description"],
-        reportedAt: json["reportedAt"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "issueType": issueType,
-        "description": description,
-        "reportedAt": reportedAt,
-    };
-}
-
-class Rating {
-    String? message;
-    dynamic ratedAt;
-
-    Rating({
-        this.message,
-        this.ratedAt,
-    });
-
-    factory Rating.fromJson(Map<String, dynamic> json) => Rating(
-        message: json["message"],
-        ratedAt: json["ratedAt"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "message": message,
-        "ratedAt": ratedAt,
-    };
-}
-
-class ListServiceId {
     PersonalInformation? personalInformation;
     PropertyDetails? propertyDetails;
     PlanDetails? planDetails;
@@ -225,7 +85,7 @@ class ListServiceId {
     int? v;
     String? approvedBy;
 
-    ListServiceId({
+    ListElement({
         this.personalInformation,
         this.propertyDetails,
         this.planDetails,
@@ -247,7 +107,7 @@ class ListServiceId {
         this.approvedBy,
     });
 
-    factory ListServiceId.fromJson(Map<String, dynamic> json) => ListServiceId(
+    factory ListElement.fromJson(Map<String, dynamic> json) => ListElement(
         personalInformation: json["personalInformation"] == null ? null : PersonalInformation.fromJson(json["personalInformation"]),
         propertyDetails: json["propertyDetails"] == null ? null : PropertyDetails.fromJson(json["propertyDetails"]),
         planDetails: json["planDetails"] == null ? null : PlanDetails.fromJson(json["planDetails"]),
@@ -298,8 +158,8 @@ class Declaration {
     bool? agreeTermsAndConditions;
     bool? noPreExistingFaults;
     String? electronicSignature;
-    String? signature;
     DateTime? date;
+    String? signature;
 
     Declaration({
         this.informationAccurate,
@@ -307,8 +167,8 @@ class Declaration {
         this.agreeTermsAndConditions,
         this.noPreExistingFaults,
         this.electronicSignature,
-        this.signature,
         this.date,
+        this.signature,
     });
 
     factory Declaration.fromJson(Map<String, dynamic> json) => Declaration(
@@ -317,8 +177,8 @@ class Declaration {
         agreeTermsAndConditions: json["agreeTermsAndConditions"],
         noPreExistingFaults: json["noPreExistingFaults"],
         electronicSignature: json["electronicSignature"],
-        signature: json["signature"],
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
+        signature: json["signature"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -327,8 +187,8 @@ class Declaration {
         "agreeTermsAndConditions": agreeTermsAndConditions,
         "noPreExistingFaults": noPreExistingFaults,
         "electronicSignature": electronicSignature,
-        "signature": signature,
         "date": date?.toIso8601String(),
+        "signature": signature,
     };
 }
 
@@ -397,7 +257,7 @@ class PersonalInformation {
 }
 
 class PlanDetails {
-    PlanDetailsServiceId? serviceId;
+    ServiceId? serviceId;
     PlanId? planId;
 
     PlanDetails({
@@ -406,7 +266,7 @@ class PlanDetails {
     });
 
     factory PlanDetails.fromJson(Map<String, dynamic> json) => PlanDetails(
-        serviceId: json["serviceId"] == null ? null : PlanDetailsServiceId.fromJson(json["serviceId"]),
+        serviceId: json["serviceId"] == null ? null : ServiceId.fromJson(json["serviceId"]),
         planId: json["planId"] == null ? null : PlanId.fromJson(json["planId"]),
     );
 
@@ -512,7 +372,7 @@ class PlanId {
     };
 }
 
-class PlanDetailsServiceId {
+class ServiceId {
     String? id;
     String? name;
     String? description;
@@ -525,7 +385,7 @@ class PlanDetailsServiceId {
     int? createdAt;
     int? updatedAt;
 
-    PlanDetailsServiceId({
+    ServiceId({
         this.id,
         this.name,
         this.description,
@@ -539,7 +399,7 @@ class PlanDetailsServiceId {
         this.updatedAt,
     });
 
-    factory PlanDetailsServiceId.fromJson(Map<String, dynamic> json) => PlanDetailsServiceId(
+    factory ServiceId.fromJson(Map<String, dynamic> json) => ServiceId(
         id: json["_id"],
         name: json["name"],
         description: json["description"],
@@ -597,33 +457,5 @@ class PropertyDetails {
         "acUnits": acUnits,
         "propertyType": propertyType,
         "propertyAge": propertyAge,
-    };
-}
-
-class UserId {
-    String? id;
-    String? fullName;
-    String? email;
-    String? phone;
-
-    UserId({
-        this.id,
-        this.fullName,
-        this.email,
-        this.phone,
-    });
-
-    factory UserId.fromJson(Map<String, dynamic> json) => UserId(
-        id: json["_id"],
-        fullName: json["fullName"],
-        email: json["email"],
-        phone: json["phone"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "_id": id,
-        "fullName": fullName,
-        "email": email,
-        "phone": phone,
     };
 }

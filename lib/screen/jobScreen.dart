@@ -1,9 +1,14 @@
 import 'dart:developer';
 
+import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/screen/detilesScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getAssignRequestProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getCompleteRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/pendingRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/todayPendingRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/requestDetailScreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,9 +47,12 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
     },
   ];
   int select = 0;
+  String? loadingRequestId;
+  bool isloading = false;
   @override
   Widget build(BuildContext context) {
-    final assignRequestState = ref.watch(getAssignRequestProvider);
+    // final assignRequestState = ref.watch(getAssignRequestProvider);
+    final pendingRequestState = ref.watch(pendingRequestProvider);
     final getCompleteRequestState = ref.watch(getCompleteRequestProvider);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
@@ -178,7 +186,7 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
             ),
             SizedBox(height: 26.h),
             if (select == 0)
-              assignRequestState.when(
+              pendingRequestState.when(
                 data: (assignData) {
                   if (assignData.data?.list == null ||
                       assignData.data!.list!.isEmpty) {
@@ -252,11 +260,19 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                           "dd MMM yyyy",
                         ).format(preferredDate);
                         return buildShedule(
-                          image: "assets/Rectangle 10 (1).png",
-                          name: assign?.serviceId?.name ?? "N/A",
-                          client: assign?.userId?.email ?? "N/A",
-                          location: "location",
+                          image: assign?.image ?? "",
+                          name:
+                              assign?.serviceId?.planDetails?.planId?.name ??
+                              "N/A",
+                          client: assign?.userId?.fullName ?? "",
+                          location:
+                              assign
+                                  ?.serviceId
+                                  ?.personalInformation
+                                  ?.propertyAddress ??
+                              "",
                           date: formattedDate,
+                          loadingRequestId: assign!.id.toString(),
                         );
                       },
                     ),
@@ -348,12 +364,59 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                         final formattedDate = DateFormat(
                           "dd MMM yyyy",
                         ).format(preferredDate);
-                        return buildShedule(
-                          image: "assets/Rectangle 10 (1).png",
-                          name: assign?.serviceId?.name ?? "N/A",
+                        return buildComplteShedule(
+                          image: assign?.image ?? "N/A",
+                          name:
+                              assign?.serviceId?.planDetails?.planId?.name ??
+                              "N/A",
                           client: assign?.userId?.email ?? "N/A",
-                          location: "location",
+                          location:
+                              assign
+                                  ?.serviceId
+                                  ?.personalInformation
+                                  ?.propertyAddress ??
+                              "",
                           date: formattedDate,
+                          callbacl: () {
+                            final complete = completeData.data?.list?[index];
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => RequestDetailScreen(
+                                  image: complete?.image,
+                                  userName: complete?.userId?.fullName ?? "",
+                                  phone: complete?.userId?.phone ?? "",
+                                  preferredDate: complete?.preferredDate,
+                                  service:
+                                      complete
+                                          ?.serviceId
+                                          ?.planDetails
+                                          ?.serviceId
+                                          ?.name ??
+                                      "",
+                                  assignService:
+                                      complete
+                                          ?.serviceId
+                                          ?.planDetails
+                                          ?.planId
+                                          ?.name ??
+                                      "",
+                                  requestNumber: complete?.requestNumber,
+                                  description: complete?.description,
+                                  remark: complete?.remark,
+                                  rating: complete?.rating?.rating ?? 0,
+                                  message: complete?.rating?.message ?? "",
+                                  status: complete?.status,
+                                  propertyAddress:
+                                      complete
+                                          ?.serviceId
+                                          ?.personalInformation
+                                          ?.propertyAddress ??
+                                      "",
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
@@ -383,6 +446,7 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
     required String client,
     required String location,
     required String date,
+    required String loadingRequestId,
   }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 20.h),
@@ -390,16 +454,31 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// 📸 Image
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16.r),
-              topRight: Radius.circular(16.r),
+          Container(
+            width: double.infinity,
+            height: 216.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16.r),
             ),
-            child: Image.asset(
-              image,
-              width: double.infinity,
-              height: 216.h,
-              fit: BoxFit.cover,
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16.r),
+                topRight: Radius.circular(16.r),
+              ),
+              child: Image.network(
+                image,
+                width: double.infinity,
+                height: 216.h,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.network(
+                    "https://blocks.astratic.com/img/general-img-landscape.png",
+                    width: double.infinity,
+                    height: 216.h,
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
             ),
           ),
 
@@ -442,7 +521,7 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
 
                 /// 👤 Client
                 Text(
-                  client,
+                  "Client: $client",
                   style: GoogleFonts.parkinsans(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -455,7 +534,7 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
 
                 /// 📍 Location
                 Text(
-                  location,
+                  "location: $location",
                   style: GoogleFonts.parkinsans(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -468,7 +547,280 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
 
                 /// 📅 Date
                 Text(
-                  date,
+                  "date: $date",
+                  style: GoogleFonts.parkinsans(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16.sp,
+                    letterSpacing: -0.64,
+                  ),
+                ),
+                // SizedBox(height: 12.h),
+                // InkWell(
+                //   onTap: () {
+                //     // Navigator.push(
+                //     //   context,
+                //     //   MaterialPageRoute(
+                //     //     builder: (context) => Detilesscreen(
+                //     //       requestId: '',
+                //     //       userName: "",
+                //     //       userPhone: "",
+                //     //       service: "",
+                //     //       assignService: "",
+                //     //       status: "",
+                //     //     ),
+                //     //   ),
+                //     // );
+                //     // Navigator.push(
+                //     //   context,
+                //     //   CupertinoPageRoute(
+                //     //     builder: (context) => RequestDetailScreen(),
+                //     //   ),
+                //     // );
+                //   },
+                //   child: Container(
+                //     height: 49.h,
+                //     decoration: BoxDecoration(
+                //       color: Color(0xffF2D701),
+                //       borderRadius: BorderRadius.circular(50.r),
+                //     ),
+                //     child: Center(
+                //       child: Text(
+                //         "View Details",
+                //         style: GoogleFonts.outfit(
+                //           fontSize: 16.sp,
+                //           fontWeight: FontWeight.w500,
+                //           color: Color(0xff04254E),
+                //           letterSpacing: -0.64,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                SizedBox(height: 16.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () async {
+                          setState(() {
+                            isloading = true;
+                          });
+                          try {
+                            final acceptService = ref.read(authServiceProvider);
+                            final res = await acceptService.acceptRequest(
+                              requestId: loadingRequestId,
+                            );
+                            if (res.code == 0 && res.error == false) {
+                              ref.invalidate(pendingRequestProvider);
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => Detilesscreen(
+                                    requestId: loadingRequestId,
+                                    userName:
+                                        res.data?.userId?.fullName ?? "N/A",
+                                    userPhone: res.data?.userId?.phone ?? "N/A",
+                                    service:
+                                        res
+                                            .data
+                                            ?.serviceId
+                                            ?.planDetails
+                                            ?.serviceId
+                                            ?.name ??
+                                        "N/A",
+                                    assignService:
+                                        res
+                                            .data
+                                            ?.serviceId
+                                            ?.planDetails
+                                            ?.serviceId
+                                            ?.name ??
+                                        "",
+                                    status: res.data?.status ?? "",
+                                    image: res.data?.image ?? "",
+                                    propertyAddress:
+                                        res
+                                            .data
+                                            ?.serviceId
+                                            ?.personalInformation
+                                            ?.propertyAddress ??
+                                        "",
+                                    preferredDate: res.data?.preferredDate ?? 0,
+                                    desc: res.data?.description ?? "",
+                                  ),
+                                ),
+                              );
+                            }
+                          } catch (e, st) {
+                            log(e.toString());
+                          } finally {
+                            setState(() {
+                              isloading = false;
+                            });
+                          }
+                        },
+                        child: Container(
+                          height: 49.h,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(50.r),
+                          ),
+                          child: Center(
+                            child: isloading
+                                ? Center(
+                                    child: SizedBox(
+                                      width: 20,
+                                      height: 20.h,
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 1.w,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    "Approve",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: const Color(0xff04254E),
+                                      letterSpacing: -0.56,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // SizedBox(width: 12.w),
+                    // Expanded(
+                    //   child: Container(
+                    //     height: 49.h,
+                    //     decoration: BoxDecoration(
+                    //       color: Colors.red,
+                    //       borderRadius: BorderRadius.circular(50.r),
+                    //     ),
+                    //     child: Center(child: Text("Reject")),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildComplteShedule({
+    required String image,
+    required String name,
+    required String client,
+    required String location,
+    required String date,
+    required VoidCallback callbacl,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // /// 📸 Image
+          Container(
+            width: double.infinity,
+            height: 216.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16.r),
+                topRight: Radius.circular(16.r),
+              ),
+              child: Image.network(
+                image,
+                width: double.infinity,
+                height: 216.h,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.network(
+                    "https://blocks.astratic.com/img/general-img-landscape.png",
+                    width: double.infinity,
+                    height: 216.h,
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            ),
+          ),
+
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(
+              top: 20.h,
+              left: 16.w,
+              bottom: 20.h,
+              right: 16.w,
+            ),
+            decoration: BoxDecoration(
+              border: Border(
+                left: BorderSide(color: Color(0xffF2D701)),
+                right: BorderSide(color: Color(0xffF2D701)),
+                bottom: BorderSide(color: Color(0xffF2D701)),
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(16.r),
+                bottomRight: Radius.circular(16.r),
+              ),
+            ),
+
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// 🛠 Service Name
+                Text(
+                  name,
+                  style: GoogleFonts.outfit(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                    letterSpacing: -0.72,
+                  ),
+                ),
+
+                SizedBox(height: 10.h),
+
+                /// 👤 Client
+                Text(
+                  "Client: $client",
+                  style: GoogleFonts.parkinsans(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16.sp,
+                    letterSpacing: -0.64,
+                  ),
+                ),
+
+                SizedBox(height: 8.h),
+
+                /// 📍 Location
+                Text(
+                  "location: $location",
+                  style: GoogleFonts.parkinsans(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16.sp,
+                    letterSpacing: -0.64,
+                  ),
+                ),
+
+                SizedBox(height: 8.h),
+
+                /// 📅 Date
+                Text(
+                  "date: $date",
                   style: GoogleFonts.parkinsans(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -479,12 +831,26 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                 SizedBox(height: 12.h),
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Detilesscreen(requestId: '',userName: "",userPhone: "",service: "",),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => Detilesscreen(
+                    //       requestId: '',
+                    //       userName: "",
+                    //       userPhone: "",
+                    //       service: "",
+                    //       assignService: "",
+                    //       status: "",
+                    //     ),
+                    //   ),
+                    // );
+                    callbacl();
+                    // Navigator.push(
+                    //   context,
+                    //   CupertinoPageRoute(
+                    //     builder: (context) => RequestDetailScreen(),
+                    //   ),
+                    // );
                   },
                   child: Container(
                     height: 49.h,
@@ -505,6 +871,7 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                     ),
                   ),
                 ),
+                SizedBox(height: 16.h),
               ],
             ),
           ),

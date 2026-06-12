@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/data/provider/getProfileProvider.dart';
 import 'package:dwelleasy_ghana/screen/EditProfileScreen.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/jobDoneProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +22,7 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
   @override
   Widget build(BuildContext context) {
     final profileState = ref.watch(getProfileProvider);
+    final jobDoneState = ref.watch(jobDoneProvider);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       body: profileState.when(
@@ -253,12 +255,31 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        "120",
-                                        style: GoogleFonts.outfit(
-                                          fontSize: 21.w,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: -0.64,
+                                      jobDoneState.when(
+                                        data: (data) {
+                                          return Text(
+                                            data.data.toString(),
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 21.w,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: -0.64,
+                                            ),
+                                          );
+                                        },
+                                        error: (error, stackTrace) {
+                                          return Center(
+                                            child: Text(error.toString()),
+                                          );
+                                        },
+                                        loading: () => SizedBox(
+                                          width: 20.w,
+                                          height: 20.h,
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                              strokeWidth: 1.5,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: 10.h),
@@ -346,6 +367,7 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                   ],
                 ),
               ),
+             
             ],
           );
         },

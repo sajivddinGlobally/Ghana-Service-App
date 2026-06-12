@@ -31,7 +31,9 @@ class ReportIssueBodyModel {
   };
 }
 
-
+// To parse this JSON data, do
+//
+//     final ratingBodyModel = ratingBodyModelFromJson(jsonString);
 
 RatingBodyModel ratingBodyModelFromJson(String str) =>
     RatingBodyModel.fromJson(json.decode(str));
@@ -41,33 +43,24 @@ String ratingBodyModelToJson(RatingBodyModel data) =>
 
 class RatingBodyModel {
   String? serviceRequestId;
-  String? issueType;
-  String? description;
+  int? rating;
+  String? message;
 
-  RatingBodyModel({
-    this.serviceRequestId,
-    this.issueType,
-    this.description,
-  });
+  RatingBodyModel({this.serviceRequestId, this.rating, this.message});
 
   factory RatingBodyModel.fromJson(Map<String, dynamic> json) =>
       RatingBodyModel(
         serviceRequestId: json["serviceRequestId"],
-        issueType: json["issueType"],
-        description: json["description"],
+        rating: json["rating"],
+        message: json["message"],
       );
 
   Map<String, dynamic> toJson() => {
     "serviceRequestId": serviceRequestId,
-    "issueType": issueType,
-    "description": description,
+    "rating": rating,
+    "message": message,
   };
 }
-
-
-
-
-
 
 SendMessageRequest SendMessageRequestFromJson(String str) =>
     SendMessageRequest.fromJson(json.decode(str));
@@ -79,21 +72,13 @@ class SendMessageRequest {
   String? requestId;
   String? message;
 
-  SendMessageRequest({
-    this.requestId,
-    this.message,
-  });
+  SendMessageRequest({this.requestId, this.message});
 
   factory SendMessageRequest.fromJson(Map<String, dynamic> json) =>
       SendMessageRequest(
         requestId: json["requestId"],
         message: json["message"],
-
       );
 
-  Map<String, dynamic> toJson() => {
-    "requestId": requestId,
-    "message": message,
-
-  };
+  Map<String, dynamic> toJson() => {"requestId": requestId, "message": message};
 }

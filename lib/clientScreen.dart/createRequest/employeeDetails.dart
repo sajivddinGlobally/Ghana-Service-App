@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/getRatingProvider.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/service/serviceCompleteScreen.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +19,7 @@ class EmployeeDetails extends ConsumerStatefulWidget {
 }
 
 class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
+  String? completeJob;
   @override
   Widget build(BuildContext context) {
     final detailsAsync = ref.watch(
@@ -82,263 +85,239 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
         ),
         centerTitle: true,
       ),
-      body: detailsAsync.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.buttonBg),
-        ),
-
-        error: (error, stackTrace) {
-          log(stackTrace.toString());
-          return Center(child: Text(error.toString()));
-        },
-        data: (response) {
-          final employee = response.data;
-
-          return SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 17.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 30.h),
-                  Center(
-                    child: Container(
-                      width: 113.w,
-                      height: 113.w,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey.shade100,
-                        border: Border.all(
-                          color: AppColors.buttonText,
-                          width: 3.w,
-                        ),
-                      ),
-                      child: ClipOval(
-                        child: Image.network(
-                          // "assets/ClientImage/Ellipse 1202 (1).png",
-                          employee?.image ?? "",
-                          width: 113.w,
-                          height: 113.h,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
+      body: SafeArea(
+        child: detailsAsync.when(
+          data: (response) {
+            final employee = response.data;
+            final hasRated =
+                (employee?.rating?.rating ?? 0) > 0 ||
+                (employee?.rating?.ratedAt != null);
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 17.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 30.h),
+                          Center(
+                            child: Container(
                               width: 113.w,
                               height: 113.w,
-                              color: Colors.grey.shade100,
-                              child: Center(
-                                child: Icon(Icons.person, size: 40.sp),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 15.h),
-                  Center(
-                    child: Text(
-                      // employee.serviceId?.name ?? "N/A",
-                      employee?.employeeId?.fullName ?? "N/A",
-                      // "Dakarai",
-                      style: GoogleFonts.outfit(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.buttonText,
-                        letterSpacing: -0.72,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  Center(
-                    child: Text(
-                      employee?.employeeId?.serviceId ?? "N/A",
-                      // "AC Repair Specialist",
-                      style: GoogleFonts.parkinsans(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.buttonText,
-                        letterSpacing: -0.48,
-                        height: 1,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  Center(
-                    child: Text(
-                      "⭐ ${employee?.employeeId?.averageRating ?? 0} Rating",
-                      style: GoogleFonts.parkinsans(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.buttonText,
-                        letterSpacing: -0.48,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 15.w,
-                      vertical: 17.h,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: Colors.white,
-                      border: Border(
-                        left: BorderSide(color: AppColors.buttonBg, width: 2.w),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Professional Info",
-                          style: GoogleFonts.outfit(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.buttonText,
-                            letterSpacing: -0.4,
-                          ),
-                        ),
-                        SizedBox(height: 13.h),
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Experience: ",
-                                style: GoogleFonts.outfit(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey.shade100,
+                                border: Border.all(
                                   color: AppColors.buttonText,
-                                  letterSpacing: -0.56,
+                                  width: 3.w,
                                 ),
                               ),
-                              TextSpan(
-                                text:
-                                    "${employee?.employeeId?.experience ?? "N/A"} Years",
-                                style: GoogleFonts.outfit(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.buttonText,
-                                  letterSpacing: -0.56,
+                              child: ClipOval(
+                                child: Image.network(
+                                  // "assets/ClientImage/Ellipse 1202 (1).png",
+                                  employee?.image ?? "",
+                                  width: 113.w,
+                                  height: 113.h,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      width: 113.w,
+                                      height: 113.w,
+                                      color: Colors.grey.shade100,
+                                      child: Center(
+                                        child: Icon(Icons.person, size: 40.sp),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 8.h),
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Jobs Completed: ",
-                                style: GoogleFonts.outfit(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.buttonText,
-                                  letterSpacing: -0.56,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "350+",
-                                style: GoogleFonts.outfit(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.buttonText,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 8.h),
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Location: ",
-                                style: GoogleFonts.outfit(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.buttonText,
-                                  letterSpacing: -0.56,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "${employee?.employeeId?.city ?? ""}",
-                                style: GoogleFonts.outfit(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.buttonText,
-                                  letterSpacing: -0.56,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  getRatingState.when(
-                    data: (data) {
-                      return Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 14.h,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          color: Colors.white,
-                          border: Border(
-                            left: BorderSide(
-                              color: AppColors.buttonText,
-                              width: 2.w,
                             ),
                           ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Client Reviews",
+                          SizedBox(height: 15.h),
+                          Center(
+                            child: Text(
+                              // employee.serviceId?.name ?? "N/A",
+                              employee?.employeeId?.fullName ?? "N/A",
+                              // "Dakarai",
                               style: GoogleFonts.outfit(
-                                fontSize: 16.sp,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.72,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Center(
+                            child: Text(
+                              employee
+                                      ?.serviceId
+                                      ?.planDetails
+                                      ?.serviceId
+                                      ?.name ??
+                                  "",
+                              // "AC Repair Specialist",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.64,
+                                letterSpacing: -0.48,
+                                height: 1,
                               ),
                             ),
-                            SizedBox(height: 10.h),
-                            Divider(color: AppColors.buttonText, height: 1),
-                            SizedBox(height: 10.h),
-                            ListView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: 4,
-                              itemBuilder: (context, index) {
-                                return Column(
+                          ),
+                          SizedBox(height: 8.h),
+                          Center(
+                            child: Text(
+                              "⭐ ${employee?.employeeId?.averageRating ?? 0} Rating",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.48,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 15.w,
+                              vertical: 17.h,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.r),
+                              color: Colors.white,
+                              border: Border(
+                                left: BorderSide(
+                                  color: AppColors.buttonBg,
+                                  width: 2.w,
+                                ),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Professional Info",
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.buttonText,
+                                    letterSpacing: -0.4,
+                                  ),
+                                ),
+                                SizedBox(height: 13.h),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "Experience: ",
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.buttonText,
+                                          letterSpacing: -0.56,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            "${employee?.employeeId?.experience ?? "N/A"} Years",
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.buttonText,
+                                          letterSpacing: -0.56,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "Jobs Completed: ",
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.buttonText,
+                                          letterSpacing: -0.56,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: completeJob,
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.buttonText,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "Location: ",
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.buttonText,
+                                          letterSpacing: -0.56,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            "${employee?.employeeId?.city ?? ""}",
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.buttonText,
+                                          letterSpacing: -0.56,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                          getRatingState.when(
+                            data: (data) {
+                              return Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 16.w,
+                                  vertical: 14.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: Colors.white,
+                                  border: Border(
+                                    left: BorderSide(
+                                      color: AppColors.buttonText,
+                                      width: 2.w,
+                                    ),
+                                  ),
+                                ),
+                                child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Excellent service, very professional.",
+                                      "Client Reviews",
                                       style: GoogleFonts.outfit(
-                                        fontSize: 14.sp,
+                                        fontSize: 16.sp,
                                         fontWeight: FontWeight.w400,
                                         color: AppColors.buttonText,
-                                        letterSpacing: -0.56,
-                                      ),
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    Text(
-                                      "⭐ 5 - Rajesh",
-                                      style: GoogleFonts.parkinsans(
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.buttonText,
-                                        letterSpacing: -0.48,
-                                        height: 1,
+                                        letterSpacing: -0.64,
                                       ),
                                     ),
                                     SizedBox(height: 10.h),
@@ -347,30 +326,128 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                                       height: 1,
                                     ),
                                     SizedBox(height: 10.h),
+                                    ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      // itemCount: 4,
+                                      itemCount: data.data?.retingList?.length,
+                                      itemBuilder: (context, index) {
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              // "Excellent service, very professional.",
+                                              data
+                                                      .data
+                                                      ?.retingList?[index]
+                                                      .message ??
+                                                  "",
+                                              style: GoogleFonts.outfit(
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.buttonText,
+                                                letterSpacing: -0.56,
+                                              ),
+                                            ),
+                                            SizedBox(height: 8.h),
+                                            Text(
+                                              // "⭐ 5 - Rajesh",
+                                              "${data.data?.retingList?[index].rating ?? 0}- ${data.data?.retingList?[index].userId?.fullName ?? ""}",
+                                              style: GoogleFonts.parkinsans(
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.buttonText,
+                                                letterSpacing: -0.48,
+                                                height: 1,
+                                              ),
+                                            ),
+                                            SizedBox(height: 10.h),
+                                            Divider(
+                                              color: AppColors.buttonText,
+                                              height: 1,
+                                            ),
+                                            SizedBox(height: 10.h),
+                                          ],
+                                        );
+                                      },
+                                    ),
                                   ],
-                                );
-                              },
+                                ),
+                              );
+                            },
+                            error: (error, stackTrace) {
+                              log(stackTrace.toString());
+                              return Center(child: Text(error.toString()));
+                            },
+                            loading: () => Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.buttonBg,
+                              ),
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                    error: (error, stackTrace) {
-                      log(stackTrace.toString());
-                      return Center(child: Text(error.toString()));
-                    },
-                    loading: () => Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.buttonBg,
+                          ),
+                          SizedBox(height: 20.h),
+                        ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.h),
-                ],
-              ),
-            ),
-          );
-        },
+                ),
+                if (employee?.status?.toLowerCase() == "completed" && !hasRated)
+                  Container(
+                    padding: EdgeInsets.all(12.w),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.shade50,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.orange),
+                        SizedBox(width: 10.w),
+                        Expanded(
+                          child: Text(
+                            "Service completed. Please rate your experience.",
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => ServiceCompleteScreen(
+                                  assignServices:
+                                      employee
+                                          ?.serviceId
+                                          ?.planDetails
+                                          ?.planId
+                                          ?.name ??
+                                      "",
+                                  name: employee?.employeeId?.fullName ?? "",
+                                  status: employee?.status ?? "",
+                                  requestId: employee!.id.toString(),
+                                  emploImage: employee?.image ?? "",
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text("Rate Now"),
+                        ),
+                      ],
+                    ),
+                  ),
+                SizedBox(height: 30.h),
+              ],
+            );
+          },
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: AppColors.buttonBg),
+          ),
+
+          error: (error, stackTrace) {
+            log(stackTrace.toString());
+            return Center(child: Text(error.toString()));
+          },
+        ),
       ),
     );
   }

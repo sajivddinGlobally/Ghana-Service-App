@@ -7,6 +7,8 @@ import 'package:dwelleasy_ghana/screen/quickMessageScreenDetiles.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getAssignRequestProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getCompleteRequestProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/todayAssignRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/todayPendingRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/requestDetailScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,7 +30,8 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
   String? loadingRequestId;
   @override
   Widget build(BuildContext context) {
-    final todayAssignRequest = ref.watch(todayAssignRequestProvider);
+    // final todayAssignRequest = ref.watch(todayAssignRequestProvider);
+    final todayPendingRequest = ref.watch(todayPendingRequestProvider);
     final completeRequestState = ref.watch(getCompleteRequestProvider);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
@@ -113,9 +116,12 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                     setState(() {
                       select = 0;
                     });
+                    // ref
+                    //     .read(todayAssignRequestProvider.notifier)
+                    //     .getTodayAssignRequest();
                     ref
-                        .read(todayAssignRequestProvider.notifier)
-                        .getTodayAssignRequest();
+                        .read(todayPendingRequestProvider.notifier)
+                        .getPendingRequest();
                   },
                   child: Container(
                     margin: EdgeInsets.only(left: 16.w),
@@ -194,7 +200,7 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
           ),
           SizedBox(height: 20.h),
           if (select == 0)
-            todayAssignRequest.when(
+            todayPendingRequest.when(
               data: (todayData) {
                 if (todayData.data?.list == null ||
                     todayData.data!.list!.isEmpty) {
@@ -299,12 +305,11 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                                 letterSpacing: -0.72,
                               ),
                             ),
-
                             SizedBox(height: 14.h),
-
                             // 🔥 Time
                             Text(
                               "Time: 9:00 AM - 1:00 PM",
+                              // "Date: ${DateFormat('dd MMMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(assign.serviceId?.paymentAndBilling?.preferredBillingDate ?? 0))}",
                               style: GoogleFonts.parkinsans(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.sp,
@@ -327,7 +332,7 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                             SizedBox(height: 10.h),
                             Text(
                               // "Service: AC Repair",
-                              "Service: ${assign.serviceId?.name ?? ""}",
+                              "Service: ${assign.serviceId?.planDetails?.planId?.name ?? "N/A"}",
                               style: GoogleFonts.parkinsans(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.sp,
@@ -371,6 +376,27 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                                                   ?.serviceId
                                                   ?.name ??
                                               "N/A",
+                                          assignService:
+                                              res
+                                                  .data
+                                                  ?.serviceId
+                                                  ?.planDetails
+                                                  ?.serviceId
+                                                  ?.name ??
+                                              "",
+                                          status:
+                                              res.data?.serviceId?.status ?? "",
+                                          image: res.data?.image ?? "",
+                                          propertyAddress:
+                                              res
+                                                  .data
+                                                  ?.serviceId
+                                                  ?.personalInformation
+                                                  ?.propertyAddress ??
+                                              "",
+                                          preferredDate:
+                                              res.data?.preferredDate ?? 0,
+                                          desc: res.data?.description ?? "",
                                         ),
                                       ),
                                     );
@@ -470,6 +496,7 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                 );
               },
               error: (error, stackTrace) {
+                log(stackTrace.toString());
                 log(error.toString());
                 return Center(child: Text("Something went wrong"));
               },
@@ -603,7 +630,7 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
 
                             SizedBox(height: 10.h),
                             Text(
-                              "Area: Thema",
+                              "Area: ${assign.serviceId?.personalInformation?.propertyAddress ?? ""}",
                               style: GoogleFonts.parkinsans(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.sp,
@@ -611,13 +638,11 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                                 letterSpacing: -0.64,
                               ),
                             ),
-
                             SizedBox(height: 10.h),
-
                             // 🔥 Service
                             Text(
                               // "Service: AC Repair",
-                              "Service: ${assign.serviceId?.name ?? ""}",
+                              "Service: ${assign.serviceId?.planDetails?.planId?.name ?? ""}",
                               style: GoogleFonts.parkinsans(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.sp,
@@ -626,24 +651,100 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                               ),
                             ),
                             SizedBox(height: 14.h),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 10.h,
-                                horizontal: 34.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xff6CE227),
-                                borderRadius: BorderRadius.circular(50.r),
-                              ),
-                              child: Text(
-                                assign.status ?? "",
-                                style: GoogleFonts.outfit(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color(0xff04254E),
-                                  letterSpacing: -0.56,
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 10.h,
+                                    horizontal: 34.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff6CE227),
+                                    borderRadius: BorderRadius.circular(50.r),
+                                  ),
+                                  child: Text(
+                                    assign.status ?? "",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: const Color(0xff04254E),
+                                      letterSpacing: -0.56,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                SizedBox(width: 12.w),
+                                InkWell(
+                                  onTap: () {
+                                    final complete =
+                                        completeData.data!.list![index];
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (context) =>
+                                            RequestDetailScreen(
+                                              image: complete.image,
+                                              userName:
+                                                  complete.userId?.fullName ??
+                                                  "",
+                                              phone:
+                                                  complete.userId?.phone ?? "",
+                                              preferredDate:
+                                                  complete.preferredDate,
+                                              service:
+                                                  complete
+                                                      .serviceId
+                                                      ?.planDetails
+                                                      ?.serviceId
+                                                      ?.name ??
+                                                  "",
+                                              assignService:
+                                                  complete
+                                                      .serviceId
+                                                      ?.planDetails
+                                                      ?.planId
+                                                      ?.name ??
+                                                  "",
+                                              requestNumber:
+                                                  complete.requestNumber,
+                                              description: complete.description,
+                                              remark: complete.remark,
+                                              rating:
+                                                  complete.rating?.rating ?? 0,
+                                              message:
+                                                  complete.rating?.message ??
+                                                  "",
+                                              status: complete.status,
+                                              propertyAddress:
+                                                  complete
+                                                      .serviceId
+                                                      ?.personalInformation
+                                                      ?.propertyAddress ??
+                                                  "",
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.h,
+                                      horizontal: 34.w,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.buttonBg,
+                                      borderRadius: BorderRadius.circular(50.r),
+                                    ),
+                                    child: Text(
+                                      "View All",
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: const Color(0xff04254E),
+                                        letterSpacing: -0.56,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

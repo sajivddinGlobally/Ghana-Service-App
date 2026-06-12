@@ -1,3 +1,4 @@
+import 'package:dwelleasy_ghana/clientScreen.dart/ClientHomeScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/service/RatingScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/service/reportOnIssueScreen.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
@@ -7,7 +8,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ServiceCompleteScreen extends StatefulWidget {
-  const ServiceCompleteScreen({super.key});
+  final String assignServices;
+  final String name;
+  final String status;
+  final String requestId;
+  final String emploImage;
+  const ServiceCompleteScreen({
+    super.key,
+    required this.assignServices,
+    required this.name,
+    required this.status,
+    required this.requestId,
+    required this.emploImage,
+  });
 
   @override
   State<ServiceCompleteScreen> createState() => _ServiceCompleteScreenState();
@@ -131,7 +144,7 @@ class _ServiceCompleteScreenState extends State<ServiceCompleteScreen> {
                           ),
                         ),
                         TextSpan(
-                          text: ' AC Repair',
+                          text: ' ${widget.assignServices}',
                           style: GoogleFonts.parkinsans(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
@@ -156,7 +169,7 @@ class _ServiceCompleteScreenState extends State<ServiceCompleteScreen> {
                           ),
                         ),
                         TextSpan(
-                          text: ' Dakarai',
+                          text: ' ${widget.name}',
                           style: GoogleFonts.parkinsans(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
@@ -181,7 +194,7 @@ class _ServiceCompleteScreenState extends State<ServiceCompleteScreen> {
                           ),
                         ),
                         TextSpan(
-                          text: ' Completed',
+                          text: ' ${widget.status}',
                           style: GoogleFonts.parkinsans(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
@@ -199,7 +212,14 @@ class _ServiceCompleteScreenState extends State<ServiceCompleteScreen> {
             button("Rating", AppColors.buttonBg, Colors.transparent, () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Ratingscreen()),
+                CupertinoPageRoute(
+                  builder: (context) => Ratingscreen(
+                    emploName: widget.name,
+                    employeeImage: widget.emploImage,
+                    serivces: widget.assignServices,
+                    serviceRequestId: widget.requestId,
+                  ),
+                ),
               );
             }),
             SizedBox(height: 20.h),
@@ -210,12 +230,21 @@ class _ServiceCompleteScreenState extends State<ServiceCompleteScreen> {
               () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Reportonissue()),
+                  CupertinoPageRoute(
+                    builder: (context) =>
+                        Reportonissue(requestId: widget.requestId),
+                  ),
                 );
               },
             ),
             SizedBox(height: 20.h),
-            button("Skip", AppColors.backgroungBg, AppColors.buttonText, () {}),
+            button("Skip", AppColors.backgroungBg, AppColors.buttonText, () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                CupertinoPageRoute(builder: (context) => ClientMyBottomNav()),
+                (route) => false,
+              );
+            }),
           ],
         ),
       ),

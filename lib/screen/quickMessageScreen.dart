@@ -1,5 +1,6 @@
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/screen/detilesScreen.dart';
+import 'package:dwelleasy_ghana/screen/work/requestDetailScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -161,12 +162,25 @@ class _QuickmessagescreenState extends State<Quickmessagescreen> {
                     SizedBox(height: 14.h),
                     InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => Detilesscreen(requestId: '',userName: "",userPhone: "",service: "",),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   CupertinoPageRoute(
+                        //     builder: (context) => Detilesscreen(
+                        //       requestId: '',
+                        //       userName: "",
+                        //       userPhone: "",
+                        //       service: "",
+                        //       assignService: "",
+                        //       status: "",
+                        //     ),
+                        //   ),
+                        // );
+                        // Navigator.push(
+                        //   context,
+                        //   CupertinoPageRoute(
+                        //     builder: (context) => RequestDetailScreen(),
+                        //   ),
+                        // );
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 9.h),

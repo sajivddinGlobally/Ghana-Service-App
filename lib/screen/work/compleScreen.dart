@@ -4,6 +4,7 @@ import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/screen/detilesScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getAssignRequestProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getCompleteRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/requestDetailScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -245,7 +246,7 @@ class _CompletescreenState extends ConsumerState<Completescreen> {
 
                           SizedBox(height: 10.h),
                           Text(
-                            "Area: Thema",
+                            "Area: ${complete.serviceId?.personalInformation?.propertyAddress ?? ""}",
                             style: GoogleFonts.parkinsans(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
@@ -259,7 +260,7 @@ class _CompletescreenState extends ConsumerState<Completescreen> {
                           // 🔥 Service
                           Text(
                             // "Service: AC Repair",
-                            "Service: ${complete.serviceId?.name ?? ""}",
+                            "Service: ${complete.serviceId?.planDetails?.planId?.name ?? ""}",
                             style: GoogleFonts.parkinsans(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
@@ -271,14 +272,54 @@ class _CompletescreenState extends ConsumerState<Completescreen> {
                           SizedBox(height: 14.h),
                           InkWell(
                             onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   CupertinoPageRoute(
+                              //     builder: (context) => Detilesscreen(
+                              //       requestId: data.data!.list![index].id ?? "",
+                              //       userName: "",
+                              //       userPhone: "",
+                              //       service: "",
+                              //       assignService: "",
+                              //       status: "",
+                              //     ),
+                              //   ),
+                              // );
+                              final complete = data.data!.list![index];
                               Navigator.push(
                                 context,
                                 CupertinoPageRoute(
-                                  builder: (context) => Detilesscreen(
-                                    requestId: data.data!.list![index].id ?? "",
-                                    userName: "",
-                                    userPhone: "",
-                                    service: "",
+                                  builder: (context) => RequestDetailScreen(
+                                    image: complete.image,
+                                    userName: complete.userId?.fullName ?? "",
+                                    phone: complete.userId?.phone ?? "",
+                                    preferredDate: complete.preferredDate,
+                                    service:
+                                        complete
+                                            .serviceId
+                                            ?.planDetails
+                                            ?.serviceId
+                                            ?.name ??
+                                        "",
+                                    assignService:
+                                        complete
+                                            .serviceId
+                                            ?.planDetails
+                                            ?.planId
+                                            ?.name ??
+                                        "",
+                                    requestNumber: complete.requestNumber,
+                                    description: complete.description,
+                                    remark: complete.remark,
+                                    rating: complete.rating?.rating ?? 0,
+                                    message: complete.rating?.message ?? "",
+                                    status: complete.status,
+                                    propertyAddress:
+                                        complete
+                                            .serviceId
+                                            ?.personalInformation
+                                            ?.propertyAddress ??
+                                        "",
                                   ),
                                 ),
                               );

@@ -1,11 +1,10 @@
 import 'dart:developer';
 
-import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/screen/detilesScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getAssignRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/getInProgressProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getPendingRequestProvider.dart';
-import 'package:dwelleasy_ghana/screen/work/requestDetailScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,18 +12,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class PendingScreen extends ConsumerStatefulWidget {
-  const PendingScreen({super.key});
+class InProgresScreen extends ConsumerStatefulWidget {
+  const InProgresScreen({super.key});
 
   @override
-  ConsumerState<PendingScreen> createState() => _PendingScreenState();
+  ConsumerState<InProgresScreen> createState() => _InProgresScreenState();
 }
 
-class _PendingScreenState extends ConsumerState<PendingScreen> {
-  bool isloading = false;
+class _InProgresScreenState extends ConsumerState<InProgresScreen> {
   @override
   Widget build(BuildContext context) {
-    final pendingRequestState = ref.watch(getPendingRequestProvider);
+    final inProgressState = ref.watch(getInProgressProvider);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       body: Column(
@@ -68,7 +66,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Pending",
+                      "In Progress",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.outfit(
                         fontSize: 16.sp,
@@ -98,7 +96,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
             ),
           ),
           SizedBox(height: 16.h),
-          pendingRequestState.when(
+          inProgressState.when(
             data: (data) {
               if (data.data?.list == null || data.data!.list!.isEmpty) {
                 return Expanded(
@@ -267,142 +265,82 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                           ),
 
                           SizedBox(height: 14.h),
-                          // InkWell(
-                          //   onTap: () {
-                          //     // Navigator.push(
-                          //     //   context,
-                          //     //   CupertinoPageRoute(
-                          //     //     builder: (context) => Detilesscreen(
-                          //     //       requestId: data.data!.list![index].id ?? "",
-                          //     //       userName: "",
-                          //     //       userPhone: "",
-                          //     //       service: "",
-                          //     //       assignService: "",
-                          //     //       status: "",
-                          //     //     ),
-                          //     //   ),
-                          //     // );
-                          //     // Navigator.push(
-                          //     //   context,
-                          //     //   CupertinoPageRoute(
-                          //     //     builder: (context) => RequestDetailScreen(),
-                          //     //   ),
-                          //     // );
-                          //   },
-                          //   child: Container(
-                          //     padding: EdgeInsets.symmetric(vertical: 9.h),
-                          //     decoration: BoxDecoration(
-                          //       color: Color(0xffF2D701),
-                          //       borderRadius: BorderRadius.circular(50.r),
-                          //     ),
-                          //     child: Center(
-                          //       child: Text(
-                          //         "View Details",
-                          //         style: GoogleFonts.outfit(
-                          //           fontSize: 16.sp,
-                          //           fontWeight: FontWeight.w500,
-                          //           color: Color(0xff04254E),
-                          //           letterSpacing: -0.64,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                           InkWell(
-                            onTap: () async {
-                              setState(() {
-                                isloading = true;
-                              });
-                              try {
-                                final acceptService = ref.read(
-                                  authServiceProvider,
-                                );
-                                final res = await acceptService.acceptRequest(
-                                  requestId: pending!.id.toString(),
-                                );
-                                if (res.code == 0 && res.error == false) {
-                                  ref.invalidate(getPendingRequestProvider);
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) => Detilesscreen(
-                                        requestId: pending.id.toString(),
-                                        userName:
-                                            res.data?.userId?.fullName ?? "N/A",
-                                        userPhone:
-                                            res.data?.userId?.phone ?? "N/A",
-                                        service:
-                                            res
-                                                .data
-                                                ?.serviceId
-                                                ?.planDetails
-                                                ?.serviceId
-                                                ?.name ??
-                                            "N/A",
-                                        assignService:
-                                            res
-                                                .data
-                                                ?.serviceId
-                                                ?.planDetails
-                                                ?.serviceId
-                                                ?.name ??
-                                            "",
-                                        status: res.data?.status ?? "",
-                                        image: res.data?.image ?? "",
-                                        propertyAddress:
-                                            res
-                                                .data
-                                                ?.serviceId
-                                                ?.personalInformation
-                                                ?.propertyAddress ??
-                                            "",
-                                        preferredDate:
-                                            res.data?.preferredDate ?? 0,
-                                        desc: res.data?.description ?? "",
-                                      ),
-                                    ),
-                                  );
-                                }
-                              } catch (e, st) {
-                                log(e.toString());
-                              } finally {
-                                setState(() {
-                                  isloading = false;
-                                });
-                              }
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => Detilesscreen(
+                                    requestId: data.data!.list![index].id ?? "",
+                                    userName:
+                                        data
+                                            .data!
+                                            .list![index]
+                                            .userId
+                                            ?.fullName ??
+                                        "N/A",
+                                    userPhone:
+                                        data.data!.list![index].userId?.phone ??
+                                        "N/A",
+                                    service:
+                                        data
+                                            .data!
+                                            .list![index]
+                                            .serviceId
+                                            ?.planDetails
+                                            ?.serviceId
+                                            ?.name ??
+                                        "N/A",
+                                    assignService:
+                                        data
+                                            .data!
+                                            .list![index]
+                                            .serviceId
+                                            ?.planDetails
+                                            ?.planId
+                                            ?.name ??
+                                        "",
+                                    status:
+                                        data.data!.list![index].status ?? "",
+                                    image: data.data!.list![index].image ?? "",
+                                    propertyAddress:
+                                        data
+                                            .data
+                                            ?.list?[index]
+                                            .serviceId
+                                            ?.personalInformation
+                                            ?.propertyAddress ??
+                                        "",
+                                    preferredDate:
+                                        data.data?.list?[index].preferredDate ??
+                                        0,
+                                    desc:
+                                        data.data?.list?[index].description ??
+                                        "",
+                                  ),
+                                ),
+                              );
                             },
                             child: Container(
-                              height: 49.h,
+                              padding: EdgeInsets.symmetric(vertical: 9.h),
                               decoration: BoxDecoration(
-                                color: Colors.green,
+                                color: Color(0xffF2D701),
                                 borderRadius: BorderRadius.circular(50.r),
                               ),
                               child: Center(
-                                child: isloading
-                                    ? Center(
-                                        child: SizedBox(
-                                          width: 20,
-                                          height: 20.h,
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                              color: Colors.white,
-                                              strokeWidth: 1.w,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : Text(
-                                        "Approve",
-                                        style: GoogleFonts.outfit(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: const Color(0xff04254E),
-                                          letterSpacing: -0.56,
-                                        ),
-                                      ),
+                                child: Text(
+                                  "View Details",
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xff04254E),
+                                    letterSpacing: -0.64,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
+                          SizedBox(height: 35.h),
                         ],
                       ),
                     );

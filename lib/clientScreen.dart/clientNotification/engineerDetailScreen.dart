@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientLoacationScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/employeeDetail.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
@@ -170,7 +169,7 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                       SizedBox(height: 8.h),
                       Text(
                         // "⭐ 4.8 Rating",
-                        "⭐ ${data.data?.rating?.rating ?? 0} Rating",
+                        "⭐ ${data.data?.employeeId?.averageRating ?? 0} Rating",
                         style: GoogleFonts.parkinsans(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,

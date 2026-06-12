@@ -1,28 +1,31 @@
+import 'dart:developer';
+import 'package:dwelleasy_ghana/clientScreen.dart/ClientHomeScreen.dart';
+import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/apiService/apiServiceProvider.dart';
-
-
-
 
 class Ratingscreen extends ConsumerStatefulWidget {
-
+  final String employeeImage;
+  final String serivces;
+  final String emploName;
+  final String serviceRequestId;
   const Ratingscreen({
     super.key,
-
+    required this.employeeImage,
+    required this.serivces,
+    required this.emploName,
+    required this.serviceRequestId,
   });
 
   @override
-  ConsumerState<Ratingscreen> createState() =>
-      _RatingscreenState();
+  ConsumerState<Ratingscreen> createState() => _RatingscreenState();
 }
 
 class _RatingscreenState extends ConsumerState<Ratingscreen> {
-
   int selectedRating = 0;
   final TextEditingController reviewController = TextEditingController();
   Widget buildStar(int index) {
@@ -39,6 +42,8 @@ class _RatingscreenState extends ConsumerState<Ratingscreen> {
       ),
     );
   }
+
+  bool isRating = false;
 
   @override
   void dispose() {
@@ -111,29 +116,43 @@ class _RatingscreenState extends ConsumerState<Ratingscreen> {
                 alignment: Alignment.center,
                 child: Column(
                   children: [
-                    Container(
-                      height: 113.h,
-                      width: 113.w,
-                      // padding: EdgeInsets.all(1),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: AppColors.buttonText,
-                          width: 3.w,
+                    Center(
+                      child: Container(
+                        width: 113.w,
+                        height: 113.w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey.shade100,
+                          border: Border.all(
+                            color: AppColors.buttonText,
+                            width: 3.w,
+                          ),
                         ),
-                        shape: BoxShape.circle,
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          "assets/ClientImage/engineer.png",
-                          fit: BoxFit.cover,
-                          // width: 113.w,
-                          // height: 113.w,
+                        child: ClipOval(
+                          child: Image.network(
+                            // "assets/ClientImage/Ellipse 1202 (1).png",
+                            widget.employeeImage ?? "",
+                            width: 113.w,
+                            height: 113.h,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 113.w,
+                                height: 113.w,
+                                color: Colors.grey.shade100,
+                                child: Center(
+                                  child: Icon(Icons.person, size: 40.sp),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(height: 15.h),
                     Text(
-                      "Dakarai",
+                      // "Dakarai",
+                      widget.emploName,
                       style: GoogleFonts.outfit(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w600,
@@ -143,7 +162,8 @@ class _RatingscreenState extends ConsumerState<Ratingscreen> {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      "AC Repair Specialist",
+                      // "AC Repair Specialist",
+                      widget.serivces,
                       style: GoogleFonts.outfit(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
@@ -252,58 +272,69 @@ class _RatingscreenState extends ConsumerState<Ratingscreen> {
                     ),
                   ),
                   onPressed: () async {
-                    // if (selectedRating == 0) {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     const SnackBar(content: Text("Please select a rating")),
-                    //   );
-                    //   return;
-                    // }
-                    //
-                    // if (reviewController.text.trim().isEmpty) {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     const SnackBar(content: Text("Please write a review")),
-                    //   );
-                    //   return;
-                    // }
-                    //
-                    // try {
-                    //   final service = ref.read(authServiceProvider);
-                    //
-                    //   final response = await service.reportIssue(
-                    //     serviceRequestId: widget.serviceRequestId,
-                    //     description: reviewController.text.trim(),
-                    //     issueType: "review",
-                    //   );
-                    //
-                    //   if (response.code == 0 && response.error == false) {
-                    //     ScaffoldMessenger.of(context).showSnackBar(
-                    //       const SnackBar(content: Text("Review submitted successfully")),
-                    //     );
-                    //
-                    //     Navigator.pop(context);
-                    //   } else {
-                    //     ScaffoldMessenger.of(context).showSnackBar(
-                    //       SnackBar(content: Text(response.message ?? "Something went wrong")),
-                    //     );
-                    //   }
-                    //
-                    // }
-                    // catch (e) {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     SnackBar(content: Text(e.toString())),
-                    //   );
-                    // }
+                    if (selectedRating == 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Please select a rating")),
+                      );
+                      return;
+                    }
 
+                    if (reviewController.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Please write a review")),
+                      );
+                      return;
+                    }
+                    setState(() {
+                      isRating = true;
+                    });
+
+                    try {
+                      final service = ref.read(authServiceProvider);
+
+                      final response = await service.addRating(
+                        serviceRequestId: widget.serviceRequestId,
+                        message: reviewController.text.trim(),
+                        rating: selectedRating,
+                      );
+
+                      if (response) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => ClientMyBottomNav(),
+                          ),
+                          (route) => false,
+                        );
+                      }
+                    } catch (e) {
+                      log(e.toString());
+                    } finally {
+                      setState(() {
+                        isRating = false;
+                      });
+                    }
                   },
-                  child: Text(
-                    "Submit Review",
-                    style: GoogleFonts.outfit(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.2,
-                    ),
-                  ),
+                  child: isRating
+                      ? Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: AppColors.buttonText,
+                              strokeWidth: 1.4,
+                            ),
+                          ),
+                        )
+                      : Text(
+                          "Submit Review",
+                          style: GoogleFonts.outfit(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
                 ),
               ),
               SizedBox(height: 10.h),

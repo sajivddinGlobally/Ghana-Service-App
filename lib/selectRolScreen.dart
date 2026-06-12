@@ -60,7 +60,7 @@ class _SelectRoleScreenState extends State<SelectRoleScreen> {
             rolBox(
               image: "assets/SvgImage/client.svg",
               title: 'Client',
-              subtitle: 'Login as Client User',
+              subtitle: 'Login as Client',
               index: 1,
             ),
             SizedBox(height: 20.h),

@@ -345,7 +345,10 @@ class _CProfileScreenState extends ConsumerState<CProfileScreen> {
                               ),
                               Spacer(),
                               Text(
-                                "Active",
+                                // "Active",
+                                data.data?.isActive == false
+                                    ? "InActive"
+                                    : "Active",
                                 style: GoogleFonts.parkinsans(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 15.sp,

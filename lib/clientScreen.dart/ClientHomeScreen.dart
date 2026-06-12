@@ -16,7 +16,10 @@ import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/myRequest.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/getPlanServiceProvider/getPlanServiceProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/myPlanScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/ClientProfile/CProfileScreen.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/service/activePlanListScreen.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
+import 'package:dwelleasy_ghana/data/provider/getActivePlanProvider.dart';
+import 'package:dwelleasy_ghana/data/provider/getDashbordCountProvider.dart';
 import 'package:dwelleasy_ghana/selectRolScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -106,7 +109,6 @@ class _ClientMyBottomNavState extends ConsumerState<ClientMyBottomNav> {
               ),
               label: "HOME",
             ),
-
             BottomNavigationBarItem(
               icon: Container(
                 margin: EdgeInsets.only(bottom: 6.h, top: 10.h),
@@ -231,6 +233,8 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
       },
       orElse: () => 0,
     );
+    final getActivePlanState = ref.watch(getActivePlanProvider);
+    final getDashbordCountState = ref.watch(getDashbordCountProvider);
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: clientProfileState.when(
@@ -614,196 +618,227 @@ class ActivePlans extends ConsumerStatefulWidget {
 class _ActivePlansState extends ConsumerState<ActivePlans> {
   @override
   Widget build(BuildContext context) {
+    final getDashbordCountState = ref.watch(getDashbordCountProvider);
     final reminderState = ref.watch(clientGetServiceRemindersProvider);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Stack(
+    return getDashbordCountState.when(
+      data: (data) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadiusGeometry.circular(12.r),
-              child: Image.asset(
-                "assets/WhatsApp Image 2026-05-07 at 12.12.29 PM.jpeg",
-                width: double.infinity,
-                height: 159.h,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              left: 15.w,
-              top: 15.h,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => Activeplanlistscreen(),
+                  ),
+                );
+              },
+              child: Stack(
                 children: [
-                  Text(
-                    "Basic Plan",
-                    style: GoogleFonts.outfit(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.80,
+                  ClipRRect(
+                    borderRadius: BorderRadiusGeometry.circular(12.r),
+                    child: Image.asset(
+                      "assets/WhatsApp Image 2026-05-07 at 12.12.29 PM.jpeg",
+                      width: double.infinity,
+                      height: 159.h,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(height: 6.h),
-                  Text(
-                    "Unlimited Service Requests",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.56,
-                    ),
-                  ),
-                  Text(
-                    "Next Renewal: 15 June 2025",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.56,
-                    ),
-                  ),
-                  SizedBox(height: 15.h),
-                  Container(
-                    width: 140.w,
-                    height: 35.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50.r),
-                      color: AppColors.buttonText,
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Access Plan",
-                        style: GoogleFonts.outfit(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.buttonBg,
-                          letterSpacing: -0.56,
+                  Positioned(
+                    left: 15.w,
+                    top: 15.h,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Basic Plan",
+                          style: GoogleFonts.outfit(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.80,
+                          ),
                         ),
-                      ),
+                        SizedBox(height: 6.h),
+                        Text(
+                          "Unlimited Service Requests",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.56,
+                          ),
+                        ),
+                        Text(
+                          "Next Renewal: 15 June 2025",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.56,
+                          ),
+                        ),
+                        SizedBox(height: 15.h),
+                        Container(
+                          width: 140.w,
+                          height: 35.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50.r),
+                            color: AppColors.buttonText,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Access Plan",
+                              style: GoogleFonts.outfit(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.buttonBg,
+                                letterSpacing: -0.56,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-        SizedBox(height: 30.h),
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                width: 189.w,
-                height: 108.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6.r),
-                  color: AppColors.buttonBg,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "3",
-                      style: GoogleFonts.inter(
-                        fontSize: 22.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF000000),
+            SizedBox(height: 30.h),
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(builder: (context) => Myrequest()),
+                      );
+                    },
+                    child: Container(
+                      width: 189.w,
+                      height: 108.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6.r),
+                        color: AppColors.buttonBg,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            // "3",
+                            (data.data?.requestUsed ?? 0).toString(),
+                            style: GoogleFonts.inter(
+                              fontSize: 22.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF000000),
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          Text(
+                            "Requests Used",
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF424242),
+                              letterSpacing: -0.56,
+                              height: 1,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      "Requests Used",
-                      style: GoogleFonts.parkinsans(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF424242),
-                        letterSpacing: -0.56,
-                        height: 1,
+                  ),
+                ),
+                SizedBox(width: 20.w),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => Servicereminderscreen(),
                       ),
+                    );
+                  },
+                  child: Container(
+                    width: 189.w,
+                    height: 108.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.r),
+                      color: AppColors.buttonBg,
                     ),
-                  ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          // "15 Jun",
+                          (data.data?.reminders ?? 0).toString(),
+                          style: GoogleFonts.inter(
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF000000),
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(
+                          "Reminders",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF424242),
+                            letterSpacing: -0.56,
+                            height: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 45.h),
+                backgroundColor: AppColors.buttonBg,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(54.r),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) => CreateService()),
+                );
+              },
+              child: Text(
+                "+ Create Service Request",
+                style: GoogleFonts.outfit(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF04254E),
+                  letterSpacing: -0.56,
                 ),
               ),
             ),
-            SizedBox(width: 20.w),
-            Container(
-              width: 189.w,
-              height: 108.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6.r),
-                color: AppColors.buttonBg,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "15 Jun",
-                    style: GoogleFonts.inter(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF000000),
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  Text(
-                    "Next AC Service",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF424242),
-                      letterSpacing: -0.56,
-                      height: 1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 20.h),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            minimumSize: Size(double.infinity, 45.h),
-            backgroundColor: AppColors.buttonBg,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(54.r),
-            ),
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(builder: (context) => CreateService()),
-            );
-          },
-          child: Text(
-            "+ Create Service Request",
-            style: GoogleFonts.outfit(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF04254E),
-              letterSpacing: -0.56,
-            ),
-          ),
-        ),
-        SizedBox(height: 25.h),
-        reminderState.when(
-          data: (data) {
-            String formatDate(int? timestamp) {
-              if (timestamp == null) return "";
+            SizedBox(height: 20.h),
+            reminderState.when(
+              data: (data) {
+                if (data.data == null || data.data!.isEmpty) {
+                  return const SizedBox.shrink(); // Kuch bhi show nahi hoga
+                }
+                String formatDate(int? timestamp) {
+                  if (timestamp == null) return "";
 
-              return DateFormat(
-                'dd MMMM yyyy',
-              ).format(DateTime.fromMillisecondsSinceEpoch(timestamp));
-            }
+                  return DateFormat(
+                    'dd MMMM yyyy',
+                  ).format(DateTime.fromMillisecondsSinceEpoch(timestamp));
+                }
 
-            return ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              itemCount: 1,
-              itemBuilder: (context, index) {
+                final reminder = data.data!.first;
                 return Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(
@@ -822,7 +857,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                         children: [
                           Text(
                             // "Home AC Units",
-                            data.data![index].serviceName ?? "N/A",
+                            reminder.serviceName ?? "N/A",
                             style: GoogleFonts.outfit(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w500,
@@ -841,7 +876,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                             ),
                             child: Text(
                               // "Due Soon",
-                              data.data![index].status ?? "",
+                              reminder.status ?? "",
                               style: GoogleFonts.parkinsans(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
@@ -883,9 +918,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                                   SizedBox(height: 6.h),
                                   Text(
                                     // "12 January 2026",
-                                    formatDate(
-                                      data.data![index].lastServiceDate,
-                                    ),
+                                    formatDate(reminder.lastServiceDate),
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w500,
@@ -926,7 +959,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                                   SizedBox(height: 6.h),
                                   Text(
                                     // "12 July 2026",
-                                    formatDate(data.data![index].nextDueDate),
+                                    formatDate(reminder.nextDueDate),
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w500,
@@ -971,127 +1004,138 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                   ),
                 );
               },
-            );
-          },
-          error: (error, stackTrace) {
-            log(stackTrace.toString());
-            return Center(child: Text(error.toString()));
-          },
-          loading: () => Center(
-            child: CircularProgressIndicator(color: AppColors.buttonBg),
-          ),
-        ),
-        SizedBox(height: 25.h),
-        Text(
-          "Recent Requests",
-          style: GoogleFonts.outfit(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
-            color: Color(0xFF04254E),
-            letterSpacing: -0.64,
-          ),
-        ),
-        SizedBox(height: 16.h),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: 3,
-          padding: EdgeInsets.zero,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 20.w,
-            childAspectRatio: 0.74,
-          ),
-          itemBuilder: (context, index) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16.r),
-                    topRight: Radius.circular(16.r),
-                  ),
-                  child: Image.asset(
-                    "assets/Rectangle 4.png",
-                    width: 189.w,
-                    height: 138.h,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(10.w),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(color: const Color(0xffF2D701)),
-                      right: BorderSide(color: const Color(0xffF2D701)),
-                      bottom: BorderSide(color: const Color(0xffF2D701)),
-                      top: BorderSide.none,
+              error: (error, stackTrace) {
+                log(stackTrace.toString());
+                return Center(child: Text(error.toString()));
+              },
+              loading: () => Center(
+                child: CircularProgressIndicator(color: AppColors.buttonBg),
+              ),
+            ),
+            SizedBox(height: 20.h),
+            Text(
+              "Recent Requests",
+              style: GoogleFonts.outfit(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF04254E),
+                letterSpacing: -0.64,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 3,
+              padding: EdgeInsets.zero,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 20.w,
+                childAspectRatio: 0.74,
+              ),
+              itemBuilder: (context, index) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16.r),
+                        topRight: Radius.circular(16.r),
+                      ),
+                      child: Image.asset(
+                        "assets/Rectangle 4.png",
+                        width: 189.w,
+                        height: 138.h,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(16.r),
-                      bottomRight: Radius.circular(16.r),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "AC Repair Service",
-                        style: GoogleFonts.outfit(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.buttonText,
-                          letterSpacing: -0.5,
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          left: BorderSide(color: const Color(0xffF2D701)),
+                          right: BorderSide(color: const Color(0xffF2D701)),
+                          bottom: BorderSide(color: const Color(0xffF2D701)),
+                          top: BorderSide.none,
+                        ),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(16.r),
+                          bottomRight: Radius.circular(16.r),
                         ),
                       ),
-                      SizedBox(height: 10.h),
-                      Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.star,
-                            color: Color(0xffF2D701),
-                            size: 15.sp,
-                          ),
-                          SizedBox(width: 4.w),
                           Text(
-                            "4.9",
-                            style: GoogleFonts.inter(
-                              fontSize: 18.sp,
+                            "AC Repair Service",
+                            style: GoogleFonts.outfit(
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.w500,
                               color: AppColors.buttonText,
                               letterSpacing: -0.5,
                             ),
                           ),
-                          SizedBox(width: 6.w),
+                          SizedBox(height: 10.h),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Color(0xffF2D701),
+                                size: 15.sp,
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                "4.9",
+                                style: GoogleFonts.inter(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.buttonText,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              SizedBox(width: 6.w),
+                              Text(
+                                "(500+ Reviews)",
+                                style: GoogleFonts.inter(
+                                  color: Color(0xff808080),
+                                  fontSize: 14.sp,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10.h),
                           Text(
-                            "(500+ Reviews)",
-                            style: GoogleFonts.inter(
-                              color: Color(0xff808080),
-                              fontSize: 14.sp,
-                              letterSpacing: -0.5,
+                            "Engineer: Dakarai",
+                            style: GoogleFonts.parkinsans(
+                              color: AppColors.buttonText,
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: -0.56,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "Engineer: Dakarai",
-                        style: GoogleFonts.parkinsans(
-                          color: AppColors.buttonText,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.56,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        );
+      },
+      error: (error, stackTrace) {
+        log(stackTrace.toString());
+        return Center(child: Text(error.toString()));
+      },
+      loading: () => SizedBox(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height / 2,
+        child: Center(
+          child: CircularProgressIndicator(color: AppColors.buttonBg),
         ),
-      ],
+      ),
     );
   }
 }

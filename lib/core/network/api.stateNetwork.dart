@@ -13,6 +13,7 @@ import 'package:dwelleasy_ghana/data/ClientModel/CUpdateProfileResModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CVerifyOrCreatePassBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CVerifyOrCreatePassResModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CloginResModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/addRatingResModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/clientCreateTicketBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/clientCreateTicketResModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/clientGetTicketModel.dart';
@@ -21,11 +22,14 @@ import 'package:dwelleasy_ghana/data/ClientModel/createPlanReqiestBodyModel.dart
 import 'package:dwelleasy_ghana/data/ClientModel/createPlanRequestResModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestResModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/getActivePlanModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/getDashbordCountModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getMyPlanRequestServiceModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceDetailsModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceListModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getRatingModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getServiceRequestModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/reportIssueResModel.dart';
 import 'package:dwelleasy_ghana/data/model/acceptRequestBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/acceptRequestResModel.dart';
 import 'package:dwelleasy_ghana/data/model/createLeaveRequestBodyModel.dart';
@@ -43,6 +47,8 @@ import 'package:dwelleasy_ghana/data/model/getPendingRequestModel.dart';
 import 'package:dwelleasy_ghana/data/model/getProfileModel.dart';
 import 'package:dwelleasy_ghana/data/model/getServiceResModel.dart';
 import 'package:dwelleasy_ghana/data/model/getTicketModel.dart';
+import 'package:dwelleasy_ghana/data/model/inProgressModel.dart';
+import 'package:dwelleasy_ghana/data/model/jobDoneModel.dart';
 import 'package:dwelleasy_ghana/data/model/loginBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/loginResModel.dart';
 import 'package:dwelleasy_ghana/data/model/readNotificationModel.dart';
@@ -53,6 +59,7 @@ import 'package:dwelleasy_ghana/data/model/requestCompleteResModel.dart';
 import 'package:dwelleasy_ghana/data/model/sendMessageBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/sendMessageResModel.dart';
 import 'package:dwelleasy_ghana/data/model/todayAssignRequestModel.dart';
+import 'package:dwelleasy_ghana/data/model/todayPendngRequestModel.dart';
 import 'package:dwelleasy_ghana/data/model/updateProfileBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/updateProfileResModel.dart';
 import 'package:dwelleasy_ghana/data/model/uploadImageResModel.dart';
@@ -145,11 +152,26 @@ abstract class ApiStateNetwork {
   @GET("/api/v1/employee/get-assigned-requests?page=1&limit=10&today=true")
   Future<TodayAssignRequestModel> todayAssignReqeust();
 
+  @GET("/api/v1/employee/get-pending-requests?page=1&limit=10&today=true")
+  Future<TodayPendingRequestModel> todayPendingReqeust();
+
+  @GET("/api/v1/employee/get-pending-requests?page=1&limit=10")
+  Future<TodayPendingRequestModel> pendingReqeust();
+
   @GET("/api/v1/employee/get-notification?page=1&limit=10")
   Future<GetNotificationModel> getNotification();
 
   @POST("/api/v1/employee/read-notification")
   Future<ReadNotificationModel> readNotification();
+
+  @GET("/api/v1/employee/get-in-progress-requests?page=1&limit=10")
+  Future<InProgressModel> inProgress();
+
+  @GET("/api/v1/user/get-active-plan?page=1&limit=10")
+  Future<GetActivePlanModel> getActivePlan();
+
+  @GET("/api/v1/user/get-dashbaord-count")
+  Future<GetDashbordCountModel> getDashbordCount();
 
   ////////////////////////////////  Client (user) ////////////////////////////
   ////////////////////////////////////////////////////////////////////////
@@ -223,10 +245,10 @@ abstract class ApiStateNetwork {
   Future<GetServiceReminderResponseModel> clientGetServiceReminders();
 
   @POST("/api/v1/user/report-issue")
-  Future<void> reportIssue(@Body() ReportIssueBodyModel body);
+  Future<ReportIssueResModel> reportIssue(@Body() ReportIssueBodyModel body);
 
   @POST("/api/v1/user/add-rating")
-  Future<void> addRating(@Body() RatingBodyModel body);
+  Future<AddRatingResModel> addRating(@Body() RatingBodyModel body);
 
   @POST("/api/v1/user/send-message")
   Future<void> sendMessageHelp(@Body() SendMessageRequest body);
@@ -245,4 +267,7 @@ abstract class ApiStateNetwork {
 
   @GET("/api/v1/user/get-employee-rating")
   Future<GetRatingModel> clientGetRating(@Query('requestId') String requestId);
+
+  @GET("/api/v1/employee/get-job-done-count")
+  Future<JobDoneModel> jobDone();
 }

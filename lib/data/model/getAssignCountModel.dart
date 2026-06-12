@@ -40,22 +40,26 @@ class Data {
     int? assigned;
     int? pending;
     int? completed;
+    int? inProgress;
 
     Data({
         this.assigned,
         this.pending,
         this.completed,
+        this.inProgress,
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         assigned: json["assigned"],
         pending: json["pending"],
         completed: json["completed"],
+        inProgress: json["inProgress"],
     );
 
     Map<String, dynamic> toJson() => {
         "assigned": assigned,
         "pending": pending,
         "completed": completed,
+        "inProgress": inProgress,
     };
 }

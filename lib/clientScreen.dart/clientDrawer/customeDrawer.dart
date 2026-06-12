@@ -26,7 +26,6 @@ class CustomeDrawer extends ConsumerStatefulWidget {
 }
 
 class _CustomeDrawerState extends ConsumerState<CustomeDrawer> {
-  
   void showLogoutDialog() {
     showDialog(
       context: context,
@@ -471,111 +470,111 @@ class _CustomeDrawerState extends ConsumerState<CustomeDrawer> {
                     //     ],
                     //   ),
                     // ),
-                    SizedBox(height: 30.h),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => PaymentHistoryScreen(),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            height: 20.h,
-                            width: 20.w,
-                            child: SvgPicture.asset(
-                              "assets/SvgImage/payment.svg",
-                              fit: BoxFit.contain,
-                            ),
-                          ),
+                    // SizedBox(height: 30.h),
+                    // InkWell(
+                    //   onTap: () {
+                    //     Navigator.pop(context);
+                    //     Navigator.push(
+                    //       context,
+                    //       CupertinoPageRoute(
+                    //         builder: (context) => PaymentHistoryScreen(),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Row(
+                    //     children: [
+                    //       SizedBox(
+                    //         height: 20.h,
+                    //         width: 20.w,
+                    //         child: SvgPicture.asset(
+                    //           "assets/SvgImage/payment.svg",
+                    //           fit: BoxFit.contain,
+                    //         ),
+                    //       ),
 
-                          SizedBox(width: 10.w),
-                          Text(
-                            "Payment History",
-                            style: GoogleFonts.outfit(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xff04254E),
-                              letterSpacing: -0.64,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 30.h),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => ClientPaymentIssue(),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            height: 20.h,
-                            width: 20.w,
-                            child: SvgPicture.asset(
-                              "assets/SvgImage/payment.svg",
-                              fit: BoxFit.contain,
-                            ),
-                          ),
+                    //       SizedBox(width: 10.w),
+                    //       Text(
+                    //         "Payment History",
+                    //         style: GoogleFonts.outfit(
+                    //           fontSize: 16.sp,
+                    //           fontWeight: FontWeight.w500,
+                    //           color: Color(0xff04254E),
+                    //           letterSpacing: -0.64,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // SizedBox(height: 30.h),
+                    // InkWell(
+                    //   onTap: () {
+                    //     Navigator.pop(context);
+                    //     Navigator.push(
+                    //       context,
+                    //       CupertinoPageRoute(
+                    //         builder: (context) => ClientPaymentIssue(),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Row(
+                    //     children: [
+                    //       SizedBox(
+                    //         height: 20.h,
+                    //         width: 20.w,
+                    //         child: SvgPicture.asset(
+                    //           "assets/SvgImage/payment.svg",
+                    //           fit: BoxFit.contain,
+                    //         ),
+                    //       ),
 
-                          SizedBox(width: 10.w),
-                          Text(
-                            "Payment Issue",
-                            style: GoogleFonts.outfit(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xff04254E),
-                              letterSpacing: -0.64,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 30.h),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => ClientNotificationSetting(),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            height: 20.h,
-                            width: 20.w,
-                            child: SvgPicture.asset(
-                              "assets/SvgImage/notfi.svg",
-                              fit: BoxFit.contain,
-                            ),
-                          ),
+                    //       SizedBox(width: 10.w),
+                    //       Text(
+                    //         "Payment Issue",
+                    //         style: GoogleFonts.outfit(
+                    //           fontSize: 16.sp,
+                    //           fontWeight: FontWeight.w500,
+                    //           color: Color(0xff04254E),
+                    //           letterSpacing: -0.64,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // SizedBox(height: 30.h),
+                    // InkWell(
+                    //   onTap: () {
+                    //     Navigator.pop(context);
+                    //     Navigator.push(
+                    //       context,
+                    //       CupertinoPageRoute(
+                    //         builder: (context) => ClientNotificationSetting(),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Row(
+                    //     children: [
+                    //       SizedBox(
+                    //         height: 20.h,
+                    //         width: 20.w,
+                    //         child: SvgPicture.asset(
+                    //           "assets/SvgImage/notfi.svg",
+                    //           fit: BoxFit.contain,
+                    //         ),
+                    //       ),
 
-                          SizedBox(width: 10.w),
-                          Text(
-                            "Notifications Settings",
-                            style: GoogleFonts.outfit(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xff04254E),
-                              letterSpacing: -0.64,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    //       SizedBox(width: 10.w),
+                    //       Text(
+                    //         "Notifications Settings",
+                    //         style: GoogleFonts.outfit(
+                    //           fontSize: 16.sp,
+                    //           fontWeight: FontWeight.w500,
+                    //           color: Color(0xff04254E),
+                    //           letterSpacing: -0.64,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     // SizedBox(height: 30.h),
                     // InkWell(
                     //   onTap: () {

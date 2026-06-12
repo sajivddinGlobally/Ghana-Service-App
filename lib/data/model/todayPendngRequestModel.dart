@@ -1,27 +1,27 @@
 // To parse this JSON data, do
 //
-//     final getPendingRequestsModel = getPendingRequestsModelFromJson(jsonString);
+//     final todayPendingRequestModel = todayPendingRequestModelFromJson(jsonString);
 
 import 'dart:convert';
 
-GetPendingRequestsModel getPendingRequestsModelFromJson(String str) => GetPendingRequestsModel.fromJson(json.decode(str));
+TodayPendingRequestModel todayPendingRequestModelFromJson(String str) => TodayPendingRequestModel.fromJson(json.decode(str));
 
-String getPendingRequestsModelToJson(GetPendingRequestsModel data) => json.encode(data.toJson());
+String todayPendingRequestModelToJson(TodayPendingRequestModel data) => json.encode(data.toJson());
 
-class GetPendingRequestsModel {
+class TodayPendingRequestModel {
     String? message;
     int? code;
     bool? error;
     Data? data;
 
-    GetPendingRequestsModel({
+    TodayPendingRequestModel({
         this.message,
         this.code,
         this.error,
         this.data,
     });
 
-    factory GetPendingRequestsModel.fromJson(Map<String, dynamic> json) => GetPendingRequestsModel(
+    factory TodayPendingRequestModel.fromJson(Map<String, dynamic> json) => TodayPendingRequestModel(
         message: json["message"],
         code: json["code"],
         error: json["error"],

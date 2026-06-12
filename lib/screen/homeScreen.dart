@@ -16,6 +16,7 @@ import 'package:dwelleasy_ghana/screen/notificationScreen.dart';
 import 'package:dwelleasy_ghana/screen/profileScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/assignedScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/compleScreen.dart';
+import 'package:dwelleasy_ghana/screen/work/inProgresScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/pendingScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getAssignCountProvider.dart';
 import 'package:dwelleasy_ghana/selectRolScreen.dart';
@@ -36,10 +37,20 @@ class MyBottomNav extends ConsumerStatefulWidget {
 
 class _MyBottomNavState extends ConsumerState<MyBottomNav> {
   int currentIndex = 0;
-  List<Widget> screens = [
-    Homescreen(),
+  List<Widget> get screens => [
+    Homescreen(
+      onScheduleTap: () {
+        setState(() {
+          currentIndex = 2;
+        });
+      },
+      onJobTap: () {
+        setState(() {
+          currentIndex = 1; // Job Screen
+        });
+      },
+    ),
     Jobscreen(),
-    // Requestscreen(),
     Yourschedulescreen(isShowBack: false),
     Profilescreen(),
   ];
@@ -185,7 +196,13 @@ class _MyBottomNavState extends ConsumerState<MyBottomNav> {
 }
 
 class Homescreen extends ConsumerStatefulWidget {
-  const Homescreen({super.key});
+  final VoidCallback onScheduleTap;
+  final VoidCallback onJobTap;
+  const Homescreen({
+    super.key,
+    required this.onScheduleTap,
+    required this.onJobTap,
+  });
 
   @override
   ConsumerState<Homescreen> createState() => _HomescreenState();
@@ -510,74 +527,74 @@ class _HomescreenState extends ConsumerState<Homescreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 15.h),
-            Padding(
-              padding: EdgeInsets.only(left: 16.w, right: 16.w),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      style: GoogleFonts.parkinsans(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                      ),
-                      cursorColor: Colors.white,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color(0xff34383D),
-                        hint: Text(
-                          "Search Services...",
-                          style: GoogleFonts.parkinsans(
-                            fontWeight: FontWeight.w400,
-                            color: Color.fromRGBO(255, 255, 255, 0.5),
-                            fontSize: 16.sp,
-                            letterSpacing: -0.64,
-                          ),
-                        ),
-                        hintStyle: GoogleFonts.parkinsans(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey,
-                        ),
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          color: Colors.white,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 18.h),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14.r),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14.r),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14.r),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                  // SizedBox(width: 16.w),
-                  // Container(
-                  //   padding: EdgeInsets.all(14),
-                  //   decoration: BoxDecoration(
-                  //     color: Color(0xffF2D701),
-                  //     borderRadius: BorderRadius.circular(4.r),
-                  //   ),
-                  //   child: Center(
-                  //     child: Icon(
-                  //       Icons.menu,
-                  //       color: Color(0xff04254E),
-                  //       size: 22.sp,
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
+            // SizedBox(height: 15.h),
+            // Padding(
+            //   padding: EdgeInsets.only(left: 16.w, right: 16.w),
+            //   child: Row(
+            //     children: [
+            //       Expanded(
+            //         child: TextField(
+            //           style: GoogleFonts.parkinsans(
+            //             fontSize: 16.sp,
+            //             fontWeight: FontWeight.w400,
+            //             color: Colors.white,
+            //           ),
+            //           cursorColor: Colors.white,
+            //           decoration: InputDecoration(
+            //             filled: true,
+            //             fillColor: const Color(0xff34383D),
+            //             hint: Text(
+            //               "Search Services...",
+            //               style: GoogleFonts.parkinsans(
+            //                 fontWeight: FontWeight.w400,
+            //                 color: Color.fromRGBO(255, 255, 255, 0.5),
+            //                 fontSize: 16.sp,
+            //                 letterSpacing: -0.64,
+            //               ),
+            //             ),
+            //             hintStyle: GoogleFonts.parkinsans(
+            //               fontSize: 16.sp,
+            //               fontWeight: FontWeight.w400,
+            //               color: Colors.grey,
+            //             ),
+            //             prefixIcon: const Icon(
+            //               Icons.search,
+            //               color: Colors.white,
+            //             ),
+            //             contentPadding: EdgeInsets.symmetric(vertical: 18.h),
+            //             border: OutlineInputBorder(
+            //               borderRadius: BorderRadius.circular(14.r),
+            //               borderSide: BorderSide.none,
+            //             ),
+            //             enabledBorder: OutlineInputBorder(
+            //               borderRadius: BorderRadius.circular(14.r),
+            //               borderSide: BorderSide.none,
+            //             ),
+            //             focusedBorder: OutlineInputBorder(
+            //               borderRadius: BorderRadius.circular(14.r),
+            //               borderSide: BorderSide.none,
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //       // SizedBox(width: 16.w),
+            //       // Container(
+            //       //   padding: EdgeInsets.all(14),
+            //       //   decoration: BoxDecoration(
+            //       //     color: Color(0xffF2D701),
+            //       //     borderRadius: BorderRadius.circular(4.r),
+            //       //   ),
+            //       //   child: Center(
+            //       //     child: Icon(
+            //       //       Icons.menu,
+            //       //       color: Color(0xff04254E),
+            //       //       size: 22.sp,
+            //       //     ),
+            //       //   ),
+            //       // ),
+            //     ],
+            //   ),
+            // ),
             SizedBox(height: 24.h),
             SizedBox(
               height: 160.h,
@@ -586,12 +603,13 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => Assignedscreen(),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   CupertinoPageRoute(
+                      //     builder: (context) => Assignedscreen(),
+                      //   ),
+                      // );
+                      widget.onJobTap();
                     },
                     child: Container(
                       margin: EdgeInsets.only(left: 12.w, right: 10.w),
@@ -660,13 +678,14 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) =>
-                              Yourschedulescreen(isShowBack: true),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   CupertinoPageRoute(
+                      //     builder: (context) =>
+                      //         Yourschedulescreen(isShowBack: true),
+                      //   ),
+                      // );
+                      widget.onScheduleTap();
                     },
                     child: Container(
                       margin: EdgeInsets.only(left: 12.w, right: 10.w),
@@ -742,36 +761,56 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                 final assign = countData.data?.assigned;
                 final pending = countData.data?.pending;
                 final complete = countData.data?.completed;
+                final inProgress = countData.data?.inProgress;
                 return Padding(
                   padding: EdgeInsets.only(left: 16.w, right: 16.w),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _complete(assign.toString(), "Assigned", () {
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => Assignedscreen(),
-                          ),
-                        );
-                      }),
-                      SizedBox(width: 16.w),
-                      _complete(pending.toString(), "Pending", () {
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => PendingScreen(),
-                          ),
-                        );
-                      }),
-                      SizedBox(width: 16.w),
-                      _complete(complete.toString(), "Completed", () {
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => Completescreen(),
-                          ),
-                        );
-                      }),
+                      Row(
+                        children: [
+                          _complete(assign.toString(), "Assigned", () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => Assignedscreen(),
+                              ),
+                            );
+                            // widget.onJobTap();
+                          }),
+                          SizedBox(width: 16.w),
+                          _complete(pending.toString(), "Pending", () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => PendingScreen(),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                      SizedBox(height: 16.w),
+                      Row(
+                        children: [
+                          _complete(inProgress.toString(), "In Progress", () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => InProgresScreen(),
+                              ),
+                            );
+                          }),
+                          SizedBox(width: 16.w),
+                          _complete(complete.toString(), "Completed", () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => Completescreen(),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
                     ],
                   ),
                 );

@@ -19,6 +19,14 @@ import 'package:dwelleasy_ghana/data/ClientModel/clientGetTicketModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/clientNotificationModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createPlanReqiestBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestBodyModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/getActivePlanModel.dart'
+    hide
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration,
+        PersonalInformation,
+        PropertyDetails;
+import 'package:dwelleasy_ghana/data/ClientModel/getDashbordCountModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getMyPlanRequestServiceModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceDetailsModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceListModel.dart';
@@ -44,20 +52,59 @@ import 'package:dwelleasy_ghana/data/model/createTicketBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/forgotPasswordBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/forgotPasswordResModel.dart';
 import 'package:dwelleasy_ghana/data/model/getAssignCountModel.dart';
-import 'package:dwelleasy_ghana/data/model/getAssigneRequestModel.dart';
-import 'package:dwelleasy_ghana/data/model/getCompleteRequestModel.dart';
+import 'package:dwelleasy_ghana/data/model/getAssigneRequestModel.dart'
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
+import 'package:dwelleasy_ghana/data/model/getCompleteRequestModel.dart'
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        Declaration,
+        PaymentAndBilling;
 import 'package:dwelleasy_ghana/data/model/getMyLeaveModel.dart';
 import 'package:dwelleasy_ghana/data/model/getNotificationModel.dart';
-import 'package:dwelleasy_ghana/data/model/getPendingRequestModel.dart';
+import 'package:dwelleasy_ghana/data/model/getPendingRequestModel.dart'
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
 import 'package:dwelleasy_ghana/data/model/getProfileModel.dart';
 import 'package:dwelleasy_ghana/data/model/getServiceResModel.dart';
 import 'package:dwelleasy_ghana/data/model/getTicketModel.dart';
+import 'package:dwelleasy_ghana/data/model/inProgressModel.dart'
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
+import 'package:dwelleasy_ghana/data/model/jobDoneModel.dart';
 import 'package:dwelleasy_ghana/data/model/loginBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/readNotificationModel.dart';
 import 'package:dwelleasy_ghana/data/model/registerBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/requestCompleteBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/sendMessageBodyModel.dart';
-import 'package:dwelleasy_ghana/data/model/todayAssignRequestModel.dart';
+import 'package:dwelleasy_ghana/data/model/todayAssignRequestModel.dart'
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
+import 'package:dwelleasy_ghana/data/model/todayPendngRequestModel.dart'
+    hide
+        PropertyDetails,
+        PersonalInformation,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
 import 'package:dwelleasy_ghana/data/model/updateProfileBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/updateProfileResModel.dart';
 import 'package:dwelleasy_ghana/data/model/verifyOrCreatePasswordBody.dart';
@@ -342,7 +389,8 @@ class AuthService {
         return response;
       }
       return throw Exception(response.message);
-    } catch (e) {
+    } catch (e, st) {
+      log(st.toString());
       throw Exception(e.toString());
     }
   }
@@ -371,6 +419,18 @@ class AuthService {
     }
   }
 
+  Future<InProgressModel> getInProgress() async {
+    try {
+      final response = await api.inProgress();
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      return throw Exception(response.message);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<TodayAssignRequestModel> todayAssignRequest() async {
     try {
       final response = await api.todayAssignReqeust();
@@ -379,6 +439,32 @@ class AuthService {
       }
       return throw Exception(response.message);
     } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<TodayPendingRequestModel> todayPendingRequest() async {
+    try {
+      final response = await api.todayPendingReqeust();
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      return throw Exception(response.message);
+    } catch (e, st) {
+      log(st.toString());
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<TodayPendingRequestModel> pendingRequest() async {
+    try {
+      final response = await api.pendingReqeust();
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      return throw Exception(response.message);
+    } catch (e, st) {
+      log(st.toString());
       throw Exception(e.toString());
     }
   }
@@ -454,8 +540,8 @@ class AuthService {
       return false;
     }
   }
-   
-   Future<GetNotificationModel> getNotification() async {
+
+  Future<GetNotificationModel> getNotification() async {
     try {
       final response = await api.getNotification();
       if (response.code == 0 && response.error == false) {
@@ -471,6 +557,19 @@ class AuthService {
   Future<ReadNotificationModel> readNotification() async {
     try {
       final response = await api.readNotification();
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      return throw Exception(response.message);
+    } catch (e, st) {
+      log(st.toString());
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<JobDoneModel> jobDone() async {
+    try {
+      final response = await api.jobDone();
       if (response.code == 0 && response.error == false) {
         return response;
       }
@@ -879,55 +978,53 @@ class AuthService {
     }
   }
 
-  // Future<bool> reportIssue({
-  //   required String serviceRequestId,
-  //   required String issueType,
-  //   required int description,
-  // }) async {
-  //   try {
-  //     final body = ReportIssueBodyModel(
-  //       serviceRequestId: serviceRequestId,
-  //       issueType: issueType,
-  //       description: description,
-  //     );
-  //     final response = await api.reportIssue(body);
-  //     if (response.code == 0 && response.error == false) {
-  //       log(response.message ?? "Login Success");
-  //       return true;
-  //     }
-  //     return false;
-  //   } catch (e, st) {
-  //     log("ERROR => $e");
-  //     log("STACK TRACE => $st");
-  //     return false;
-  //   }
-  // }
-  //
-  //
-  // Future<bool> addRating({
-  //   required String serviceRequestId,
-  //   required String issueType,
-  //   required String description,
-  // }) async {
-  //   try {
-  //     final body = RatingBodyModel(
-  //       serviceRequestId: serviceRequestId,
-  //       issueType: issueType,
-  //       description: description,
-  //     );
-  //     final response = await api.addRating(body);
-  //     if (response.code == 0 && response.error == false) {
-  //       log(response.message ?? "Login Success");
-  //       return true;
-  //     }
-  //     return false;
-  //   } catch (e, st) {
-  //     log("ERROR => $e");
-  //     log("STACK TRACE => $st");
-  //     return false;
-  //   }
-  // }
-  //
+  Future<bool> reportIssue({
+    required String serviceRequestId,
+    required String issueType,
+    required String description,
+  }) async {
+    try {
+      final body = ReportIssueBodyModel(
+        serviceRequestId: serviceRequestId,
+        issueType: issueType,
+        description: description,
+      );
+      final response = await api.reportIssue(body);
+      if (response.code == 0 && response.error == false) {
+        log(response.message ?? "Login Success");
+        return true;
+      }
+      return false;
+    } catch (e, st) {
+      log("ERROR => $e");
+      log("STACK TRACE => $st");
+      return false;
+    }
+  }
+
+  Future<bool> addRating({
+    required String serviceRequestId,
+    required int rating,
+    required String message,
+  }) async {
+    try {
+      final body = RatingBodyModel(
+        serviceRequestId: serviceRequestId,
+        message: message,
+        rating: rating,
+      );
+      final response = await api.addRating(body);
+      if (response.code == 0 && response.error == false) {
+        log(response.message ?? "Login Success");
+        return true;
+      }
+      return false;
+    } catch (e, st) {
+      log("ERROR => $e");
+      log("STACK TRACE => $st");
+      return false;
+    }
+  }
 
   Future<bool> sendMessageHelp({
     required String requestId,
@@ -967,7 +1064,8 @@ class AuthService {
         return response;
       }
       return throw Exception(response.message);
-    } catch (e) {
+    } catch (e, st) {
+      log(st.toString());
       throw Exception(e.toString());
     }
   }
@@ -998,7 +1096,7 @@ class AuthService {
     }
   }
 
-   Future<GetRatingModel> clientGetRating({required String requstId}) async {
+  Future<GetRatingModel> clientGetRating({required String requstId}) async {
     try {
       final response = await api.clientGetRating(requstId);
       if (response.code == 0 && response.error == false) {
@@ -1011,4 +1109,27 @@ class AuthService {
     }
   }
 
+  Future<GetActivePlanModel> clientGetActivePlan() async {
+    try {
+      final response = await api.getActivePlan();
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      return throw Exception(response.message);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<GetDashbordCountModel> clientGetDashbordCount() async {
+    try {
+      final response = await api.getDashbordCount();
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      return throw Exception(response.message);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

@@ -65,6 +65,57 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
       body: SingleChildScrollView(
         child: MyPlan.when(
           data: (data) {
+            if (data.data?.list == null || data.data!.list!.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 110.h,
+                        width: 110.w,
+                        decoration: BoxDecoration(
+                          color: AppColors.buttonBg.withOpacity(0.15),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.assignment_outlined,
+                          size: 55.sp,
+                          color: AppColors.buttonText,
+                        ),
+                      ),
+
+                      SizedBox(height: 20.h),
+
+                      Text(
+                        "No Active Plan Found",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.outfit(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.buttonText,
+                        ),
+                      ),
+
+                      SizedBox(height: 10.h),
+
+                      Text(
+                        "You don't have any active service plans at the moment.\nPurchase a plan to start enjoying our services.",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.parkinsans(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+
+                      SizedBox(height: 30.h),
+                    ],
+                  ),
+                ),
+              );
+            }
             return Padding(
               padding: EdgeInsets.only(left: 16.w, right: 16.w),
               child: Column(

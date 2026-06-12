@@ -231,13 +231,25 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
             ),
             SizedBox(height: 60.h),
             Center(
-              child: Text(
-                "Upload Photo",
-                style: GoogleFonts.outfit(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.buttonBg,
-                  fontSize: 18.sp,
-                  letterSpacing: -0.72,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(15.r),
+                onTap: () {
+                  showImagePicker();
+                },
+                child: SizedBox(
+                  width: 200.w,
+                  height: 40.h,
+                  child: Center(
+                    child: Text(
+                      "Upload Photo",
+                      style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.buttonBg,
+                        fontSize: 18.sp,
+                        letterSpacing: -0.72,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -565,6 +577,7 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
                 ],
               ),
             ),
+            SizedBox(height: 30.h),
           ],
         ),
       ),
