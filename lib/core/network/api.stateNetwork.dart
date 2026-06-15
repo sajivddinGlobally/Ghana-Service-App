@@ -127,8 +127,11 @@ abstract class ApiStateNetwork {
   @GET("/api/v1/employee/get-assign-count")
   Future<GetAssignCount> getAssignCount();
 
-  @GET("/api/v1/employee/get-assigned-requests?page=1&limit=10")
-  Future<GetAssignedRequestsModel> getAssignRequest();
+  @GET("/api/v1/employee/get-assigned-requests")
+  Future<GetAssignedRequestsModel> getAssignRequest(
+      @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
   @GET("/api/v1/employee/get-pending-requests?page=1&limit=10")
   Future<GetPendingRequestsModel> getPendingRequest();

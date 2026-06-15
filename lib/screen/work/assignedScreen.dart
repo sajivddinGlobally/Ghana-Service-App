@@ -18,9 +18,31 @@ class Assignedscreen extends ConsumerStatefulWidget {
 }
 
 class _AssignedscreenState extends ConsumerState<Assignedscreen> {
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      ref.read(getAssignRequestProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final assignRequestState = ref.watch(getAssignRequestProvider);
+    final notifier = ref.read(getAssignRequestProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       body: Column(
@@ -156,9 +178,26 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
               return Expanded(
                 child: ListView.builder(
                   padding: EdgeInsets.zero,
-                  itemCount: data.data?.list?.length,
+                  // itemCount: data.data?.list?.length,
+                  itemCount:
+                      (data.data?.list?.length ?? 0) +
+                      (notifier.hasMoreData ? 1 : 0),
                   itemBuilder: (context, index) {
-                    final assign = data.data!.list![index];
+                    final list = data.data?.list ?? [];
+
+                    if (index == list.length) {
+                      return Padding(
+                        padding: EdgeInsets.all(16.w),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.buttonBg,
+                          ),
+                        ),
+                      );
+                    }
+
+                    final assign = list[index];
+
                     final preferredDate = DateTime.fromMillisecondsSinceEpoch(
                       assign.preferredDate ?? 0,
                     );

@@ -382,9 +382,12 @@ class AuthService {
     }
   }
 
-  Future<GetAssignedRequestsModel> getAssignRequestList() async {
+  Future<GetAssignedRequestsModel> getAssignRequestList({
+    required int page,
+    int limit = 10,
+  }) async {
     try {
-      final response = await api.getAssignRequest();
+      final response = await api.getAssignRequest(page, limit);
       if (response.code == 0 && response.error == false) {
         return response;
       }
