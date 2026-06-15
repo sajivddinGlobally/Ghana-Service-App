@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/provider/serviceReminderProvider.dart';
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
@@ -30,11 +29,33 @@ class _HelpsupportscreenState extends ConsumerState<Helpsupportscreen> {
     }
   }
 
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // जब यूज़र लिस्ट के बिल्कुल नीचे पहुँचने वाला हो (200px पहले)
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
+      ref.read(clientGetTicketProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final clientGetTicketState = ref.watch(clientGetTicketProvider);
-    final detailsAsync =
-    ref.watch(clientGetServiceRemindersProvider);
+    final notifier = ref.read(clientGetTicketProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: AppBar(
@@ -82,13 +103,14 @@ class _HelpsupportscreenState extends ConsumerState<Helpsupportscreen> {
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w500,
                 color: Color.fromRGBO(4, 37, 78, 0.7),
-                letterSpacing: -0.56
+                letterSpacing: -0.56,
               ),
             ),
           ],
         ),
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Padding(
           padding: EdgeInsets.only(left: 16.w, right: 16.w),
           child: Column(
@@ -225,8 +247,7 @@ class _HelpsupportscreenState extends ConsumerState<Helpsupportscreen> {
                     ),
                     elevation: 0,
                   ),
-                  onPressed:
-                  isLoading
+                  onPressed: isLoading
                       ? null
                       : () async {
                           if (subjectController.text.trim().isEmpty) {
@@ -289,9 +310,25 @@ class _HelpsupportscreenState extends ConsumerState<Helpsupportscreen> {
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: data.data?.list?.length ?? 0,
+                    // itemCount: data.data?.list?.length ?? 0,
+                    itemCount:
+                        (data.data?.list?.length ?? 0) +
+                        (notifier.hasMoreData ? 1 : 0),
                     itemBuilder: (context, index) {
-                      final ticket = data.data?.list?[index];
+                      final list = data.data?.list ?? [];
+
+                      if (index == list.length) {
+                        return Padding(
+                          padding: EdgeInsets.all(16.w),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.buttonBg,
+                            ),
+                          ),
+                        );
+                      }
+
+                      final ticket = list[index];
 
                       final createdAt = DateTime.fromMillisecondsSinceEpoch(
                         ticket?.createdAt ?? 0,

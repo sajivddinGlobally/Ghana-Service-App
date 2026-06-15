@@ -158,8 +158,13 @@ abstract class ApiStateNetwork {
   @GET("/api/v1/employee/get-pending-requests?page=1&limit=10")
   Future<TodayPendingRequestModel> pendingReqeust();
 
-  @GET("/api/v1/employee/get-notification?page=1&limit=10")
-  Future<GetNotificationModel> getNotification();
+  // @GET("/api/v1/employee/get-notification?page=1&limit=10")
+  // Future<GetNotificationModel> getNotification();
+  @GET("/api/v1/employee/get-notification")
+  Future<GetNotificationModel> getNotification(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
   @POST("/api/v1/employee/read-notification")
   Future<ReadNotificationModel> readNotification();
@@ -167,8 +172,11 @@ abstract class ApiStateNetwork {
   @GET("/api/v1/employee/get-in-progress-requests?page=1&limit=10")
   Future<InProgressModel> inProgress();
 
-  @GET("/api/v1/user/get-active-plan?page=1&limit=10")
-  Future<GetActivePlanModel> getActivePlan();
+  @GET("/api/v1/user/get-active-plan")
+  Future<GetActivePlanModel> getActivePlan(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
   @GET("/api/v1/user/get-dashbaord-count")
   Future<GetDashbordCountModel> getDashbordCount();
@@ -223,8 +231,14 @@ abstract class ApiStateNetwork {
     @Body() CreateServiceRequestBodyModel body,
   );
 
-  @GET("/api/v1/user/get-service-request?page=1&limit=10")
+  // @GET("/api/v1/user/get-service-request?page=1&limit=10")
+  // Future<GetServiceRequestModel> clientGetServiceRequest(
+  //   @Query("status") String status,
+  // );
+  @GET("/api/v1/user/get-service-request")
   Future<GetServiceRequestModel> clientGetServiceRequest(
+    @Query("page") int page,
+    @Query("limit") int limit,
     @Query("status") String status,
   );
 
@@ -233,8 +247,11 @@ abstract class ApiStateNetwork {
     @Body() ClientCreateTicketBodyModel body,
   );
 
-  @GET("/api/v1/user/get-tickets?page=1&limit=10")
-  Future<ClientGetTicketModel> clientGetTicket();
+  @GET("/api/v1/user/get-tickets")
+  Future<ClientGetTicketModel> clientGetTicket(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
   @GET("/api/v1/user/get-service-request-details")
   Future<GetServiceRequestDetailsModel> clientGetServiceRequestDetails(
@@ -256,11 +273,17 @@ abstract class ApiStateNetwork {
   @GET("/api/v1/user/get-messages?requestId")
   Future<GetServiceReminderResponseModel> getMessage();
 
-  @GET("/api/v1/user/get-notification?page=1&limit=10")
-  Future<ClientNotificationModel> clientGetNotification();
+  @GET("/api/v1/user/get-notification")
+  Future<ClientNotificationModel> clientGetNotification(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
-  @GET("/api/v1/user/get-my-plan-request?page=1&limit=10")
-  Future<CGetMyPlanRequestModel> clientGetMyPlanRequest();
+  @GET("/api/v1/user/get-my-plan-request")
+  Future<CGetMyPlanRequestModel> clientGetMyPlanRequest(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
   @POST("/api/v1/user/read-notification")
   Future<ReadNotificationModel> clientReadNotification();

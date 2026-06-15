@@ -1,9 +1,3 @@
-// final getCompleteRequestProvider =
-//     FutureProvider.autoDispose<GetCompleteRequestsModel>((ref) async {
-//       final pendingService = ref.read(authServiceProvider);
-//       return await pendingService.getCompleteRequestList();
-//     });
-
 import 'package:dwelleasy_ghana/core/apiService/apiService.dart';
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/data/model/getCompleteRequestModel.dart';

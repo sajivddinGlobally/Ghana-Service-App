@@ -18,9 +18,33 @@ class MyPlanScreen extends ConsumerStatefulWidget {
 }
 
 class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // जब यूज़र लिस्ट के बिल्कुल नीचे पहुँचने वाला हो (200px पहले)
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
+      ref.read(myPlanRequestProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final MyPlan = ref.watch(getMyPlanRequestProvider);
+    final state = ref.watch(myPlanRequestProvider);
+    final notifier = ref.read(myPlanRequestProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: AppBar(
@@ -62,72 +86,87 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
               )
             : const SizedBox(),
       ),
-      body: SingleChildScrollView(
-        child: MyPlan.when(
-          data: (data) {
-            if (data.data?.list == null || data.data!.list!.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 110.h,
-                        width: 110.w,
-                        decoration: BoxDecoration(
-                          color: AppColors.buttonBg.withOpacity(0.15),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.assignment_outlined,
-                          size: 55.sp,
-                          color: AppColors.buttonText,
-                        ),
+      body: state.when(
+        data: (data) {
+          if (data.data?.list == null || data.data!.list!.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 110.h,
+                      width: 110.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.buttonBg.withOpacity(0.15),
+                        shape: BoxShape.circle,
                       ),
-
-                      SizedBox(height: 20.h),
-
-                      Text(
-                        "No Active Plan Found",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.outfit(
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.buttonText,
-                        ),
+                      child: Icon(
+                        Icons.assignment_outlined,
+                        size: 55.sp,
+                        color: AppColors.buttonText,
                       ),
+                    ),
 
-                      SizedBox(height: 10.h),
+                    SizedBox(height: 20.h),
 
-                      Text(
-                        "You don't have any active service plans at the moment.\nPurchase a plan to start enjoying our services.",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.parkinsans(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey.shade600,
-                        ),
+                    Text(
+                      "No Active Plan Found",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.outfit(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.buttonText,
                       ),
+                    ),
 
-                      SizedBox(height: 30.h),
-                    ],
-                  ),
+                    SizedBox(height: 10.h),
+
+                    Text(
+                      "You don't have any active service plans at the moment.\nPurchase a plan to start enjoying our services.",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.parkinsans(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+
+                    SizedBox(height: 30.h),
+                  ],
                 ),
-              );
-            }
-            return Padding(
-              padding: EdgeInsets.only(left: 16.w, right: 16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 30.h),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: data.data?.list?.length ?? 0,
+              ),
+            );
+          }
+          return Padding(
+            padding: EdgeInsets.only(left: 16.w, right: 16.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20.h),
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    // itemCount: data.data?.list?.length ?? 0,
+                    itemCount:
+                        (data.data?.list?.length ?? 0) +
+                        (notifier.hasMoreData ? 1 : 0),
                     itemBuilder: (context, index) {
-                      final item = data.data!.list?[index];
+                      final list = data.data?.list ?? [];
+
+                      if (index == list.length) {
+                        return Padding(
+                          padding: EdgeInsets.all(16.w),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.buttonBg,
+                            ),
+                          ),
+                        );
+                      }
+
+                      final item = list[index];
                       return Container(
                         margin: EdgeInsets.only(bottom: 16.h),
                         padding: EdgeInsets.symmetric(
@@ -142,7 +181,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              item?.planDetails?.serviceId?.name ?? "",
+                              item.planDetails?.serviceId?.name ?? "",
                               style: GoogleFonts.outfit(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,
@@ -299,29 +338,29 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                       );
                     },
                   ),
-                ],
-              ),
-            );
-          },
-          error: (error, stackTrace) {
-            log(error.toString());
-            log(stackTrace.toString());
-            return Center(
-              child: Text(
-                "Somthing went wrong",
-                style: GoogleFonts.outfit(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
                 ),
-              ),
-            );
-          },
-          loading: () => SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 2,
-            child: Center(
-              child: CircularProgressIndicator(color: AppColors.buttonBg),
+              ],
             ),
+          );
+        },
+        error: (error, stackTrace) {
+          log(error.toString());
+          log(stackTrace.toString());
+          return Center(
+            child: Text(
+              "Somthing went wrong",
+              style: GoogleFonts.outfit(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          );
+        },
+        loading: () => SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 2,
+          child: Center(
+            child: CircularProgressIndicator(color: AppColors.buttonBg),
           ),
         ),
       ),

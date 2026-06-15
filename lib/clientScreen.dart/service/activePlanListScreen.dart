@@ -63,10 +63,33 @@ class _ActiveplanlistscreenState extends ConsumerState<Activeplanlistscreen> {
       "subtitleColor": Colors.white,
     },
   ];
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // जब यूज़र लिस्ट के बिल्कुल नीचे पहुँचने वाला हो (200px पहले)
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
+      ref.read(getActivePlanProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final getActivePlanState = ref.watch(getActivePlanProvider);
+    final notifier = ref.read(getActivePlanProvider.notifier);
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -74,10 +97,27 @@ class _ActiveplanlistscreenState extends ConsumerState<Activeplanlistscreen> {
         child: getActivePlanState.when(
           data: (data) {
             return ListView.builder(
+              controller: _scrollController,
               padding: EdgeInsets.zero,
-              // itemCount: planList.length,
-              itemCount: data.data!.list?.length,
+              // itemCount: data.data!.list?.length,
+              itemCount:
+                  (data.data?.list?.length ?? 0) +
+                  (notifier.hasMoreData ? 1 : 0),
               itemBuilder: (context, index) {
+                final list = data.data?.list ?? [];
+
+                if (index == list.length) {
+                  return Padding(
+                    padding: EdgeInsets.all(16.w),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.buttonBg,
+                      ),
+                    ),
+                  );
+                }
+
+                final item = list[index];
                 final imageData = planList[index % planList.length];
                 return Padding(
                   padding: EdgeInsets.only(bottom: 20.h),

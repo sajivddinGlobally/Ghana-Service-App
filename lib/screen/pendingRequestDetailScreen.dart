@@ -180,8 +180,8 @@ class _PendingRequestDetailScreenState
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        "AC Repair Specialist",
-                        // data.data.serviceId.
+                        // "AC Repair Specialist",
+                        data.data?.employeeId?.fullName ?? "N/A",
                         style: GoogleFonts.parkinsans(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,

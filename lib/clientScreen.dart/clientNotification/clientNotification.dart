@@ -1,5 +1,6 @@
 import 'dart:developer' show log;
 
+import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientOurPlanProvider/CGetOurPlanProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotificationProvider/clientNotificationProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/engineerDetailScreen.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
@@ -18,18 +19,37 @@ class Clientnotification extends ConsumerStatefulWidget {
 }
 
 class _ClientnotificationState extends ConsumerState<Clientnotification> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _scrollController.addListener(_onScroll);
     Future.microtask(() {
       ref.refresh(clientReadNotificationProvider);
     });
   }
 
+  void _onScroll() {
+    // जब यूज़र लिस्ट के बिल्कुल नीचे पहुँचने वाला हो (200px पहले)
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
+      ref.read(clientNotificationProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final clientNotification = ref.watch(clientNotificationProvider);
+    final clientNotifier = ref.read(clientNotificationProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: AppBar(
@@ -131,10 +151,25 @@ class _ClientnotificationState extends ConsumerState<Clientnotification> {
                 SizedBox(height: 30.h),
                 Expanded(
                   child: ListView.builder(
+                    controller: _scrollController,
                     padding: EdgeInsets.zero,
-                    itemCount: data.data?.list?.length ?? 0,
+                    // itemCount: data.data?.list?.length ?? 0,
+                    itemCount:
+                        notifications.length +
+                        (clientNotifier.hasMoreData ? 1 : 0),
                     itemBuilder: (context, index) {
-                      final item = data.data!.list![index];
+                      if (index == notifications.length) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: Color(0xffF2D701),
+                            ),
+                          ),
+                        );
+                      }
+
+                      final item = notifications[index];
                       return InkWell(
                         onTap: () {
                           // Navigator.push(

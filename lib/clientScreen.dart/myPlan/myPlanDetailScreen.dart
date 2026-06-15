@@ -241,101 +241,111 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                     ),
                   ),
                   SizedBox(height: 15.h),
-                  Text(
-                    "✔ Unlimited service requests",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.56,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    "✔ AC servicing every 6 months",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.56,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    "✔ Priority support",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.56,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    "✔ Free inspection visits",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.56,
-                    ),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: (widget.data.planDetails?.planId?.features ?? [])
+                        .map(
+                          (feature) => Padding(
+                            padding: EdgeInsets.only(bottom: 8.h),
+                            child: Text(
+                              "✔ $feature",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.56,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ],
               ),
             ),
+            // Text(
+            //   "✔ AC servicing every 6 months",
+            //   style: GoogleFonts.parkinsans(
+            //     fontSize: 14.sp,
+            //     fontWeight: FontWeight.w400,
+            //     color: AppColors.buttonText,
+            //     letterSpacing: -0.56,
+            //   ),
+            // ),
+            // SizedBox(height: 4.h),
+            // Text(
+            //   "✔ Priority support",
+            //   style: GoogleFonts.parkinsans(
+            //     fontSize: 14.sp,
+            //     fontWeight: FontWeight.w400,
+            //     color: AppColors.buttonText,
+            //     letterSpacing: -0.56,
+            //   ),
+            // ),
+            // SizedBox(height: 4.h),
+            // Text(
+            //   "✔ Free inspection visits",
+            //   style: GoogleFonts.parkinsans(
+            //     fontSize: 14.sp,
+            //     fontWeight: FontWeight.w400,
+            //     color: AppColors.buttonText,
+            //     letterSpacing: -0.56,
+            //   ),
+            // ),
             SizedBox(height: 20.h),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.buttonText),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Usage History",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.56,
-                    ),
-                  ),
-                  SizedBox(height: 15.h),
-                  Text(
-                    "AC Repair - 10 Feb",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.56,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    "Plumbing Fix - 05 Mar",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.56,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    "Electrical Issue - 20 Mar",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.56,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   width: double.infinity,
+            //   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+            //   decoration: BoxDecoration(
+            //     border: Border.all(color: AppColors.buttonText),
+            //     borderRadius: BorderRadius.circular(10.r),
+            //   ),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text(
+            //         "Usage History",
+            //         style: GoogleFonts.parkinsans(
+            //           fontSize: 14.sp,
+            //           fontWeight: FontWeight.w400,
+            //           color: AppColors.buttonText,
+            //           letterSpacing: -0.56,
+            //         ),
+            //       ),
+            //       SizedBox(height: 15.h),
+            //       Text(
+            //         "AC Repair - 10 Feb",
+            //         style: GoogleFonts.parkinsans(
+            //           fontSize: 14.sp,
+            //           fontWeight: FontWeight.w400,
+            //           color: AppColors.buttonText,
+            //           letterSpacing: -0.56,
+            //         ),
+            //       ),
+            //       SizedBox(height: 4.h),
+            //       Text(
+            //         "Plumbing Fix - 05 Mar",
+            //         style: GoogleFonts.parkinsans(
+            //           fontSize: 14.sp,
+            //           fontWeight: FontWeight.w400,
+            //           color: AppColors.buttonText,
+            //           letterSpacing: -0.56,
+            //         ),
+            //       ),
+            //       SizedBox(height: 4.h),
+            //       Text(
+            //         "Electrical Issue - 20 Mar",
+            //         style: GoogleFonts.parkinsans(
+            //           fontSize: 14.sp,
+            //           fontWeight: FontWeight.w400,
+            //           color: AppColors.buttonText,
+            //           letterSpacing: -0.56,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             SizedBox(height: 20.h),
             SizedBox(
               width: double.infinity,

@@ -362,7 +362,7 @@ class PlanId {
   Currency? currency;
   int? callLimit;
   bool? isUnlimited;
-  List<Feature>? features;
+List<String>? features;
   String? durationType;
   String? status;
   EdBy? createdBy;
@@ -409,11 +409,9 @@ class PlanId {
     currency: currencyValues.map[json["currency"]]!,
     callLimit: json["callLimit"],
     isUnlimited: json["isUnlimited"],
-    features: json["features"] == null
-        ? []
-        : List<Feature>.from(
-            json["features"]!.map((x) => featureValues.map[x]!),
-          ),
+   features: json["features"] == null
+    ? []
+    : List<String>.from(json["features"]),
     durationType: json["durationType"],
     status: json["status"],
     createdBy: edByValues.map[json["createdBy"]]!,
@@ -437,9 +435,7 @@ class PlanId {
     "currency": currencyValues.reverse[currency],
     "callLimit": callLimit,
     "isUnlimited": isUnlimited,
-    "features": features == null
-        ? []
-        : List<dynamic>.from(features!.map((x) => featureValues.reverse[x])),
+  "features": features ?? [],
     "durationType": durationTypeValues.reverse[durationType],
     "status": status,
     "createdBy": edByValues.reverse[createdBy],
@@ -600,8 +596,8 @@ class PropertyDetails {
         bedrooms: json["bedrooms"],
         bathrooms: json["bathrooms"],
         acUnits: json["acUnits"],
-        propertyType: propertyTypeValues.map[json["propertyType"]]!,
-        propertyAge: propertyAgeValues.map[json["propertyAge"]]!,
+        propertyType: propertyTypeValues.map[json["propertyType"]],
+        propertyAge: propertyAgeValues.map[json["propertyAge"]],
       );
 
   Map<String, dynamic> toJson() => {

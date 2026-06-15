@@ -211,6 +211,7 @@ class AuthService {
 
   Future<UpdateProfileResModel?> updateProfile({
     File? uploadImage,
+    String? existingImage,
     required String fullName,
     required String phone,
     required String city,
@@ -221,7 +222,7 @@ class AuthService {
     required BuildContext context,
   }) async {
     try {
-      String imageUrl = "";
+      String imageUrl = existingImage ?? "";
       if (uploadImage != null) {
         final uploadResponse = await api.uploadImage(uploadImage);
 
@@ -229,7 +230,6 @@ class AuthService {
           imageUrl = uploadResponse.data?.imageUrl ?? "";
         }
       }
-
       final body = UpdateProfileBodyModel(
         fullName: fullName,
         phone: phone,
@@ -541,13 +541,28 @@ class AuthService {
     }
   }
 
-  Future<GetNotificationModel> getNotification() async {
+  // Future<GetNotificationModel> getNotification() async {
+  //   try {
+  //     final response = await api.getNotification();
+  //     if (response.code == 0 && response.error == false) {
+  //       return response;
+  //     }
+  //     return throw Exception(response.message);
+  //   } catch (e, st) {
+  //     log(st.toString());
+  //     throw Exception(e.toString());
+  //   }
+  // }
+  Future<GetNotificationModel> getNotification({
+    required int page,
+    int limit = 10,
+  }) async {
     try {
-      final response = await api.getNotification();
+      final response = await api.getNotification(page, limit);
       if (response.code == 0 && response.error == false) {
         return response;
       }
-      return throw Exception(response.message);
+      throw Exception(response.message);
     } catch (e, st) {
       log(st.toString());
       throw Exception(e.toString());
@@ -900,9 +915,13 @@ class AuthService {
     }
   }
 
-  Future<GetServiceRequestModel> clientGetServiceRequest(String status) async {
+  Future<GetServiceRequestModel> clientGetServiceRequest({
+    required int page,
+    int limit = 10,
+    required String status,
+  }) async {
     try {
-      final response = await api.clientGetServiceRequest(status);
+      final response = await api.clientGetServiceRequest(page, limit, status);
       if (response.code == 0 && response.error == false) {
         return response;
       }
@@ -936,9 +955,12 @@ class AuthService {
     }
   }
 
-  Future<ClientGetTicketModel> clientGetTicket() async {
+  Future<ClientGetTicketModel> clientGetTicket({
+    required int page,
+    int limit = 10,
+  }) async {
     try {
-      final response = await api.clientGetTicket();
+      final response = await api.clientGetTicket(page, limit);
       if (response.code == 0 && response.error == false) {
         return response;
       }
@@ -1057,9 +1079,12 @@ class AuthService {
     }
   }
 
-  Future<ClientNotificationModel> clientGetNotification() async {
+  Future<ClientNotificationModel> clientGetNotification({
+    required int page,
+    int limit = 10,
+  }) async {
     try {
-      final response = await api.clientGetNotification();
+      final response = await api.clientGetNotification(page, limit);
       if (response.code == 0 && response.error == false) {
         return response;
       }
@@ -1070,9 +1095,12 @@ class AuthService {
     }
   }
 
-  Future<CGetMyPlanRequestModel> clientGetMyPlanRequest() async {
+  Future<CGetMyPlanRequestModel> clientGetMyPlanRequest({
+    required int page,
+    int limit = 10,
+  }) async {
     try {
-      final response = await api.clientGetMyPlanRequest();
+      final response = await api.clientGetMyPlanRequest(page, limit);
       if (response.code == 0 && response.error == false) {
         return response;
       }
@@ -1109,9 +1137,12 @@ class AuthService {
     }
   }
 
-  Future<GetActivePlanModel> clientGetActivePlan() async {
+  Future<GetActivePlanModel> clientGetActivePlan({
+    required int page,
+    int limit = 10,
+  }) async {
     try {
-      final response = await api.getActivePlan();
+      final response = await api.getActivePlan(page, limit);
       if (response.code == 0 && response.error == false) {
         return response;
       }

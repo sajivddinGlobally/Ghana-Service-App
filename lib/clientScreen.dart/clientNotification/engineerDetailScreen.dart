@@ -111,8 +111,7 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                       //   ),
                       // ),
                       Container(
-                        height: 113.h,
-                        width: 113.w,
+                        padding: EdgeInsets.all(4.w),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -120,28 +119,36 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                             width: 3.w,
                           ),
                         ),
-                        child: ClipOval(
-                          child:
-                              (data.data?.employeeId?.image != null &&
-                                  data.data!.employeeId!.image!.isNotEmpty)
-                              ? Image.network(
-                                  data.data!.employeeId!.image!,
-                                  fit: BoxFit.cover,
-                                  width: 113.w,
-                                  height: 113.h,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Icon(
-                                      Icons.person,
-                                      size: 60.sp,
-                                      color: Colors.grey,
-                                    );
-                                  },
-                                )
-                              : Icon(
-                                  Icons.person,
-                                  size: 60.sp,
-                                  color: Colors.grey,
-                                ),
+                        child: Container(
+                          width: 113.w,
+                          height: 113.h,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          child: ClipOval(
+                            child:
+                                (data.data?.employeeId?.image != null &&
+                                    data.data!.employeeId!.image!.isNotEmpty)
+                                ? Image.network(
+                                    data.data!.employeeId!.image!,
+                                    fit: BoxFit.cover,
+                                    width: 113.w,
+                                    height: 113.h,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(
+                                        Icons.person,
+                                        size: 60.sp,
+                                        color: Colors.grey,
+                                      );
+                                    },
+                                  )
+                                : Icon(
+                                    Icons.person,
+                                    size: 60.sp,
+                                    color: Colors.grey,
+                                  ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 15.h),
@@ -157,8 +164,8 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        "AC Repair Specialist",
-                        // data.data.serviceId.
+                        // "AC Repair Specialist",
+                        data.data?.employeeId?.fullName ?? "N/A",
                         style: GoogleFonts.parkinsans(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,

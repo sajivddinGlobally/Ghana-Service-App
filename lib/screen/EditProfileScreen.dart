@@ -530,6 +530,7 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
                           final updateService = ref.read(authServiceProvider);
                           final response = await updateService.updateProfile(
                             uploadImage: profileImage,
+                              existingImage: existingImage,
                             fullName: fullNameController.text.trim(),
                             phone: phoneController.text.trim(),
                             city: cityController.text.trim(),

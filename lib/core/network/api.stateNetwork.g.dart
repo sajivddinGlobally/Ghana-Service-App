@@ -652,16 +652,16 @@ class _ApiStateNetwork implements ApiStateNetwork {
   }
 
   @override
-  Future<GetNotificationModel> getNotification() async {
+  Future<GetNotificationModel> getNotification(int page, int limit) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page, r'limit': limit};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<GetNotificationModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/employee/get-notification?page=1&limit=10',
+            '/api/v1/employee/get-notification',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -733,16 +733,16 @@ class _ApiStateNetwork implements ApiStateNetwork {
   }
 
   @override
-  Future<GetActivePlanModel> getActivePlan() async {
+  Future<GetActivePlanModel> getActivePlan(int page, int limit) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page, r'limit': limit};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<GetActivePlanModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/user/get-active-plan?page=1&limit=10',
+            '/api/v1/user/get-active-plan',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -1130,16 +1130,24 @@ class _ApiStateNetwork implements ApiStateNetwork {
   }
 
   @override
-  Future<GetServiceRequestModel> clientGetServiceRequest(String status) async {
+  Future<GetServiceRequestModel> clientGetServiceRequest(
+    int page,
+    int limit,
+    String status,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'status': status};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'limit': limit,
+      r'status': status,
+    };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<GetServiceRequestModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/user/get-service-request?page=1&limit=10',
+            '/api/v1/user/get-service-request',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -1187,16 +1195,16 @@ class _ApiStateNetwork implements ApiStateNetwork {
   }
 
   @override
-  Future<ClientGetTicketModel> clientGetTicket() async {
+  Future<ClientGetTicketModel> clientGetTicket(int page, int limit) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page, r'limit': limit};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<ClientGetTicketModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/user/get-tickets?page=1&limit=10',
+            '/api/v1/user/get-tickets',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -1375,16 +1383,19 @@ class _ApiStateNetwork implements ApiStateNetwork {
   }
 
   @override
-  Future<ClientNotificationModel> clientGetNotification() async {
+  Future<ClientNotificationModel> clientGetNotification(
+    int page,
+    int limit,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page, r'limit': limit};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<ClientNotificationModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/user/get-notification?page=1&limit=10',
+            '/api/v1/user/get-notification',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -1402,16 +1413,19 @@ class _ApiStateNetwork implements ApiStateNetwork {
   }
 
   @override
-  Future<CGetMyPlanRequestModel> clientGetMyPlanRequest() async {
+  Future<CGetMyPlanRequestModel> clientGetMyPlanRequest(
+    int page,
+    int limit,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page, r'limit': limit};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<CGetMyPlanRequestModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/user/get-my-plan-request?page=1&limit=10',
+            '/api/v1/user/get-my-plan-request',
             queryParameters: queryParameters,
             data: _data,
           )

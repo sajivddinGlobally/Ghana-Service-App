@@ -41,8 +41,14 @@ class ClientMyBottomNav extends ConsumerStatefulWidget {
 class _ClientMyBottomNavState extends ConsumerState<ClientMyBottomNav> {
   int currentIndex = 0;
 
-  List<Widget> screen = [
-    Clienthomescreen(),
+  List<Widget> get screen => [
+    Clienthomescreen(
+      requestUsed: () {
+        setState(() {
+          currentIndex = 1;
+        });
+      },
+    ),
     Myrequest(),
     MyPlanScreen(isShowBack: false),
     CProfileScreen(isShowBack: false),
@@ -166,7 +172,8 @@ class _ClientMyBottomNavState extends ConsumerState<ClientMyBottomNav> {
 }
 
 class Clienthomescreen extends ConsumerStatefulWidget {
-  const Clienthomescreen({super.key});
+  final VoidCallback requestUsed;
+  const Clienthomescreen({super.key, required this.requestUsed});
 
   @override
   ConsumerState<Clienthomescreen> createState() => _ClienthomescreenState();
@@ -225,15 +232,15 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
     final clientProfileState = ref.watch(clientProfileProvider);
     final getPlanServiceState = ref.watch(getPlanServiceProvider);
     final reminderState = ref.watch(clientGetServiceRemindersProvider);
-    final clientNotificationState = ref.watch(clientNotificationProvider);
-    final unReadCount = clientNotificationState.maybeWhen(
+    final clientReadNotificationState = ref.watch(
+      clientReadNotificationProvider,
+    );
+    final unReadCount = clientReadNotificationState.maybeWhen(
       data: (data) {
-        return data.data?.list?.where((item) => item.isRead == false).length ??
-            0;
+        return data.data?.modifiedCount ?? 0;
       },
       orElse: () => 0,
     );
-    final getActivePlanState = ref.watch(getActivePlanProvider);
     final getDashbordCountState = ref.watch(getDashbordCountProvider);
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
@@ -341,7 +348,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
                         builder: (context) => Clientnotification(),
                       ),
                     ).then((_) {
-                      ref.invalidate(clientNotificationProvider);
+                      ref.invalidate(clientReadNotificationProvider);
                     });
                   },
                   child: Stack(
@@ -480,125 +487,140 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(left: 16.w, right: 16.w),
-          child: clientProfileState.when(
-            data: (profileData) {
-              final isActivePlan = profileData.data?.isActive ?? false;
+      body: RefreshIndicator(
+        backgroundColor: AppColors.buttonBg,
+        color: AppColors.buttonText,
+        onRefresh: () async {
+          ref.invalidate(clientProfileProvider);
+          ref.invalidate(getPlanServiceProvider);
 
-              if (isActivePlan) {
-                return const ActivePlans();
-              }
-              return Column(
-                children: [
-                  getPlanServiceState.when(
-                    data: (data) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        // itemCount: planList.length,
-                        itemCount: data.data?.length,
-                        itemBuilder: (context, index) {
-                          final imageData = planList[index % planList.length];
-                          return Padding(
-                            padding: EdgeInsets.only(bottom: 20.h),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(12.r),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) => NewPlanDetailScreen(
-                                      id: data.data![index].id.toString(),
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadiusGeometry.circular(
-                                      12.r,
-                                    ),
-                                    child: Image.asset(
-                                      // planList[index]['image'],
-                                      imageData['image'],
-                                      width: double.infinity,
-                                      height: 159.h,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 15.w,
-                                    top: 0.h,
-                                    bottom: 0,
-                                    child: Container(
-                                      width: 190.w,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            // planList[index]['title'],
-                                            data.data?[index].name ?? "",
-                                            style: GoogleFonts.outfit(
-                                              fontSize: 20.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: imageData['titleColor'],
-                                              letterSpacing: -0.80,
-                                            ),
-                                          ),
-                                          SizedBox(height: 5.h),
+          await Future.wait([
+            ref.read(clientProfileProvider.future),
+            ref.read(getPlanServiceProvider.future),
+          ]);
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(left: 16.w, right: 16.w),
+            child: clientProfileState.when(
+              data: (profileData) {
+                final isActivePlan = profileData.data?.isActive ?? false;
 
-                                          Text(
-                                            data.data![index].description ?? "",
-                                            maxLines: 3,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.parkinsans(
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: imageData['subtitleColor'],
-                                              letterSpacing: -0.48,
-                                            ),
-                                          ),
-                                        ],
+                if (isActivePlan) {
+                  return ActivePlans(requestUsed: widget.requestUsed);
+                }
+                return Column(
+                  children: [
+                    getPlanServiceState.when(
+                      data: (data) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          // itemCount: planList.length,
+                          itemCount: data.data?.length,
+                          itemBuilder: (context, index) {
+                            final imageData = planList[index % planList.length];
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 20.h),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(12.r),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => NewPlanDetailScreen(
+                                        id: data.data![index].id.toString(),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  );
+                                },
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius:
+                                          BorderRadiusGeometry.circular(12.r),
+                                      child: Image.asset(
+                                        // planList[index]['image'],
+                                        imageData['image'],
+                                        width: double.infinity,
+                                        height: 159.h,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 15.w,
+                                      top: 0.h,
+                                      bottom: 0,
+                                      child: Container(
+                                        width: 190.w,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              // planList[index]['title'],
+                                              data.data?[index].name ?? "",
+                                              style: GoogleFonts.outfit(
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: imageData['titleColor'],
+                                                letterSpacing: -0.80,
+                                              ),
+                                            ),
+                                            SizedBox(height: 5.h),
+
+                                            Text(
+                                              data.data![index].description ??
+                                                  "",
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.parkinsans(
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color:
+                                                    imageData['subtitleColor'],
+                                                letterSpacing: -0.48,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    error: (error, stackTrace) {
-                      log(stackTrace.toString());
-                      return Center(child: Text("Something went wrong"));
-                    },
-                    loading: () => Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.buttonBg,
+                            );
+                          },
+                        );
+                      },
+                      error: (error, stackTrace) {
+                        log(stackTrace.toString());
+                        return Center(child: Text("Something went wrong"));
+                      },
+                      loading: () => Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.buttonBg,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20.h),
-                ],
-              );
-            },
-            error: (error, stackTrace) {
-              log(stackTrace.toString());
-              return Center(child: Text("Something went wrong"));
-            },
-            loading: () => SizedBox(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height / 2,
-              child: Center(
-                child: CircularProgressIndicator(color: AppColors.buttonBg),
+                    SizedBox(height: 20.h),
+                  ],
+                );
+              },
+              error: (error, stackTrace) {
+                log(stackTrace.toString());
+                return Center(child: Text("Something went wrong"));
+              },
+              loading: () => SizedBox(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height / 2,
+                child: Center(
+                  child: CircularProgressIndicator(color: AppColors.buttonBg),
+                ),
               ),
             ),
           ),
@@ -609,7 +631,9 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
 }
 
 class ActivePlans extends ConsumerStatefulWidget {
-  const ActivePlans({super.key});
+  final VoidCallback requestUsed;
+
+  const ActivePlans({super.key, required this.requestUsed});
 
   @override
   ConsumerState<ActivePlans> createState() => _ActivePlansState();
@@ -711,10 +735,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(builder: (context) => Myrequest()),
-                      );
+                      widget.requestUsed();
                     },
                     child: Container(
                       width: 189.w,

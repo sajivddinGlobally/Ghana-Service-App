@@ -41,7 +41,7 @@ class WelComeScreen extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
             Text(
-              "Welcome to DwellEasy Ghana,",
+              "Welcome to CSG Maintenance,",
               style: GoogleFonts.parkinsans(
                 fontSize: 17.sp,
                 fontWeight: FontWeight.w500,

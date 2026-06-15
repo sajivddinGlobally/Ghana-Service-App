@@ -19,7 +19,6 @@ class EmployeeDetails extends ConsumerStatefulWidget {
 }
 
 class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
-  String? completeJob;
   @override
   Widget build(BuildContext context) {
     final detailsAsync = ref.watch(
@@ -250,7 +249,12 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                                         ),
                                       ),
                                       TextSpan(
-                                        text: completeJob,
+                                        text: getRatingState.maybeWhen(
+                                          data: (data) =>
+                                              "${data.data?.completeJob ?? 0}",
+                                          orElse: () => "0",
+                                        ),
+
                                         style: GoogleFonts.outfit(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w400,
@@ -292,6 +296,7 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                           SizedBox(height: 16.h),
                           getRatingState.when(
                             data: (data) {
+                              final completeJob = data.data?.completeJob ?? 0;
                               return Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.symmetric(
@@ -435,7 +440,6 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                       ],
                     ),
                   ),
-                SizedBox(height: 30.h),
               ],
             );
           },

@@ -271,12 +271,17 @@ class _HomescreenState extends ConsumerState<Homescreen> {
 
   @override
   Widget build(BuildContext context) {
-    final profileState = ref.watch(getProfileProvider);
+   final profileState = ref.watch(getProfileProvider);
     final assignCountState = ref.watch(getAssignCountProvider);
-    final notificationState = ref.watch(getNotificationProvider);
-    final unreadCount = notificationState.maybeWhen(
-      data: (data) =>
-          data.data?.list?.where((item) => item.isRead == false).length ?? 0,
+    // final notificreadationState = ref.watch(readNotiifcationProvider);
+    // final unreadCount = notificationState.maybeWhen(
+    //   data: (data) =>
+    //       data.data?.list?.where((item) => item.isRead == false).length ?? 0,
+    //   orElse: () => 0,
+    // );
+    final readNotification = ref.watch(readNotiifcationProvider);
+    final unreadCount = readNotification.maybeWhen(
+      data: (data) => data.data?.modifiedCount ?? 0,
       orElse: () => 0,
     );
     return Scaffold(
@@ -388,7 +393,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                         builder: (context) => Notificationscreen(),
                       ),
                     ).then((value) {
-                      ref.invalidate(getNotificationProvider);
+                        ref.invalidate(readNotiifcationProvider);
                     });
                   },
                   child: Stack(

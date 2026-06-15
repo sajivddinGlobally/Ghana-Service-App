@@ -178,59 +178,6 @@ class _MyrequestState extends ConsumerState<Myrequest>
           ),
         ),
 
-        // body: getServiceRequestState.when(
-        //   data: (data) {
-        //     return TabBarView(
-        //       children: [
-        //         buildServiceList(
-        //           data.data?.list
-        //                   ?.where((e) => e.status?.toLowerCase() == "pending")
-        //                   .toList() ??
-        //               [],
-        //           "pending",
-        //         ),
-        //         buildServiceList(
-        //           data.data?.list
-        //                   ?.where(
-        //                     (e) => e.status?.toLowerCase() == "in_progress",
-        //                   )
-        //                   .toList() ??
-        //               [],
-        //           "in_progress",
-        //         ),
-        //         buildServiceList(
-        //           data.data?.list
-        //                   ?.where((e) => e.status?.toLowerCase() == "completed")
-        //                   .toList() ??
-        //               [],
-        //           "completed",
-        //         ),
-        //       ],
-        //     );
-        //   },
-        //   error: (error, stackTrace) {
-        //     log(error.toString());
-        //     return Center(child: Text("Something went wrong"));
-        //   },
-        //   loading: () => Center(
-        //     child: CircularProgressIndicator(color: AppColors.buttonBg),
-        //   ),
-        // ),
-        // body: getServiceRequestState.when(
-        //   data: (data) {
-        //     return buildServiceList(
-        //       data.data?.list ?? [],
-        //       statusList[selectedTab],
-        //     );
-        //   },
-        //   error: (error, stackTrace) {
-        //     log(error.toString());
-        //     return Center(child: Text("Something went wrong"));
-        //   },
-        //   loading: () => Center(
-        //     child: CircularProgressIndicator(color: AppColors.buttonBg),
-        //   ),
-        // ),
         body: TabBarView(
           controller: _tabController,
           children: [
@@ -244,18 +191,46 @@ class _MyrequestState extends ConsumerState<Myrequest>
   }
 }
 
-class RequestBody extends ConsumerWidget {
+class RequestBody extends ConsumerStatefulWidget {
   final String status;
-
   const RequestBody({super.key, required this.status});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(getServiceRequestProvider(status));
+  ConsumerState<RequestBody> createState() => _RequestBodyState();
+}
 
+class _RequestBodyState extends ConsumerState<RequestBody> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        ref
+            .read(getServiceRequestProvider(widget.status).notifier)
+            .loadNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(getServiceRequestProvider(widget.status));
+    final notifier = ref.read(
+      getServiceRequestProvider(widget.status).notifier,
+    );
     return state.when(
       data: (data) {
-        return buildServiceList(data.data?.list ?? [], status);
+        return buildServiceList(data.data?.list ?? [], widget.status);
       },
       error: (error, stackTrace) {
         log(error.toString());
@@ -270,6 +245,10 @@ class RequestBody extends ConsumerWidget {
   }
 
   Widget buildServiceList(List<dynamic> data, String type) {
+    final notifier = ref.read(
+      getServiceRequestProvider(widget.status).notifier,
+    );
+
     /// EMPTY UI
     if (data.isEmpty) {
       return Center(
@@ -312,10 +291,20 @@ class RequestBody extends ConsumerWidget {
       );
     }
     return ListView.separated(
+      controller: _scrollController,
       padding: EdgeInsets.only(top: 24.h, bottom: 20.h),
-      itemCount: data.length,
+      // itemCount: data.length,
+      itemCount: data.length + (notifier.hasMoreData ? 1 : 0),
       separatorBuilder: (_, __) => SizedBox(height: 18.h),
       itemBuilder: (context, index) {
+        if (index == data.length) {
+          return Padding(
+            padding: EdgeInsets.all(20.w),
+            child: Center(
+              child: CircularProgressIndicator(color: AppColors.buttonBg),
+            ),
+          );
+        }
         final item = data[index];
         Color statusColor;
         switch (type) {
