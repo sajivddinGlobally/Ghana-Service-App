@@ -24,13 +24,30 @@ class _ClientwelcomeState extends State<Clientwelcome> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 123.h),
+            SizedBox(height: 110.h),
+            // Image.asset(
+            //   // "assets/dwell.png",
+            //   "assets/logoremovebg.png",
+            //   width: 191.w,
+            //   height: 147.h,
+            //   fit: BoxFit.contain,
+            // ),
             Image.asset(
-              // "assets/dwell.png",
-              "assets/logoremovebg.png",
-              width: 191.w,
-              height: 147.h,
+              "assets/image 87 (1).png",
+              width: 280.w,
+              height: 180.h,
               fit: BoxFit.contain,
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              "HOME REPAIR SERVICE",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 3,
+                color: const Color(0xFF1f3d1d),
+              ),
             ),
             SizedBox(height: 20.h),
             Text(
@@ -78,7 +95,7 @@ class _ClientwelcomeState extends State<Clientwelcome> {
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF04254E),
-                      letterSpacing: -0.48,
+                      letterSpacing: -0.1,
                     ),
                   ),
                 ],
@@ -116,7 +133,7 @@ class _ClientwelcomeState extends State<Clientwelcome> {
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                   color: AppColors.buttonText,
-                  letterSpacing: -0.56,
+                  letterSpacing: -0.1,
                 ),
               ),
             ),

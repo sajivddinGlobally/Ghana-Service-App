@@ -129,7 +129,7 @@ abstract class ApiStateNetwork {
 
   @GET("/api/v1/employee/get-assigned-requests")
   Future<GetAssignedRequestsModel> getAssignRequest(
-      @Query("page") int page,
+    @Query("page") int page,
     @Query("limit") int limit,
   );
 
