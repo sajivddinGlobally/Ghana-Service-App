@@ -156,7 +156,7 @@ class _ClientverifyotpscreenState extends ConsumerState<Clientverifyotpscreen> {
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
                     color: Color(0xff8D8D8D),
-                    letterSpacing: -0.64,
+                    letterSpacing: -0.1,
                   ),
                 ),
                 SizedBox(height: 30.h),
@@ -357,7 +357,7 @@ class _ClientverifyotpscreenState extends ConsumerState<Clientverifyotpscreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                           color: const Color(0xff404040),
-                          letterSpacing: -0.64
+                          letterSpacing: -0.1,
                         ),
                       ),
                       TextSpan(
@@ -368,7 +368,7 @@ class _ClientverifyotpscreenState extends ConsumerState<Clientverifyotpscreen> {
                           color: Color(0xff0072FF),
                           decoration: TextDecoration.underline,
                           decorationColor: Color(0xff0072FF),
-                          letterSpacing: -0.64
+                          letterSpacing: -0.1,
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () async {
@@ -445,7 +445,7 @@ class _ClientverifyotpscreenState extends ConsumerState<Clientverifyotpscreen> {
             style: GoogleFonts.outfit(
               fontSize: 16.sp,
               fontWeight: FontWeight.w400,
-              letterSpacing: -0.5,
+              letterSpacing: -0.1,
               color: AppColors.buttonText,
             ),
           ),

@@ -797,7 +797,7 @@ class AuthService {
         return response;
       }
       return throw Exception(response.message);
-    } catch (e) {
+    } catch (e,st) {
       throw Exception(e.toString());
     }
   }

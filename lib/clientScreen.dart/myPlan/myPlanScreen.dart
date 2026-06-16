@@ -56,7 +56,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
             fontWeight: FontWeight.w600,
             color: AppColors.buttonText,
             fontSize: 18.sp,
-            letterSpacing: -0.72,
+            letterSpacing: -0.1,
           ),
         ),
         leading: widget.isShowBack
@@ -186,7 +186,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.64,
+                                letterSpacing: -0.1,
                               ),
                             ),
 

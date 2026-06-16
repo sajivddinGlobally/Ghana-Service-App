@@ -73,7 +73,7 @@ class _ClientregisterscreenState extends ConsumerState<Clientregisterscreen> {
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       color: Color(0xff747474),
-                      letterSpacing: -0.5,
+                      letterSpacing: -0.2,
                     ),
                   ),
                   SizedBox(height: 20.h),

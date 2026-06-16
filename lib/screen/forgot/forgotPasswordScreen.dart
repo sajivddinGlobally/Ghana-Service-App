@@ -82,7 +82,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
-                        letterSpacing: -0.48
+                        letterSpacing: -0.2
                       ),
                     ),
                     SizedBox(height: 10.h),
@@ -178,7 +178,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.buttonText,
-                          letterSpacing: -0.56
+                          letterSpacing: -0.2
                         ),
                       ),
               ),

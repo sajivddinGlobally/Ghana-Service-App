@@ -21,22 +21,57 @@ class WelComeScreen extends StatelessWidget {
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: 123.h),
+            // Container(
+            //   width: 191.w,
+            //   height: 147.h,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(12.r),
+            //     color: Colors.white,
+            //   ),
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(12.r),
+            //     child: Image.asset(
+            //       // "assets/dwell.png",
+            //       "assets/logoremovebg.png",
+            //       width: 191.w,
+            //       height: 147.h,
+            //       fit: BoxFit.contain,
+            //     ),
+            //   ),
+            // ),
             Container(
-              width: 191.w,
-              height: 147.h,
+              width: 280.w,
+              // height: 180.h,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.r),
                 color: Colors.white,
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
-                child: Image.asset(
-                  // "assets/dwell.png",
-                  "assets/logoremovebg.png",
-                  width: 191.w,
-                  height: 147.h,
-                  fit: BoxFit.contain,
-                ),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: Image.asset(
+                      // "assets/dwell.png",
+                      // "assets/logoremovebg.png",
+                      "assets/image 87 (1).png",
+                      width: 280.w,
+                      height: 180.h,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    "HOME REPAIR SERVICE",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 3,
+                      color: const Color(0xFF1f3d1d),
+                    ),
+                  ),
+                  SizedBox(height: 15.h),
+                ],
               ),
             ),
             SizedBox(height: 20.h),
@@ -46,7 +81,7 @@ class WelComeScreen extends StatelessWidget {
                 fontSize: 17.sp,
                 fontWeight: FontWeight.w500,
                 color: Color(0xFFFFFFFF),
-                letterSpacing: -0.64,
+                letterSpacing: -0.1,
               ),
             ),
             SizedBox(height: 60.h),
@@ -56,7 +91,7 @@ class WelComeScreen extends StatelessWidget {
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: Color(0xFFFFFFFF),
-                letterSpacing: -0.48,
+                letterSpacing: -0.2,
               ),
             ),
             SizedBox(height: 20.h),
@@ -79,7 +114,6 @@ class WelComeScreen extends StatelessWidget {
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF04254E),
-                      // letterSpacing: -0.48,
                     ),
                   ),
                 ],
@@ -116,7 +150,6 @@ class WelComeScreen extends StatelessWidget {
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                   color: AppColors.buttonText,
-                  letterSpacing: -0.56,
                 ),
               ),
             ),
@@ -130,7 +163,7 @@ class WelComeScreen extends StatelessWidget {
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       color: const Color(0xFFFFFFFF),
-                      letterSpacing: -0.64,
+                      letterSpacing: -0.1,
                     ),
                   ),
 
@@ -142,7 +175,7 @@ class WelComeScreen extends StatelessWidget {
                       color: const Color(0xFFFFFFFF),
                       decoration: TextDecoration.underline,
                       decorationColor: Color(0xFFFFFFFF),
-                      letterSpacing: -0.64,
+                      letterSpacing: -0.1,
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {

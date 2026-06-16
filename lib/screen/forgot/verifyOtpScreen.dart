@@ -139,7 +139,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w400,
                   color: Color(0xFF8D8D8D),
-                  letterSpacing: -0.64
+                  letterSpacing: -0.2
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -275,7 +275,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.buttonText,
-                          letterSpacing: -0.56
+                          letterSpacing: -0.2
                         ),
                       ),
               ),
@@ -289,7 +289,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                         color: const Color(0xFFFFFFFF),
-                        letterSpacing: -0.64
+                        letterSpacing: -0.1
                       ),
                     ),
                     TextSpan(
@@ -300,7 +300,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                         color: AppColors.buttonBg,
                         decoration: TextDecoration.underline,
                         decorationColor: AppColors.buttonBg,
-                        letterSpacing: -0.64
+                        letterSpacing: -0.1
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {

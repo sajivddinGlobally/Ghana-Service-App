@@ -89,7 +89,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                           color: Color(0xFF8D8D8D),
-                          letterSpacing: -0.64
+                          letterSpacing: -0.1
                         ),
                       ),
                     ),
@@ -164,7 +164,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: Color(0xFFFFFFFF),
-                              letterSpacing: -0.48
+                              letterSpacing: -0.2
 
                             ),
                           ),
@@ -293,7 +293,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.56
+                                letterSpacing: -0.2
                               ),
                             ),
                     ),

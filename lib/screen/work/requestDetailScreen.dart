@@ -267,7 +267,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.72,
+                          letterSpacing: -0.1,
                         ),
                       ),
 
@@ -303,7 +303,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.64,
+                          letterSpacing: -0.1,
                         ),
                       ),
 
@@ -316,7 +316,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.64,
+                          letterSpacing: -0.1,
                         ),
                       ),
 
@@ -329,7 +329,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.64,
+                          letterSpacing: -0.1,
                         ),
                       ),
 
@@ -342,7 +342,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.64,
+                          letterSpacing: -0.1,
                         ),
                       ),
 
@@ -355,7 +355,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.64,
+                          letterSpacing: -0.1,
                         ),
                       ),
 
@@ -368,7 +368,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.64,
+                          letterSpacing: -0.1,
                         ),
                       ),
 
@@ -393,7 +393,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w400,
                             color: Colors.white,
-                            letterSpacing: -0.64,
+                            letterSpacing: -0.1,
                           ),
                         ),
                       ),
@@ -433,7 +433,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.white,
-                                  letterSpacing: -0.64,
+                                  letterSpacing: -0.1,
                                 ),
                               ),
                             ],

@@ -400,11 +400,11 @@ List<String>? features;
   });
 
   factory PlanId.fromJson(Map<String, dynamic> json) => PlanId(
-    id: idValues.map[json["_id"]]!,
+    id: idValues.map[json["_id"]],
     serviceId: serviceIdEnumValues.map[json["serviceId"]]!,
     name: json["name"],
     tier: json["tier"],
-    description: descriptionValues.map[json["description"]]!,
+    description: descriptionValues.map[json["description"]],
     priceMonthly: json["priceMonthly"],
     currency: currencyValues.map[json["currency"]]!,
     callLimit: json["callLimit"],

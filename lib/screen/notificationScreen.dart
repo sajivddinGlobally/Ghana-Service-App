@@ -66,7 +66,7 @@ class _NotificationscreenState extends ConsumerState<Notificationscreen> {
             fontSize: 16.sp,
             fontWeight: FontWeight.w500,
             color: Color(0xffF2D701),
-            letterSpacing: -0.64,
+            letterSpacing: -0.1,
           ),
         ),
       ),
