@@ -41,12 +41,18 @@ class Data {
     int? pending;
     int? completed;
     int? inProgress;
+    int? onTheWay;
+    int? arrived;
+    int? customerConfirmed;
 
     Data({
         this.assigned,
         this.pending,
         this.completed,
         this.inProgress,
+        this.onTheWay,
+        this.arrived,
+        this.customerConfirmed,
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -54,6 +60,9 @@ class Data {
         pending: json["pending"],
         completed: json["completed"],
         inProgress: json["inProgress"],
+        onTheWay: json["onTheWay"],
+        arrived: json["arrived"],
+        customerConfirmed: json["customer_confirmed"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -61,5 +70,8 @@ class Data {
         "pending": pending,
         "completed": completed,
         "inProgress": inProgress,
+        "onTheWay": onTheWay,
+        "arrived": arrived,
+        "customer_confirmed": customerConfirmed,
     };
 }

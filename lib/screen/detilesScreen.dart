@@ -1,16 +1,22 @@
+import 'dart:developer';
 import 'dart:io';
+import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/employeeDetail.dart';
+import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/data/model/acceptRequestResModel.dart';
 import 'package:dwelleasy_ghana/screen/completeJobScreen.dart';
 import 'package:dwelleasy_ghana/screen/locationScreen.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/getInProgressProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/serviceRequestDetailsProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-class Detilesscreen extends StatefulWidget {
+class Detilesscreen extends ConsumerStatefulWidget {
   final String requestId;
   final String userName;
   final String userPhone;
@@ -36,10 +42,10 @@ class Detilesscreen extends StatefulWidget {
   });
 
   @override
-  State<Detilesscreen> createState() => _DetilesscreenState();
+  ConsumerState<Detilesscreen> createState() => _DetilesscreenState();
 }
 
-class _DetilesscreenState extends State<Detilesscreen> {
+class _DetilesscreenState extends ConsumerState<Detilesscreen> {
   void showLocationDialog() {
     showDialog(
       context: context,
@@ -65,7 +71,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xffF2D701),
-                    letterSpacing: -0.1,
+                    letterSpacing: -0.72,
                   ),
                 ),
 
@@ -78,7 +84,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
                     color: Colors.white70,
-                    letterSpacing: -0.1,
+                    letterSpacing: -0.64,
                   ),
                 ),
 
@@ -104,7 +110,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,
                                 color: const Color(0xffF2D701),
-                                letterSpacing: -0.1,
+                                letterSpacing: -0.64,
                               ),
                             ),
                           ),
@@ -138,7 +144,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,
                                 color: const Color(0xff04254E),
-                                letterSpacing: -0.1,
+                                letterSpacing: -0.64,
                               ),
                             ),
                           ),
@@ -155,62 +161,14 @@ class _DetilesscreenState extends State<Detilesscreen> {
     );
   }
 
-  List<File> _image = [];
-  final ImagePicker picker = ImagePicker();
-  Future<void> getImagesFromGallery() async {
-    final List<XFile> pickedFiles = await picker.pickMultiImage();
-
-    if (pickedFiles.isNotEmpty) {
-      setState(() {
-        _image.addAll(pickedFiles.map((e) => File(e.path)).toList());
-      });
-    }
-  }
-
-  /// 📸 Camera Image
-  Future<void> getImageFromCamera() async {
-    final XFile? pickedFile = await picker.pickImage(
-      source: ImageSource.camera,
-    );
-    if (pickedFile != null) {
-      setState(() {
-        _image.add(File(pickedFile.path));
-      });
-    }
-  }
-
-  void showImagePicker() {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (context) => CupertinoActionSheet(
-        actions: [
-          CupertinoActionSheetAction(
-            onPressed: () async {
-              Navigator.pop(context);
-              await getImagesFromGallery();
-            },
-            child: const Text("Gallery"),
-          ),
-          CupertinoActionSheetAction(
-            onPressed: () async {
-              Navigator.pop(context);
-              await getImageFromCamera();
-            },
-            child: const Text("Camera"),
-          ),
-        ],
-        cancelButton: CupertinoActionSheetAction(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text("Cancel"),
-        ),
-      ),
-    );
-  }
+  bool isOnTheWay = false;
+  bool isArrived = false;
 
   @override
   Widget build(BuildContext context) {
+    final requestDetailState = ref.watch(
+      serviceRequestDetailsProvider(widget.requestId),
+    );
     final formattedDate = DateFormat(
       'dd MMM yyyy',
     ).format(DateTime.fromMillisecondsSinceEpoch(widget.preferredDate ?? 0));
@@ -313,7 +271,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.1,
+                          letterSpacing: -0.72,
                         ),
                       ),
                       SizedBox(height: 13.h),
@@ -332,7 +290,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w500,
                               color: const Color(0xffF2D701),
-                              letterSpacing: -0.1,
+                              letterSpacing: -0.64,
                             ),
                           ),
                         ),
@@ -344,7 +302,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.1,
+                          letterSpacing: -0.64,
                         ),
                       ),
                       SizedBox(height: 14.h),
@@ -354,7 +312,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.1,
+                          letterSpacing: -0.64,
                         ),
                       ),
                       SizedBox(height: 14.h),
@@ -364,7 +322,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.1,
+                          letterSpacing: -0.64,
                         ),
                       ),
                       SizedBox(height: 14.h),
@@ -374,7 +332,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.1,
+                          letterSpacing: -0.64,
                         ),
                       ),
                       SizedBox(height: 14.h),
@@ -385,7 +343,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
-                          letterSpacing: -0.1,
+                          letterSpacing: -0.64,
                         ),
                       ),
                       SizedBox(height: 36.h),
@@ -408,7 +366,7 @@ class _DetilesscreenState extends State<Detilesscreen> {
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w400,
                             color: Colors.white,
-                            letterSpacing: -0.1,
+                            letterSpacing: -0.64,
                           ),
                         ),
                       ),
@@ -433,99 +391,197 @@ class _DetilesscreenState extends State<Detilesscreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xff04254E),
-                          letterSpacing: -0.1,
+                          letterSpacing: -0.64,
                         ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(height: 20.h),
-                InkWell(
-                  onTap: () {
-                    // showImagePicker();
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => Completejobscreen(
-                          requestID: widget.requestId,
-                          userName: widget.userName,
-                          userPhone: widget.userPhone,
-                          service: widget.service,
-                          area: widget.propertyAddress,
-                          date: widget.preferredDate,
-                        ),
+                if (widget.status == "in_progress")
+                  GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        isOnTheWay = true;
+                      });
+                      try {
+                        final service = ref.read(authServiceProvider);
+                        final res = await service.onTheWay(
+                          requestId: widget.requestId,
+                        );
+                        if (res) {
+                          setState(() {
+                            isOnTheWay = false;
+                          });
+                          ref.invalidate(getInProgressProvider);
+                        }
+                      } catch (e, st) {
+                        log(e.toString());
+                        setState(() {
+                          isOnTheWay = false;
+                        });
+                      } finally {
+                        setState(() {
+                          isOnTheWay = false;
+                        });
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 18.h),
+                      decoration: BoxDecoration(
+                        color: const Color(0xffF2D701),
+                        borderRadius: BorderRadius.circular(50.r),
                       ),
-                    );
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 18.h),
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 107, 101, 49),
-                      borderRadius: BorderRadius.circular(50.r),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Upload Work Photo",
-                        style: GoogleFonts.outfit(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffF2D701),
-                          letterSpacing: -0.1,
+                      child: Center(
+                        child: Text(
+                          isOnTheWay ? "Loading..." : "On The Way",
+                          style: GoogleFonts.outfit(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xff04254E),
+                            letterSpacing: -0.64,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                SizedBox(height: 20.h),
+                if (widget.status == "on_the_way")
+                  GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        isArrived = true;
+                      });
+                      try {
+                        final service = ref.read(authServiceProvider);
+                        final res = await service.employeeArrived(
+                          requestId: widget.requestId,
+                        );
+                        if (res) {
+                          setState(() {
+                            isArrived = false;
+                          });
+                          ref.invalidate(getInProgressProvider);
+                        }
+                      } catch (e, st) {
+                        log(e.toString());
+                        setState(() {
+                          isArrived = false;
+                        });
+                      } finally {
+                        setState(() {
+                          isArrived = false;
+                        });
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 18.h),
+                      decoration: BoxDecoration(
+                        color: const Color(0xffF2D701),
+                        borderRadius: BorderRadius.circular(50.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          isArrived ? "Loading..." : "Arrived",
+                          style: GoogleFonts.outfit(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xff04254E),
+                            letterSpacing: -0.64,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                SizedBox(height: 20.h),
+                if (widget.status == "customer_confirmed")
+                  InkWell(
+                    onTap: () {
+                      // showImagePicker();
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => Completejobscreen(
+                            requestID: widget.requestId,
+                            userName: widget.userName,
+                            userPhone: widget.userPhone,
+                            service: widget.service,
+                            area: widget.propertyAddress,
+                            date: widget.preferredDate,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 18.h),
+                      decoration: BoxDecoration(
+                        color: Color(0xff04254E),
+                        borderRadius: BorderRadius.circular(50.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          // "Upload Work Photo",
+                          "Complete Job",
+                          style: GoogleFonts.outfit(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                            letterSpacing: -0.64,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 SizedBox(height: 15.h),
 
-                // 👇 Image niche show hogi
-                if (_image.isNotEmpty)
-                  Wrap(
-                    spacing: 12.w,
-                    runSpacing: 12.h,
-                    children: List.generate(_image.length, (index) {
-                      return Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10.r),
-                            child: Image.file(
-                              _image[index],
-                              width: 150.w,
-                              height: 200.h,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                // // 👇 Image niche show hogi
+                // if (_image.isNotEmpty)
+                //   Wrap(
+                //     spacing: 12.w,
+                //     runSpacing: 12.h,
+                //     children: List.generate(_image.length, (index) {
+                //       return Stack(
+                //         clipBehavior: Clip.none,
+                //         children: [
+                //           ClipRRect(
+                //             borderRadius: BorderRadius.circular(10.r),
+                //             child: Image.file(
+                //               _image[index],
+                //               width: 150.w,
+                //               height: 200.h,
+                //               fit: BoxFit.cover,
+                //             ),
+                //           ),
 
-                          // ❌ Remove Image
-                          Positioned(
-                            top: -10.h,
-                            right: -10.w,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _image.removeAt(index);
-                                });
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(6.r),
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                  size: 20.sp,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                  ),
-                SizedBox(height: 10.h),
+                //           // ❌ Remove Image
+                //           Positioned(
+                //             top: -10.h,
+                //             right: -10.w,
+                //             child: GestureDetector(
+                //               onTap: () {
+                //                 setState(() {
+                //                   _image.removeAt(index);
+                //                 });
+                //               },
+                //               child: Container(
+                //                 padding: EdgeInsets.all(6.r),
+                //                 decoration: const BoxDecoration(
+                //                   color: Colors.red,
+                //                   shape: BoxShape.circle,
+                //                 ),
+                //                 child: Icon(
+                //                   Icons.close,
+                //                   color: Colors.white,
+                //                   size: 20.sp,
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //         ],
+                //       );
+                //     }),
+                //   ),
+                // SizedBox(height: 10.h),
                 // InkWell(
                 //   onTap: () {
                 //     Navigator.push(

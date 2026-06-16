@@ -51,6 +51,7 @@ import 'package:dwelleasy_ghana/data/model/createLeaveRequestResModel.dart';
 import 'package:dwelleasy_ghana/data/model/createTicketBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/forgotPasswordBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/forgotPasswordResModel.dart';
+import 'package:dwelleasy_ghana/data/model/getArriveModel.dart' hide PersonalInformation, PlanDetails, PropertyDetails, PaymentAndBilling, Declaration;
 import 'package:dwelleasy_ghana/data/model/getAssignCountModel.dart';
 import 'package:dwelleasy_ghana/data/model/getAssigneRequestModel.dart'
     hide
@@ -68,6 +69,7 @@ import 'package:dwelleasy_ghana/data/model/getCompleteRequestModel.dart'
         PaymentAndBilling;
 import 'package:dwelleasy_ghana/data/model/getMyLeaveModel.dart';
 import 'package:dwelleasy_ghana/data/model/getNotificationModel.dart';
+import 'package:dwelleasy_ghana/data/model/getOnTheWayModel.dart' hide PersonalInformation, PropertyDetails, PlanDetails, PaymentAndBilling, Declaration;
 import 'package:dwelleasy_ghana/data/model/getPendingRequestModel.dart'
     hide
         PersonalInformation,
@@ -87,10 +89,18 @@ import 'package:dwelleasy_ghana/data/model/inProgressModel.dart'
         Declaration;
 import 'package:dwelleasy_ghana/data/model/jobDoneModel.dart';
 import 'package:dwelleasy_ghana/data/model/loginBodyModel.dart';
+import 'package:dwelleasy_ghana/data/model/onTheWayBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/readNotificationModel.dart';
 import 'package:dwelleasy_ghana/data/model/registerBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/requestCompleteBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/sendMessageBodyModel.dart';
+import 'package:dwelleasy_ghana/data/model/serviceRequestDetailModel.dart'
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
 import 'package:dwelleasy_ghana/data/model/todayAssignRequestModel.dart'
     hide
         PersonalInformation,
@@ -511,6 +521,26 @@ class AuthService {
     }
   }
 
+  Future<bool> rejectRequest({
+    required String requestId,
+    required String message,
+  }) async {
+    try {
+      final body = SendMessageBodyModel(requestId: requestId, message: message);
+      final response = await api.rejectRequest(body);
+      if (response.code == 0 && response.error == false) {
+        log(response.message ?? "Login Success");
+        showSuccessSnackBar(response.message ?? "Sucess");
+        return true;
+      }
+      return false;
+    } catch (e, st) {
+      log("ERROR => $e");
+      log("STACK TRACE => $st");
+      return false;
+    }
+  }
+
   Future<bool> requestComplete({
     File? uploadImage,
     required String requestId,
@@ -592,6 +622,86 @@ class AuthService {
         return response;
       }
       return throw Exception(response.message);
+    } catch (e, st) {
+      log(st.toString());
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<bool> onTheWay({required String requestId}) async {
+    try {
+      final body = OnTheWayBodyModel(requestId: requestId);
+      final response = await api.onTheWay(body);
+      if (response.code == 0 && response.error == false) {
+        log(response.message ?? "Login Success");
+        return true;
+      }
+      return false;
+    } catch (e, st) {
+      log("ERROR => $e");
+      log("STACK TRACE => $st");
+      return false;
+    }
+  }
+
+  Future<bool> employeeArrived({required String requestId}) async {
+    try {
+      final body = OnTheWayBodyModel(requestId: requestId);
+      final response = await api.employeeArrived(body);
+      if (response.code == 0 && response.error == false) {
+        log(response.message ?? "Login Success");
+        return true;
+      }
+      return false;
+    } catch (e, st) {
+      log("ERROR => $e");
+      log("STACK TRACE => $st");
+      return false;
+    }
+  }
+
+   Future<GetOnTheWayModel> getOnTheWayData({
+    required int page,
+    int limit = 10,
+  }) async {
+    try {
+      final response = await api.getOnTheWay(page, limit);
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      throw Exception(response.message);
+    } catch (e, st) {
+      log(st.toString());
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<GetArriveModel> getArriveData({
+    required int page,
+    int limit = 10,
+  }) async {
+    try {
+      final response = await api.getArrive(page, limit);
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      throw Exception(response.message);
+    } catch (e, st) {
+      log(st.toString());
+      throw Exception(e.toString());
+    }
+  }
+
+
+  Future<ServiceRequestDetailModel> serviceRequestDetails({
+    required String requestId,
+  }) async {
+    try {
+      final response = await api.serviceRequestDetails(requestId);
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      throw Exception(response.message);
     } catch (e, st) {
       log(st.toString());
       throw Exception(e.toString());

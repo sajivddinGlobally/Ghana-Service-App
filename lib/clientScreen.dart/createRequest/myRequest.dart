@@ -69,13 +69,19 @@ class _MyrequestState extends ConsumerState<Myrequest>
   ];
   int selectedTab = 0;
 
-  final statusList = ["pending", "in_progress", "completed"];
+  final statusList = [
+    "pending",
+    "in_progress",
+    "on_the_way",
+    "arrived",
+    "completed",
+  ];
   late TabController _tabController;
   @override
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
 
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
@@ -151,7 +157,11 @@ class _MyrequestState extends ConsumerState<Myrequest>
                     selectedTab = index;
                   });
                 },
-                labelPadding: EdgeInsets.zero,
+                // labelPadding: EdgeInsets.zero,
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                labelPadding: EdgeInsets.symmetric(horizontal: 12.w),
+                indicatorPadding: EdgeInsets.zero,
                 splashBorderRadius: BorderRadius.circular(10.r),
                 indicator: BoxDecoration(),
                 labelColor: AppColors.buttonBg,
@@ -166,11 +176,13 @@ class _MyrequestState extends ConsumerState<Myrequest>
                   fontWeight: FontWeight.w500,
                   letterSpacing: -0.1,
                 ),
-                indicatorPadding: EdgeInsets.symmetric(horizontal: 20.w),
+                // indicatorPadding: EdgeInsets.symmetric(horizontal: 20.w),
                 dividerColor: Color(0xFF04254E),
                 tabs: [
                   Tab(text: "Pending"),
                   Tab(text: "In Progress"),
+                  Tab(text: "On The Way"),
+                  Tab(text: "Arrived"),
                   Tab(text: "Completed"),
                 ],
               ),
@@ -183,7 +195,9 @@ class _MyrequestState extends ConsumerState<Myrequest>
           children: [
             RequestBody(status: "pending"),
             RequestBody(status: "in_progress"),
-            RequestBody(status: "completed"),
+            RequestBody(status: "on_the_way"),
+            RequestBody(status: "arrived"),
+            RequestBody(status: "customer_confirmed"),
           ],
         ),
       ),
@@ -276,6 +290,10 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                   ? "You don’t have any pending requests"
                   : type == "in_progress"
                   ? "No service is currently in progress"
+                  : type == "on_the_way"
+                  ? "No requests are on the way"
+                  : type == "arrived"
+                  ? "No arrived requests found"
                   : "No completed requests available",
               textAlign: TextAlign.center,
               style: GoogleFonts.parkinsans(
@@ -307,6 +325,7 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
         }
         final item = data[index];
         Color statusColor;
+
         switch (type) {
           case "pending":
             statusColor = const Color(0xffFDEBB3);
@@ -316,11 +335,16 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
             statusColor = const Color(0xffCCD3DD);
             break;
 
-          case "completed":
-            statusColor = const Color(0xffCFE2BE);
+          case "on_the_way":
+            statusColor = const Color(0xffD6E8FF);
             break;
 
-          case "assigned":
+          case "arrived":
+            statusColor = const Color(0xffFFE5B4);
+            break;
+
+          case "customer_confirmed":
+          case "completed":
             statusColor = const Color(0xffCFE2BE);
             break;
 
@@ -386,6 +410,41 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                 ),
               ),
               SizedBox(height: 10.h),
+              if (type == "arrived")
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 8.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF3CD),
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(color: const Color(0xFFFFD54F)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.pending_actions,
+                        size: 16.sp,
+                        color: const Color(0xFF856404),
+                      ),
+                      SizedBox(width: 6.w),
+                      Flexible(
+                        child: Text(
+                          "Employee has arrived. Please confirm to start the service.",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF856404),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              SizedBox(height: 10.h),
               SizedBox(
                 width: 131.w,
                 height: 30.h,
@@ -406,7 +465,7 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                               PendingRequestDetailScreen(requestId: item.id),
                         ),
                       );
-                    } else if (type == "in_progress") {
+                    } else if (type == "in_progress" || type == "arrived") {
                       Navigator.push(
                         context,
                         CupertinoPageRoute(

@@ -320,7 +320,7 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
 
                             SizedBox(height: 10.h),
                             Text(
-                              "Area: Thema",
+                              "Area: ${assign.serviceId?.propertyDetails ?? "N/A"}",
                               style: GoogleFonts.parkinsans(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.sp,
@@ -384,8 +384,7 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                                                   ?.serviceId
                                                   ?.name ??
                                               "",
-                                          status:
-                                              res.data?.serviceId?.status ?? "",
+                                          status: res.data?.status ?? "",
                                           image: res.data?.image ?? "",
                                           propertyAddress:
                                               res
@@ -468,14 +467,15 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                                         horizontal: 19.w,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xffF2D701),
+                                        color: Colors.red,
                                         borderRadius: BorderRadius.circular(
                                           50.r,
                                         ),
                                       ),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        "Send Message",
+                                        // "Send Message",
+                                        "Reject",
                                         style: GoogleFonts.outfit(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w500,

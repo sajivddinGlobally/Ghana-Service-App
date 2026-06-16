@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/model/getServiceRequestDetailsModel.dart';
 
-final serviceRequestDetailsProvider = FutureProvider.family
+final clientServiceRequestDetailsProvider = FutureProvider.family
     .autoDispose<GetServiceRequestDetailsModel, String>((
       ref,
       serviceRequestId,
