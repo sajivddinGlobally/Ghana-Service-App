@@ -362,7 +362,7 @@ class PlanId {
   Currency? currency;
   int? callLimit;
   bool? isUnlimited;
-List<String>? features;
+  List<String>? features;
   String? durationType;
   String? status;
   EdBy? createdBy;
@@ -400,18 +400,18 @@ List<String>? features;
   });
 
   factory PlanId.fromJson(Map<String, dynamic> json) => PlanId(
-    id: idValues.map[json["_id"]]!,
+    id: idValues.map[json["_id"]],
     serviceId: serviceIdEnumValues.map[json["serviceId"]]!,
     name: json["name"],
     tier: json["tier"],
-    description: descriptionValues.map[json["description"]]!,
+    description: descriptionValues.map[json["description"]],
     priceMonthly: json["priceMonthly"],
     currency: currencyValues.map[json["currency"]]!,
     callLimit: json["callLimit"],
     isUnlimited: json["isUnlimited"],
-   features: json["features"] == null
-    ? []
-    : List<String>.from(json["features"]),
+    features: json["features"] == null
+        ? []
+        : List<String>.from(json["features"]),
     durationType: json["durationType"],
     status: json["status"],
     createdBy: edByValues.map[json["createdBy"]]!,
@@ -435,7 +435,7 @@ List<String>? features;
     "currency": currencyValues.reverse[currency],
     "callLimit": callLimit,
     "isUnlimited": isUnlimited,
-  "features": features ?? [],
+    "features": features ?? [],
     "durationType": durationTypeValues.reverse[durationType],
     "status": status,
     "createdBy": edByValues.reverse[createdBy],
@@ -540,7 +540,7 @@ class ServiceId {
     id: serviceIdEnumValues.map[json["_id"]]!,
     name: json["name"],
     description: json["description"],
-    image: imageValues.map[json["image"]]!,
+    image: imageValues.map[json["image"]],
     isDisable: json["isDisable"],
     isDeleted: json["isDeleted"],
     date: json["date"],

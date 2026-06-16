@@ -4,6 +4,7 @@ import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/screen/detilesScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getAssignRequestProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getInProgressProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/getOnTheWayProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getPendingRequestProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,17 +13,41 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class InProgresScreen extends ConsumerStatefulWidget {
-  const InProgresScreen({super.key});
+class OnTheWayScreen extends ConsumerStatefulWidget {
+  const OnTheWayScreen({super.key});
 
   @override
-  ConsumerState<InProgresScreen> createState() => _InProgresScreenState();
+  ConsumerState<OnTheWayScreen> createState() => _OnTheWayScreenState();
 }
 
-class _InProgresScreenState extends ConsumerState<InProgresScreen> {
+class _OnTheWayScreenState extends ConsumerState<OnTheWayScreen> {
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // जब यूज़र लिस्ट के बिल्कुल नीचे पहुँचने वाला हो (200px पहले)
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
+      ref.read(getOnTheWayProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final inProgressState = ref.watch(getInProgressProvider);
+    final onTheWayState = ref.watch(getOnTheWayProvider);
+    final notifier = ref.read(getOnTheWayProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       body: Column(
@@ -66,7 +91,7 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "In Progress",
+                      "OnTheWayScreen",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.outfit(
                         fontSize: 16.sp,
@@ -96,7 +121,7 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
             ),
           ),
           SizedBox(height: 16.h),
-          inProgressState.when(
+          onTheWayState.when(
             data: (data) {
               if (data.data?.list == null || data.data!.list!.isEmpty) {
                 return Expanded(
@@ -140,7 +165,7 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
                           SizedBox(height: 10.h),
 
                           Text(
-                            "You don't have any pending work requests yet.",
+                            "You don't have any on the way work requests yet.",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.parkinsans(
                               fontSize: 13.sp,
@@ -157,10 +182,28 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
               }
               return Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: EdgeInsets.zero,
-                  itemCount: data.data?.list?.length,
+                  // itemCount: data.data?.list?.length,
+                  itemCount:
+                      (data.data?.list?.length ?? 0) +
+                      (notifier.hasMoreData ? 1 : 0),
                   itemBuilder: (context, index) {
-                    final pending = data.data?.list?[index];
+                    final list = data.data?.list ?? [];
+
+                    if (index == list.length) {
+                      return Padding(
+                        padding: EdgeInsets.all(16.w),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.buttonBg,
+                          ),
+                        ),
+                      );
+                    }
+
+                    final pending = list[index];
+                    // final pending = data.data?.list?[index];
                     final prefferedDate = DateTime.fromMillisecondsSinceEpoch(
                       pending?.date ?? 0,
                     );

@@ -172,7 +172,7 @@ class _QuickmessagescreendetilesState
 
                     try {
                       final service = ref.read(authServiceProvider);
-                      final isSucess = await service.sendMessage(
+                      final isSucess = await service.rejectRequest(
                         requestId: widget.requestID,
                         message: messageController.text.trim(),
                       );

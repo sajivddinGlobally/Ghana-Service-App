@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientLoacationScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/employeeDetail.dart';
+import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +25,11 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     final detailsAsync = ref.watch(
-      serviceRequestDetailsProvider(widget.requestId),
+      clientServiceRequestDetailsProvider(widget.requestId),
     );
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
@@ -93,23 +95,6 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                 Center(
                   child: Column(
                     children: [
-                      // Container(
-                      //   height: 113.h,
-                      //   width: 113.w,
-                      //   decoration: BoxDecoration(
-                      //     shape: BoxShape.circle,
-                      //     border: Border.all(
-                      //       color: AppColors.buttonText,
-                      //       width: 3.w,
-                      //     ),
-                      //     image: DecorationImage(
-                      //       image: AssetImage(
-                      //         "assets/ClientImage/engineer.png",
-                      //       ),
-                      //       fit: BoxFit.cover,
-                      //     ),
-                      //   ),
-                      // ),
                       Container(
                         padding: EdgeInsets.all(4.w),
                         decoration: BoxDecoration(
@@ -165,7 +150,7 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                       SizedBox(height: 8.h),
                       Text(
                         // "AC Repair Specialist",
-                        data.data?.employeeId?.fullName ?? "N/A",
+                        data.data?.employeeId?.serviceId?.name ?? "N/A",
                         style: GoogleFonts.parkinsans(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
@@ -314,34 +299,55 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                   ),
                 ),
                 SizedBox(height: 16.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff6CE227),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(100.r),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Clientlocationscreen(),
+                if (data.data?.status == "arrived")
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xff6CE227),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(100.r),
                         ),
-                      );
-                    },
-                    child: Text(
-                      "Track Engineer",
-                      style: GoogleFonts.outfit(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.buttonText,
-                        letterSpacing: -0.64,
                       ),
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        try {
+                          final service = ref.read(authServiceProvider);
+                          final res = await service.employeeArrived(
+                            requestId: widget.requestId,
+                          );
+                          if (res) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.pop(context);
+                          }
+                        } catch (e) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      },
+                      child: isLoading
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 1.5,
+                              ),
+                            )
+                          : Text(
+                              "Confirm Arrival",
+                              style: GoogleFonts.outfit(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.64,
+                              ),
+                            ),
                     ),
                   ),
-                ),
               ],
             ),
           );

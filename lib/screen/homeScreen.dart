@@ -14,9 +14,11 @@ import 'package:dwelleasy_ghana/screen/jobScreen.dart';
 import 'package:dwelleasy_ghana/screen/loginScreen.dart';
 import 'package:dwelleasy_ghana/screen/notificationScreen.dart';
 import 'package:dwelleasy_ghana/screen/profileScreen.dart';
+import 'package:dwelleasy_ghana/screen/work/arriveScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/assignedScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/compleScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/inProgresScreen.dart';
+import 'package:dwelleasy_ghana/screen/work/ontheWayScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/pendingScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getAssignCountProvider.dart';
 import 'package:dwelleasy_ghana/selectRolScreen.dart';
@@ -762,6 +764,10 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                 final pending = countData.data?.pending;
                 final complete = countData.data?.completed;
                 final inProgress = countData.data?.inProgress;
+                final onTheWay = countData.data?.onTheWay;
+                final arrived = countData.data?.arrived;
+                final customerConfirmed = countData.data?.customerConfirmed;
+
                 return Padding(
                   padding: EdgeInsets.only(left: 16.w, right: 16.w),
                   child: Column(
@@ -799,6 +805,28 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                                 builder: (context) => InProgresScreen(),
                               ),
                             );
+                          }),
+                          SizedBox(width: 16.w),
+                          _complete(onTheWay.toString(), "On The Way", () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => OnTheWayScreen(),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                      SizedBox(height: 16.w),
+                      Row(
+                        children: [
+                          _complete(arrived.toString(), "Arrived", () {
+                            // Navigator.push(
+                            //   context,
+                            //   CupertinoPageRoute(
+                            //     builder: (context) => ArriveScreen(),
+                            //   ),
+                            // );
                           }),
                           SizedBox(width: 16.w),
                           _complete(complete.toString(), "Completed", () {

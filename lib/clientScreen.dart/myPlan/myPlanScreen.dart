@@ -204,7 +204,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                                 ),
                                 const Spacer(),
                                 Text(
-                                  "${item?.planDetails?.planId!.name ?? ""} (${item?.planDetails!.planId?.tier ?? ""})",
+                                  "${item?.planDetails?.planId?.name ?? ""} (${item?.planDetails!.planId?.tier ?? ""})",
                                   textAlign: TextAlign.end,
                                   style: GoogleFonts.parkinsans(
                                     fontSize: 14.sp,

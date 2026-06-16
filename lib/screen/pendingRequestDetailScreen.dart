@@ -23,7 +23,7 @@ class _PendingRequestDetailScreenState
   @override
   Widget build(BuildContext context) {
     final detailsAsync = ref.watch(
-      serviceRequestDetailsProvider(widget.requestId),
+      clientServiceRequestDetailsProvider(widget.requestId),
     );
     final getRatingState = ref.watch(getRatingProvider(widget.requestId));
     return Scaffold(
