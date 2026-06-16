@@ -144,9 +144,8 @@ class _CProfileScreenState extends ConsumerState<CProfileScreen> {
                       data.data?.email ?? "N/A",
                       style: GoogleFonts.outfit(
                         fontWeight: FontWeight.w400,
-                        fontSize: 12.sp,
+                        fontSize: 14.sp,
                         color: AppColors.buttonText,
-                        letterSpacing: -0.1,
                       ),
                     ),
                     SizedBox(height: 50.h),

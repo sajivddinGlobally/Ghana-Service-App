@@ -290,36 +290,7 @@ class _CompletescreenState extends ConsumerState<Completescreen> {
                                 context,
                                 CupertinoPageRoute(
                                   builder: (context) => RequestDetailScreen(
-                                    image: complete.image,
-                                    userName: complete.userId?.fullName ?? "",
-                                    phone: complete.userId?.phone ?? "",
-                                    preferredDate: complete.preferredDate,
-                                    service:
-                                        complete
-                                            .serviceId
-                                            ?.planDetails
-                                            ?.serviceId
-                                            ?.name ??
-                                        "",
-                                    assignService:
-                                        complete
-                                            .serviceId
-                                            ?.planDetails
-                                            ?.planId
-                                            ?.name ??
-                                        "",
-                                    requestNumber: complete.requestNumber,
-                                    description: complete.description,
-                                    remark: complete.remark,
-                                    rating: complete.rating?.rating ?? 0,
-                                    message: complete.rating?.message ?? "",
-                                    status: complete.status,
-                                    propertyAddress:
-                                        complete
-                                            .serviceId
-                                            ?.personalInformation
-                                            ?.propertyAddress ??
-                                        "",
+                                   requestId: data.data!.list![index].id.toString(),
                                   ),
                                 ),
                               );

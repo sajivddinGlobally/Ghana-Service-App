@@ -138,11 +138,17 @@ abstract class ApiStateNetwork {
     @Query("limit") int limit,
   );
 
-  @GET("/api/v1/employee/get-pending-requests?page=1&limit=10")
-  Future<GetPendingRequestsModel> getPendingRequest();
+  @GET("/api/v1/employee/get-pending-requests")
+  Future<GetPendingRequestsModel> getPendingRequest(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
-  @GET("/api/v1/employee/get-completed-requests?page=1&limit=10")
-  Future<GetCompleteRequestsModel> getCompleteRequest();
+  @GET("/api/v1/employee/get-completed-requests")
+  Future<GetCompleteRequestsModel> getCompleteRequest(
+     @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
   @POST("/api/v1/employee/accept-request")
   Future<AcceptRequestResModel> acceptRequest(
@@ -163,11 +169,17 @@ abstract class ApiStateNetwork {
   @GET("/api/v1/employee/get-assigned-requests?page=1&limit=10&today=true")
   Future<TodayAssignRequestModel> todayAssignReqeust();
 
-  @GET("/api/v1/employee/get-pending-requests?page=1&limit=10&today=true")
-  Future<TodayPendingRequestModel> todayPendingReqeust();
+  @GET("/api/v1/employee/get-pending-requests")
+  Future<TodayPendingRequestModel> todayPendingReqeust(
+    @Query("page") int page,
+    @Query("limit") int limit, {
+    @Query("today") bool today = true,
+  });
 
   @GET("/api/v1/employee/get-pending-requests?page=1&limit=10")
-  Future<TodayPendingRequestModel> pendingReqeust();
+  Future<TodayPendingRequestModel> pendingReqeust(
+    
+  );
 
   @GET("/api/v1/employee/get-on-the-way-requests")
   Future<GetOnTheWayModel> getOnTheWay(
@@ -192,8 +204,11 @@ abstract class ApiStateNetwork {
   @POST("/api/v1/employee/read-notification")
   Future<ReadNotificationModel> readNotification();
 
-  @GET("/api/v1/employee/get-in-progress-requests?page=1&limit=10")
-  Future<InProgressModel> inProgress();
+  @GET("/api/v1/employee/get-in-progress-requests")
+  Future<InProgressModel> inProgress(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
   @GET("/api/v1/user/get-active-plan")
   Future<GetActivePlanModel> getActivePlan(

@@ -28,11 +28,40 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
   int select = 0;
   bool isLoading = false;
   String? loadingRequestId;
+
+  final ScrollController _scrollController = ScrollController();
+  final ScrollController _completeScrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    _completeScrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
+      ref.read(todayPendingRequestProvider.notifier).loadNextPage();
+      ref.read(getCompleteRequestProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _completeScrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final todayAssignRequest = ref.watch(todayAssignRequestProvider);
     final todayPendingRequest = ref.watch(todayPendingRequestProvider);
+    final todayPendingNotofier = ref.read(todayPendingRequestProvider.notifier);
     final completeRequestState = ref.watch(getCompleteRequestProvider);
+    final completeNotifier = ref.read(getCompleteRequestProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       body: Column(
@@ -116,9 +145,7 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                     setState(() {
                       select = 0;
                     });
-                    // ref
-                    //     .read(todayAssignRequestProvider.notifier)
-                    //     .getTodayAssignRequest();
+
                     ref
                         .read(todayPendingRequestProvider.notifier)
                         .getPendingRequest();
@@ -263,8 +290,22 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                 return Expanded(
                   child: ListView.builder(
                     padding: EdgeInsets.zero,
-                    itemCount: todayData.data?.list?.length,
+                    // itemCount: todayData.data?.list?.length,
+                    itemCount:
+                        todayData.data!.list!.length +
+                        (todayPendingNotofier.hasMoreData ? 1 : 0),
                     itemBuilder: (context, index) {
+                      if (index == todayData.data!.list!.length) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: Color(0xffF2D701),
+                            ),
+                          ),
+                        );
+                      }
+
                       final assign = todayData.data!.list![index];
                       final preferredDate = DateTime.fromMillisecondsSinceEpoch(
                         assign.preferredDate ?? 0,
@@ -273,6 +314,12 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                       final formattedDate = DateFormat(
                         "dd MMM yyyy",
                       ).format(preferredDate);
+
+                      final preferredTime = DateFormat("hh:mm a").format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                          assign.preferredTime ?? 0,
+                        ),
+                      );
 
                       return Container(
                         margin: EdgeInsets.only(
@@ -308,7 +355,7 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                             SizedBox(height: 14.h),
                             // 🔥 Time
                             Text(
-                              "Time: 9:00 AM - 1:00 PM",
+                              "Time: $preferredTime",
                               // "Date: ${DateFormat('dd MMMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(assign.serviceId?.paymentAndBilling?.preferredBillingDate ?? 0))}",
                               style: GoogleFonts.parkinsans(
                                 fontWeight: FontWeight.w500,
@@ -320,7 +367,7 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
 
                             SizedBox(height: 10.h),
                             Text(
-                              "Area: ${assign.serviceId?.propertyDetails ?? "N/A"}",
+                              "Area: ${assign.serviceId?.personalInformation?.propertyAddress ?? "N/A"}",
                               style: GoogleFonts.parkinsans(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.sp,
@@ -356,46 +403,14 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                                         todayData.data!.list?[index].id ?? "",
                                   );
                                   if (res.code == 0 && res.error == false) {
-                                    Navigator.push(
+                                    ref.invalidate(todayPendingRequestProvider);
+                                    Navigator.pushReplacement(
                                       context,
                                       CupertinoPageRoute(
                                         builder: (context) => Detilesscreen(
                                           requestId:
                                               todayData.data!.list?[index].id ??
                                               "",
-                                          userName:
-                                              res.data?.userId?.fullName ??
-                                              "N/A",
-                                          userPhone:
-                                              res.data?.userId?.phone ?? "N/A",
-                                          service:
-                                              res
-                                                  .data
-                                                  ?.serviceId
-                                                  ?.planDetails
-                                                  ?.serviceId
-                                                  ?.name ??
-                                              "N/A",
-                                          assignService:
-                                              res
-                                                  .data
-                                                  ?.serviceId
-                                                  ?.planDetails
-                                                  ?.serviceId
-                                                  ?.name ??
-                                              "",
-                                          status: res.data?.status ?? "",
-                                          image: res.data?.image ?? "",
-                                          propertyAddress:
-                                              res
-                                                  .data
-                                                  ?.serviceId
-                                                  ?.personalInformation
-                                                  ?.propertyAddress ??
-                                              "",
-                                          preferredDate:
-                                              res.data?.preferredDate ?? 0,
-                                          desc: res.data?.description ?? "",
                                         ),
                                       ),
                                     );
@@ -511,6 +526,7 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
           else
             completeRequestState.when(
               data: (completeData) {
+                final notifications = completeData.data?.list ?? [];
                 if (completeData.data?.list == null ||
                     completeData.data!.list!.isEmpty) {
                   return Expanded(
@@ -572,8 +588,23 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                 return Expanded(
                   child: ListView.builder(
                     padding: EdgeInsets.zero,
-                    itemCount: completeData.data?.list?.length,
+                    // itemCount: completeData.data?.list?.length,
+                    itemCount:
+                        notifications.length +
+                        (completeNotifier.hasMoreData ? 1 : 0),
                     itemBuilder: (context, index) {
+                      
+                      if (index == notifications.length) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: Color(0xffF2D701),
+                            ),
+                          ),
+                        );
+                      }
+
                       final assign = completeData.data!.list![index];
                       final preferredDate = DateTime.fromMillisecondsSinceEpoch(
                         assign.preferredDate ?? 0,
@@ -582,6 +613,12 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                       final formattedDate = DateFormat(
                         "dd MMM yyyy",
                       ).format(preferredDate);
+
+                      final preferredTime = DateFormat("hh:mm a").format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                          assign.preferredTime ?? 0,
+                        ),
+                      );
 
                       return Container(
                         margin: EdgeInsets.only(
@@ -619,7 +656,7 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
 
                             // 🔥 Time
                             Text(
-                              "Time: 9:00 AM - 1:00 PM",
+                              "Time: $preferredTime",
                               style: GoogleFonts.parkinsans(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.sp,
@@ -675,51 +712,16 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                                 SizedBox(width: 12.w),
                                 InkWell(
                                   onTap: () {
-                                    final complete =
-                                        completeData.data!.list![index];
                                     Navigator.push(
                                       context,
                                       CupertinoPageRoute(
                                         builder: (context) =>
                                             RequestDetailScreen(
-                                              image: complete.image,
-                                              userName:
-                                                  complete.userId?.fullName ??
-                                                  "",
-                                              phone:
-                                                  complete.userId?.phone ?? "",
-                                              preferredDate:
-                                                  complete.preferredDate,
-                                              service:
-                                                  complete
-                                                      .serviceId
-                                                      ?.planDetails
-                                                      ?.serviceId
-                                                      ?.name ??
-                                                  "",
-                                              assignService:
-                                                  complete
-                                                      .serviceId
-                                                      ?.planDetails
-                                                      ?.planId
-                                                      ?.name ??
-                                                  "",
-                                              requestNumber:
-                                                  complete.requestNumber,
-                                              description: complete.description,
-                                              remark: complete.remark,
-                                              rating:
-                                                  complete.rating?.rating ?? 0,
-                                              message:
-                                                  complete.rating?.message ??
-                                                  "",
-                                              status: complete.status,
-                                              propertyAddress:
-                                                  complete
-                                                      .serviceId
-                                                      ?.personalInformation
-                                                      ?.propertyAddress ??
-                                                  "",
+                                              requestId: completeData
+                                                  .data!
+                                                  .list![index]
+                                                  .id
+                                                  .toString(),
                                             ),
                                       ),
                                     );

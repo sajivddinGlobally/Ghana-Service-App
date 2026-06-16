@@ -23,7 +23,7 @@ class GetOnTheWayNotifier extends StateNotifier<AsyncValue<GetOnTheWayModel>> {
 
   GetOnTheWayNotifier(this.authService) : super(const AsyncValue.loading()) {
     // पहली बार स्क्रीन ओपन होते ही पहला पेज लोड होगा
-    getNotifications();
+    ontheWayEmployee();
   }
 
   // Getter ताकि UI को पता चल सके कि नीचे प्रोग्रेस बार दिखाना है या नहीं
@@ -31,7 +31,7 @@ class GetOnTheWayNotifier extends StateNotifier<AsyncValue<GetOnTheWayModel>> {
   bool get hasMoreData => _currentPage < _totalPages;
 
   // 1. Initial Load या Pull-to-Refresh के लिए फ़ंक्शन
-  Future<void> getNotifications({bool isRefresh = false}) async {
+  Future<void> ontheWayEmployee({bool isRefresh = false}) async {
     try {
       if (isRefresh) {
         _currentPage = 1;

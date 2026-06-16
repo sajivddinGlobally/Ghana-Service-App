@@ -1,104 +1,93 @@
-// import 'dart:developer';
+import 'dart:developer';
 
-// import 'package:dwelleasy_ghana/core/apiService/apiService.dart';
-// import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
-// import 'package:dwelleasy_ghana/data/model/getArriveModel.dart';
-// import 'package:dwelleasy_ghana/data/model/getOnTheWayModel.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dwelleasy_ghana/core/apiService/apiService.dart';
+import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
+import 'package:dwelleasy_ghana/data/model/getArriveModel.dart';
+import 'package:dwelleasy_ghana/data/model/getOnTheWayModel.dart'
+    hide ListElement;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// class GetArriveNotifier extends StateNotifier<AsyncValue<GetArriveModel>> {
-//   final AuthService authService;
+class GetArriveNotifier extends StateNotifier<AsyncValue<GetArriveModel>> {
+  final AuthService authService;
 
-//   // Pagination को ट्रैक करने के लिए इंटरनल वेरिएबल्स
-//   int _currentPage = 1;
-//   int _totalPages = 1;
-//   bool _isLoadingMore = false;
+  int _currentPage = 1;
+  int _totalPages = 1;
+  bool _isLoadingMore = false;
 
-//   // पूरी कंबाइन लिस्ट को स्टोर करने के लिए
-//   final List<ListElement> _fullList = [];
+  final List<ListElement> _fullList = [];
 
-//   GetArriveNotifier(this.authService) : super(const AsyncValue.loading()) {
-//     // पहली बार स्क्रीन ओपन होते ही पहला पेज लोड होगा
-//     getArriveDAta();
-//   }
+  GetArriveNotifier(this.authService) : super(const AsyncValue.loading()) {
+    getArriveDAta();
+  }
 
-//   // Getter ताकि UI को पता चल सके कि नीचे प्रोग्रेस बार दिखाना है या नहीं
-//   bool get isLoadingMore => _isLoadingMore;
-//   bool get hasMoreData => _currentPage < _totalPages;
+  bool get isLoadingMore => _isLoadingMore;
+  bool get hasMoreData => _currentPage < _totalPages;
 
-//   // 1. Initial Load या Pull-to-Refresh के लिए फ़ंक्शन
-//   Future<void> getArriveDAta({bool isRefresh = false}) async {
-//     try {
-//       if (isRefresh) {
-//         _currentPage = 1;
-//         _totalPages = 1;
-//         _fullList.clear();
-//         // रिफ्रेश करते समय स्क्रीन पर पुराना डेटा न दिखे इसलिए loading स्टेट सेट करते हैं
-//         state = const AsyncValue.loading();
-//       }
+  Future<void> getArriveDAta({bool isRefresh = false}) async {
+    try {
+      if (isRefresh) {
+        _currentPage = 1;
+        _totalPages = 1;
+        _fullList.clear();
 
-//       final response = await authService.getArriveData(page: _currentPage);
+        state = const AsyncValue.loading();
+      }
 
-//       if (response.code == 0 && response.error == false) {
-//         _totalPages = response.data?.total ?? 1;
-//         final newList = response.data?.list ?? [];
+      final response = await authService.getArriveData(page: _currentPage);
 
-//         _fullList.addAll(newList);
+      if (response.code == 0 && response.error == false) {
+        _totalPages = response.data?.total ?? 1;
+        final newList = response.data?.list ?? [];
 
-//         // यहाँ हम रिस्पॉन्स मॉडल का डेटा अपडेट कर रहे हैं ताकि कंबाइन लिस्ट UI को मिले
-//         response.data?.list = _fullList;
+        _fullList.addAll(newList);
 
-//         state = AsyncValue.data(response);
-//       } else {
-//         throw Exception(response.message);
-//       }
-//     } catch (e, st) {
-//       state = AsyncValue.error(e, st);
-//     }
-//   }
+        response.data?.list = _fullList;
 
-//   // 2. स्क्रॉल करने पर अगला पेज लोड करने के लिए फ़ंक्शन
-//   Future<void> loadNextPage() async {
-//     // अगर पहले से लोडिंग चल रही है या सारे पन्ने खत्म हो चुके हैं, तो रुक जाएं
-//     if (_isLoadingMore || !hasMoreData) return;
+        state = AsyncValue.data(response);
+      } else {
+        throw Exception(response.message);
+      }
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
 
-//     try {
-//       _isLoadingMore = true;
-//       _currentPage++;
+  Future<void> loadNextPage() async {
+    if (_isLoadingMore || !hasMoreData) return;
 
-//       // UI को नोटिफाई करने के लिए करंट स्टेट को दोबारा असाइन करते हैं (बॉटम लोडर दिखने के लिए)
-//       state = AsyncValue.data(state.value!);
+    try {
+      _isLoadingMore = true;
+      _currentPage++;
 
-//       final response = await authService.getArriveData(page: _currentPage);
+      state = AsyncValue.data(state.value!);
 
-//       if (response.code == 0 && response.error == false) {
-//         final newList = response.data?.list ?? [];
-//         _fullList.addAll(newList);
+      final response = await authService.getArriveData(page: _currentPage);
 
-//         // नयी लिस्ट को पुरानी स्टेट के मॉडल में अपेंड (Merge) कर रहे हैं
-//         final updatedModel = state.value!;
-//         updatedModel.data?.list = _fullList;
+      if (response.code == 0 && response.error == false) {
+        final newList = response.data?.list ?? [];
+        _fullList.addAll(newList);
 
-//         state = AsyncValue.data(updatedModel);
-//       }
-//     } catch (e, st) {
-//       log("Load more error: $e");
-//     } finally {
-//       _isLoadingMore = false;
-//       // बॉटम लोडर को छुपाने के लिए स्टेट को दोबारा अपडेट करें
-//       if (state.hasValue) {
-//         state = AsyncValue.data(state.value!);
-//       }
-//     }
-//   }
-// }
+        final updatedModel = state.value!;
+        updatedModel.data?.list = _fullList;
 
-// //--- Provider Definition ---
-// final getOnTheWayProvider =
-//     StateNotifierProvider.autoDispose<
-//       GetArriveNotifier,
-//       AsyncValue<GetArriveModel>
-//     >((ref) {
-//       final authService = ref.read(authServiceProvider);
-//       return GetArriveNotifier(authService);
-//     });
+        state = AsyncValue.data(updatedModel);
+      }
+    } catch (e, st) {
+      log("Load more error: $e");
+    } finally {
+      _isLoadingMore = false;
+      if (state.hasValue) {
+        state = AsyncValue.data(state.value!);
+      }
+    }
+  }
+}
+
+final arrivedProvider =
+    StateNotifierProvider.autoDispose<
+      GetArriveNotifier,
+      AsyncValue<GetArriveModel>
+    >((ref) {
+      final authService = ref.read(authServiceProvider);
+      return GetArriveNotifier(authService);
+    });

@@ -20,9 +20,32 @@ class InProgresScreen extends ConsumerStatefulWidget {
 }
 
 class _InProgresScreenState extends ConsumerState<InProgresScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      ref.read(getInProgressProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final inProgressState = ref.watch(getInProgressProvider);
+    final clientNotifier = ref.read(getInProgressProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       body: Column(
@@ -98,6 +121,7 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
           SizedBox(height: 16.h),
           inProgressState.when(
             data: (data) {
+              final inProgr = data.data?.list ?? [];
               if (data.data?.list == null || data.data!.list!.isEmpty) {
                 return Expanded(
                   child: Center(
@@ -127,7 +151,7 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
                           SizedBox(height: 20.h),
 
                           Text(
-                            "No Pending Jobs",
+                            "No In Progress Jobs",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.outfit(
                               fontSize: 20.sp,
@@ -158,15 +182,36 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
               return Expanded(
                 child: ListView.builder(
                   padding: EdgeInsets.zero,
-                  itemCount: data.data?.list?.length,
+                  // itemCount: data.data?.list?.length,
+                  itemCount:
+                      inProgr.length + (clientNotifier.hasMoreData ? 1 : 0),
                   itemBuilder: (context, index) {
-                    final pending = data.data?.list?[index];
-                    final prefferedDate = DateTime.fromMillisecondsSinceEpoch(
-                      pending?.date ?? 0,
+                    if (index == inProgr.length) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: Color(0xffF2D701),
+                          ),
+                        ),
+                      );
+                    }
+
+                    final pending = inProgr[index];
+
+                    final preferredDate = DateTime.fromMillisecondsSinceEpoch(
+                      pending?.preferredDate ?? 0,
                     );
-                    final formateDate = DateFormat(
-                      'dd MM yyyy',
-                    ).format(prefferedDate);
+
+                    final formattedDate = DateFormat(
+                      "dd MMM yyyy",
+                    ).format(preferredDate);
+
+                    final preferredTime = DateFormat("hh:mm a").format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                        pending?.preferredTime ?? 0,
+                      ),
+                    );
 
                     return Container(
                       margin: EdgeInsets.only(
@@ -194,7 +239,7 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
                               Expanded(
                                 child: Text(
                                   // "20 Apr 2025",
-                                  formateDate,
+                                  formattedDate,
                                   style: GoogleFonts.parkinsans(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18.sp,
@@ -230,7 +275,7 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
 
                           // 🔥 Time
                           Text(
-                            "Time: 9:00 AM - 1:00 PM",
+                            "Time: $preferredTime",
                             style: GoogleFonts.parkinsans(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
@@ -272,51 +317,6 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
                                 CupertinoPageRoute(
                                   builder: (context) => Detilesscreen(
                                     requestId: data.data!.list![index].id ?? "",
-                                    userName:
-                                        data
-                                            .data!
-                                            .list![index]
-                                            .userId
-                                            ?.fullName ??
-                                        "N/A",
-                                    userPhone:
-                                        data.data!.list![index].userId?.phone ??
-                                        "N/A",
-                                    service:
-                                        data
-                                            .data!
-                                            .list![index]
-                                            .serviceId
-                                            ?.planDetails
-                                            ?.serviceId
-                                            ?.name ??
-                                        "N/A",
-                                    assignService:
-                                        data
-                                            .data!
-                                            .list![index]
-                                            .serviceId
-                                            ?.planDetails
-                                            ?.planId
-                                            ?.name ??
-                                        "",
-                                    status:
-                                        data.data!.list![index].status ?? "",
-                                    image: data.data!.list![index].image ?? "",
-                                    propertyAddress:
-                                        data
-                                            .data
-                                            ?.list?[index]
-                                            .serviceId
-                                            ?.personalInformation
-                                            ?.propertyAddress ??
-                                        "",
-                                    preferredDate:
-                                        data.data?.list?[index].preferredDate ??
-                                        0,
-                                    desc:
-                                        data.data?.list?[index].description ??
-                                        "",
                                   ),
                                 ),
                               );

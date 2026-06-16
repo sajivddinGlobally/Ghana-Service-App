@@ -74,6 +74,7 @@ class _MyrequestState extends ConsumerState<Myrequest>
     "in_progress",
     "on_the_way",
     "arrived",
+    "customer_confirmed",
     "completed",
   ];
   late TabController _tabController;
@@ -81,7 +82,7 @@ class _MyrequestState extends ConsumerState<Myrequest>
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 6, vsync: this);
 
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
@@ -157,7 +158,6 @@ class _MyrequestState extends ConsumerState<Myrequest>
                     selectedTab = index;
                   });
                 },
-                // labelPadding: EdgeInsets.zero,
                 isScrollable: true,
                 tabAlignment: TabAlignment.start,
                 labelPadding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -169,20 +169,21 @@ class _MyrequestState extends ConsumerState<Myrequest>
                 labelStyle: GoogleFonts.outfit(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
-                  letterSpacing: -0.1,
+                  letterSpacing: -0.4,
                 ),
                 unselectedLabelStyle: GoogleFonts.outfit(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
-                  letterSpacing: -0.1,
+                  letterSpacing: -0.4,
                 ),
-                // indicatorPadding: EdgeInsets.symmetric(horizontal: 20.w),
+
                 dividerColor: Color(0xFF04254E),
                 tabs: [
                   Tab(text: "Pending"),
                   Tab(text: "In Progress"),
                   Tab(text: "On The Way"),
                   Tab(text: "Arrived"),
+                  Tab(text: "Customer Confirmed"),
                   Tab(text: "Completed"),
                 ],
               ),
@@ -198,6 +199,7 @@ class _MyrequestState extends ConsumerState<Myrequest>
             RequestBody(status: "on_the_way"),
             RequestBody(status: "arrived"),
             RequestBody(status: "customer_confirmed"),
+            RequestBody(status: "completed"),
           ],
         ),
       ),
@@ -356,6 +358,10 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
           "dd MMM yyyy",
         ).format(DateTime.fromMillisecondsSinceEpoch(item.preferredDate ?? 0));
 
+        final preferredTime = DateFormat(
+          "hh:mm a",
+        ).format(DateTime.fromMillisecondsSinceEpoch(item.preferredTime ?? 0));
+
         return Container(
           margin: EdgeInsets.only(left: 16.w, right: 16.w),
           padding: EdgeInsets.symmetric(vertical: 13.h, horizontal: 10.w),
@@ -394,6 +400,17 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                 ),
               ),
               SizedBox(height: 8.h),
+              Text(
+                "Preferred Time: $preferredTime",
+                style: GoogleFonts.parkinsans(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w500,
+                  height: 1.4,
+                  color: const Color(0xff04254E),
+                  letterSpacing: -0.2,
+                ),
+              ),
+              SizedBox(height: 8.h),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 6.h),
                 decoration: BoxDecoration(
@@ -409,8 +426,9 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                   ),
                 ),
               ),
-              SizedBox(height: 10.h),
-              if (type == "arrived")
+
+              if (type == "arrived") ...[
+                SizedBox(height: 10.h),
                 Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: 12.w,
@@ -443,6 +461,7 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                     ],
                   ),
                 ),
+              ],
 
               SizedBox(height: 10.h),
               SizedBox(

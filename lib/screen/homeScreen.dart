@@ -821,12 +821,12 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                       Row(
                         children: [
                           _complete(arrived.toString(), "Arrived", () {
-                            // Navigator.push(
-                            //   context,
-                            //   CupertinoPageRoute(
-                            //     builder: (context) => ArriveScreen(),
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => ArriveScreen(),
+                              ),
+                            );
                           }),
                           SizedBox(width: 16.w),
                           _complete(complete.toString(), "Completed", () {

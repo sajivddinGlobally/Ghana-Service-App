@@ -378,41 +378,12 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                               "",
                           date: formattedDate,
                           callbacl: () {
-                            final complete = completeData.data?.list?[index];
                             Navigator.push(
                               context,
                               CupertinoPageRoute(
                                 builder: (context) => RequestDetailScreen(
-                                  image: complete?.image,
-                                  userName: complete?.userId?.fullName ?? "",
-                                  phone: complete?.userId?.phone ?? "",
-                                  preferredDate: complete?.preferredDate,
-                                  service:
-                                      complete
-                                          ?.serviceId
-                                          ?.planDetails
-                                          ?.serviceId
-                                          ?.name ??
-                                      "",
-                                  assignService:
-                                      complete
-                                          ?.serviceId
-                                          ?.planDetails
-                                          ?.planId
-                                          ?.name ??
-                                      "",
-                                  requestNumber: complete?.requestNumber,
-                                  description: complete?.description,
-                                  remark: complete?.remark,
-                                  rating: complete?.rating?.rating ?? 0,
-                                  message: complete?.rating?.message ?? "",
-                                  status: complete?.status,
-                                  propertyAddress:
-                                      complete
-                                          ?.serviceId
-                                          ?.personalInformation
-                                          ?.propertyAddress ??
-                                      "",
+                                  requestId: completeData.data!.list![index].id
+                                      .toString(),
                                 ),
                               ),
                             );
@@ -618,36 +589,36 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                                 CupertinoPageRoute(
                                   builder: (context) => Detilesscreen(
                                     requestId: loadingRequestId,
-                                    userName:
-                                        res.data?.userId?.fullName ?? "N/A",
-                                    userPhone: res.data?.userId?.phone ?? "N/A",
-                                    service:
-                                        res
-                                            .data
-                                            ?.serviceId
-                                            ?.planDetails
-                                            ?.serviceId
-                                            ?.name ??
-                                        "N/A",
-                                    assignService:
-                                        res
-                                            .data
-                                            ?.serviceId
-                                            ?.planDetails
-                                            ?.serviceId
-                                            ?.name ??
-                                        "",
-                                    status: res.data?.status ?? "",
-                                    image: res.data?.image ?? "",
-                                    propertyAddress:
-                                        res
-                                            .data
-                                            ?.serviceId
-                                            ?.personalInformation
-                                            ?.propertyAddress ??
-                                        "",
-                                    preferredDate: res.data?.preferredDate ?? 0,
-                                    desc: res.data?.description ?? "",
+                                    // userName:
+                                    //     res.data?.userId?.fullName ?? "N/A",
+                                    // userPhone: res.data?.userId?.phone ?? "N/A",
+                                    // service:
+                                    //     res
+                                    //         .data
+                                    //         ?.serviceId
+                                    //         ?.planDetails
+                                    //         ?.serviceId
+                                    //         ?.name ??
+                                    //     "N/A",
+                                    // assignService:
+                                    //     res
+                                    //         .data
+                                    //         ?.serviceId
+                                    //         ?.planDetails
+                                    //         ?.serviceId
+                                    //         ?.name ??
+                                    //     "",
+                                    // status: res.data?.status ?? "",
+                                    // image: res.data?.image ?? "",
+                                    // propertyAddress:
+                                    //     res
+                                    //         .data
+                                    //         ?.serviceId
+                                    //         ?.personalInformation
+                                    //         ?.propertyAddress ??
+                                    //     "",
+                                    // preferredDate: res.data?.preferredDate ?? 0,
+                                    // desc: res.data?.description ?? "",
                                   ),
                                 ),
                               );

@@ -51,7 +51,13 @@ import 'package:dwelleasy_ghana/data/model/createLeaveRequestResModel.dart';
 import 'package:dwelleasy_ghana/data/model/createTicketBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/forgotPasswordBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/forgotPasswordResModel.dart';
-import 'package:dwelleasy_ghana/data/model/getArriveModel.dart' hide PersonalInformation, PlanDetails, PropertyDetails, PaymentAndBilling, Declaration;
+import 'package:dwelleasy_ghana/data/model/getArriveModel.dart'
+    hide
+        PersonalInformation,
+        PlanDetails,
+        PropertyDetails,
+        PaymentAndBilling,
+        Declaration;
 import 'package:dwelleasy_ghana/data/model/getAssignCountModel.dart';
 import 'package:dwelleasy_ghana/data/model/getAssigneRequestModel.dart'
     hide
@@ -69,7 +75,13 @@ import 'package:dwelleasy_ghana/data/model/getCompleteRequestModel.dart'
         PaymentAndBilling;
 import 'package:dwelleasy_ghana/data/model/getMyLeaveModel.dart';
 import 'package:dwelleasy_ghana/data/model/getNotificationModel.dart';
-import 'package:dwelleasy_ghana/data/model/getOnTheWayModel.dart' hide PersonalInformation, PropertyDetails, PlanDetails, PaymentAndBilling, Declaration;
+import 'package:dwelleasy_ghana/data/model/getOnTheWayModel.dart'
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
 import 'package:dwelleasy_ghana/data/model/getPendingRequestModel.dart'
     hide
         PersonalInformation,
@@ -408,9 +420,12 @@ class AuthService {
     }
   }
 
-  Future<GetPendingRequestsModel> getPendingRequestList() async {
+  Future<GetPendingRequestsModel> getPendingRequestList({
+    required int page,
+    int limit = 10,
+  }) async {
     try {
-      final response = await api.getPendingRequest();
+      final response = await api.getPendingRequest(page, limit);
       if (response.code == 0 && response.error == false) {
         return response;
       }
@@ -420,9 +435,12 @@ class AuthService {
     }
   }
 
-  Future<GetCompleteRequestsModel> getCompleteRequestList() async {
+  Future<GetCompleteRequestsModel> getCompleteRequestList({
+    required int page,
+    int limit = 10,
+  }) async {
     try {
-      final response = await api.getCompleteRequest();
+      final response = await api.getCompleteRequest(page, limit);
       if (response.code == 0 && response.error == false) {
         return response;
       }
@@ -432,9 +450,12 @@ class AuthService {
     }
   }
 
-  Future<InProgressModel> getInProgress() async {
+  Future<InProgressModel> getInProgress({
+    required int page,
+    int limit = 10,
+  }) async {
     try {
-      final response = await api.inProgress();
+      final response = await api.inProgress(page, limit);
       if (response.code == 0 && response.error == false) {
         return response;
       }
@@ -456,9 +477,12 @@ class AuthService {
     }
   }
 
-  Future<TodayPendingRequestModel> todayPendingRequest() async {
+  Future<TodayPendingRequestModel> todayPendingRequest({
+    required int page,
+    int limit = 10,
+  }) async {
     try {
-      final response = await api.todayPendingReqeust();
+      final response = await api.todayPendingReqeust(page, limit);
       if (response.code == 0 && response.error == false) {
         return response;
       }
@@ -660,7 +684,7 @@ class AuthService {
     }
   }
 
-   Future<GetOnTheWayModel> getOnTheWayData({
+  Future<GetOnTheWayModel> getOnTheWayData({
     required int page,
     int limit = 10,
   }) async {
@@ -691,7 +715,6 @@ class AuthService {
       throw Exception(e.toString());
     }
   }
-
 
   Future<ServiceRequestDetailModel> serviceRequestDetails({
     required String requestId,
@@ -907,7 +930,7 @@ class AuthService {
         return response;
       }
       return throw Exception(response.message);
-    } catch (e,st) {
+    } catch (e, st) {
       throw Exception(e.toString());
     }
   }
@@ -1008,12 +1031,14 @@ class AuthService {
     required String serviceId,
     required String desc,
     required int preffrerData,
+    required int preferredTime,
   }) async {
     try {
       final body = CreateServiceRequestBodyModel(
         serviceId: serviceId,
         description: desc,
         preferredDate: preffrerData,
+        preferredTime: preferredTime,
       );
       final response = await api.clientCreateSerivceRequest(body);
       if (response.code == 0 && response.error == false) {

@@ -20,6 +20,8 @@ class CreateService extends ConsumerStatefulWidget {
 class _CreateServiceState extends ConsumerState<CreateService> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController descController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
+  TimeOfDay? selectedTime;
   String? selecteService;
   String? selecteServiceId;
   List<String> bedroomList = [
@@ -51,6 +53,20 @@ class _CreateServiceState extends ConsumerState<CreateService> {
   }
 
   bool isLoading = false;
+  Future<void> pickTime() async {
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        selectedTime = pickedTime;
+        timeController.text = pickedTime.format(context);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final getMyPlanRequestServiceState = ref.watch(
@@ -291,6 +307,55 @@ class _CreateServiceState extends ConsumerState<CreateService> {
                             ),
                           ),
                         ),
+                        SizedBox(height: 16.h),
+
+                        Text(
+                          "Preferred Time",
+                          style: GoogleFonts.outfit(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+
+                        SizedBox(height: 10.h),
+
+                        TextField(
+                          controller: timeController,
+                          readOnly: true,
+                          onTap: pickTime,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            hint: Text(
+                              "Select Time",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w400,
+                                color: const Color.fromARGB(127, 4, 37, 8),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.r),
+                              borderSide: BorderSide(
+                                color: const Color.fromARGB(153, 4, 37, 78),
+                                width: 1.w,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.r),
+                              borderSide: BorderSide(
+                                color: AppColors.buttonText,
+                                width: 1.w,
+                              ),
+                            ),
+                            suffixIcon: Icon(
+                              Icons.access_time,
+                              color: AppColors.buttonText,
+                              size: 20.sp,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -310,6 +375,21 @@ class _CreateServiceState extends ConsumerState<CreateService> {
                   onPressed: isLoading
                       ? null
                       : () async {
+                          log("Date : ${selectedDate}");
+                          log("Time : ${selectedTime?.format(context)}");
+                          if (selectedDate == null || selectedTime == null) {
+                            return;
+                          }
+
+                          final dateTime = DateTime(
+                            selectedDate!.year,
+                            selectedDate!.month,
+                            selectedDate!.day,
+                            selectedTime!.hour,
+                            selectedTime!.minute,
+                          );
+                          final preferredTime = dateTime.millisecondsSinceEpoch;
+
                           setState(() {
                             isLoading = true;
                           });
@@ -322,6 +402,7 @@ class _CreateServiceState extends ConsumerState<CreateService> {
                                   preffrerData:
                                       selectedDate?.millisecondsSinceEpoch ??
                                       DateTime.now().millisecondsSinceEpoch,
+                                  preferredTime: preferredTime,
                                 );
                             if (isSucess) {
                               showRequestDialog();

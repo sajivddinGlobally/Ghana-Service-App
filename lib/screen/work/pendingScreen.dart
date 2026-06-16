@@ -21,10 +21,35 @@ class PendingScreen extends ConsumerStatefulWidget {
 }
 
 class _PendingScreenState extends ConsumerState<PendingScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // जब यूज़र लिस्ट के बिल्कुल नीचे पहुँचने वाला हो (200px पहले)
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
+      ref.read(getPendingRequestProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   bool isloading = false;
   @override
   Widget build(BuildContext context) {
     final pendingRequestState = ref.watch(getPendingRequestProvider);
+    final pendingNotifier = ref.read(getPendingRequestProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       body: Column(
@@ -100,6 +125,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
           SizedBox(height: 16.h),
           pendingRequestState.when(
             data: (data) {
+              final requestPending = data.data?.list ?? [];
               if (data.data?.list == null || data.data!.list!.isEmpty) {
                 return Expanded(
                   child: Center(
@@ -160,15 +186,34 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
               return Expanded(
                 child: ListView.builder(
                   padding: EdgeInsets.zero,
-                  itemCount: data.data?.list?.length,
+                  // itemCount: data.data?.list?.length,
+                  itemCount:
+                      requestPending.length +
+                      (pendingNotifier.hasMoreData ? 1 : 0),
                   itemBuilder: (context, index) {
+                    if (index == requestPending.length) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: Color(0xffF2D701),
+                          ),
+                        ),
+                      );
+                    }
                     final pending = data.data?.list?[index];
                     final prefferedDate = DateTime.fromMillisecondsSinceEpoch(
-                      pending?.date ?? 0,
+                      pending?.preferredDate ?? 0,
                     );
-                    final formateDate = DateFormat(
-                      'dd MM yyyy',
+                    final formattedDate = DateFormat(
+                      "dd MMM yyyy",
                     ).format(prefferedDate);
+
+                    final preferredTime = DateFormat("hh:mm a").format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                        pending?.preferredTime ?? 0,
+                      ),
+                    );
 
                     return Container(
                       margin: EdgeInsets.only(
@@ -196,7 +241,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                               Expanded(
                                 child: Text(
                                   // "20 Apr 2025",
-                                  formateDate,
+                                  formattedDate,
                                   style: GoogleFonts.parkinsans(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18.sp,
@@ -205,26 +250,26 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                                   ),
                                 ),
                               ),
-                              Container(
-                                width: 99.w,
-                                height: 33.h,
-                                decoration: BoxDecoration(
-                                  color: const Color.fromRGBO(242, 215, 1, 0.3),
-                                  borderRadius: BorderRadius.circular(40.r),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    // "Pending",
-                                    pending?.status ?? "",
-                                    style: GoogleFonts.outfit(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 13.sp,
-                                      color: AppColors.buttonBg,
-                                      letterSpacing: -0.2,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              // Container(
+                              //   width: 99.w,
+                              //   height: 33.h,
+                              //   decoration: BoxDecoration(
+                              //     color: const Color.fromRGBO(242, 215, 1, 0.3),
+                              //     borderRadius: BorderRadius.circular(40.r),
+                              //   ),
+                              //   child: Center(
+                              //     child: Text(
+                              //       // "Pending",
+                              //       pending?.status ?? "",
+                              //       style: GoogleFonts.outfit(
+                              //         fontWeight: FontWeight.w500,
+                              //         fontSize: 13.sp,
+                              //         color: AppColors.buttonBg,
+                              //         letterSpacing: -0.2,
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
 
@@ -232,7 +277,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
 
                           // 🔥 Time
                           Text(
-                            "Time: 9:00 AM - 1:00 PM",
+                            "Time: $preferredTime",
                             style: GoogleFonts.parkinsans(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
@@ -267,47 +312,6 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                           ),
 
                           SizedBox(height: 14.h),
-                          // InkWell(
-                          //   onTap: () {
-                          //     // Navigator.push(
-                          //     //   context,
-                          //     //   CupertinoPageRoute(
-                          //     //     builder: (context) => Detilesscreen(
-                          //     //       requestId: data.data!.list![index].id ?? "",
-                          //     //       userName: "",
-                          //     //       userPhone: "",
-                          //     //       service: "",
-                          //     //       assignService: "",
-                          //     //       status: "",
-                          //     //     ),
-                          //     //   ),
-                          //     // );
-                          //     // Navigator.push(
-                          //     //   context,
-                          //     //   CupertinoPageRoute(
-                          //     //     builder: (context) => RequestDetailScreen(),
-                          //     //   ),
-                          //     // );
-                          //   },
-                          //   child: Container(
-                          //     padding: EdgeInsets.symmetric(vertical: 9.h),
-                          //     decoration: BoxDecoration(
-                          //       color: Color(0xffF2D701),
-                          //       borderRadius: BorderRadius.circular(50.r),
-                          //     ),
-                          //     child: Center(
-                          //       child: Text(
-                          //         "View Details",
-                          //         style: GoogleFonts.outfit(
-                          //           fontSize: 16.sp,
-                          //           fontWeight: FontWeight.w500,
-                          //           color: Color(0xff04254E),
-                          //           letterSpacing: -0.64,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                           InkWell(
                             onTap: () async {
                               setState(() {
@@ -321,44 +325,44 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                                   requestId: pending!.id.toString(),
                                 );
                                 if (res.code == 0 && res.error == false) {
-                                  ref.invalidate(getPendingRequestProvider);
+                                  // ref.invalidate(getPendingRequestProvider.notifier);
                                   Navigator.push(
                                     context,
                                     CupertinoPageRoute(
                                       builder: (context) => Detilesscreen(
                                         requestId: pending.id.toString(),
-                                        userName:
-                                            res.data?.userId?.fullName ?? "N/A",
-                                        userPhone:
-                                            res.data?.userId?.phone ?? "N/A",
-                                        service:
-                                            res
-                                                .data
-                                                ?.serviceId
-                                                ?.planDetails
-                                                ?.serviceId
-                                                ?.name ??
-                                            "N/A",
-                                        assignService:
-                                            res
-                                                .data
-                                                ?.serviceId
-                                                ?.planDetails
-                                                ?.serviceId
-                                                ?.name ??
-                                            "",
-                                        status: res.data?.status ?? "",
-                                        image: res.data?.image ?? "",
-                                        propertyAddress:
-                                            res
-                                                .data
-                                                ?.serviceId
-                                                ?.personalInformation
-                                                ?.propertyAddress ??
-                                            "",
-                                        preferredDate:
-                                            res.data?.preferredDate ?? 0,
-                                        desc: res.data?.description ?? "",
+                                        // userName:
+                                        //     res.data?.userId?.fullName ?? "N/A",
+                                        // userPhone:
+                                        //     res.data?.userId?.phone ?? "N/A",
+                                        // service:
+                                        //     res
+                                        //         .data
+                                        //         ?.serviceId
+                                        //         ?.planDetails
+                                        //         ?.serviceId
+                                        //         ?.name ??
+                                        //     "N/A",
+                                        // assignService:
+                                        //     res
+                                        //         .data
+                                        //         ?.serviceId
+                                        //         ?.planDetails
+                                        //         ?.serviceId
+                                        //         ?.name ??
+                                        //     "",
+                                        // status: res.data?.status ?? "",
+                                        // image: res.data?.image ?? "",
+                                        // propertyAddress:
+                                        //     res
+                                        //         .data
+                                        //         ?.serviceId
+                                        //         ?.personalInformation
+                                        //         ?.propertyAddress ??
+                                        //     "",
+                                        // preferredDate:
+                                        //     res.data?.preferredDate ?? 0,
+                                        // desc: res.data?.description ?? "",
                                       ),
                                     ),
                                   );

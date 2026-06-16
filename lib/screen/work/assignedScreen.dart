@@ -206,6 +206,12 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
                       "dd MMM yyyy",
                     ).format(preferredDate);
 
+                    final preferredTime = DateFormat("hh:mm a").format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                        assign.preferredTime ?? 0,
+                      ),
+                    );
+
                     return Container(
                       margin: EdgeInsets.only(
                         left: 16.w,
@@ -242,7 +248,7 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
 
                           // 🔥 Time
                           Text(
-                            "Time: 9:00 AM - 1:00 PM",
+                            "Time: $preferredTime",
                             style: GoogleFonts.parkinsans(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
@@ -263,8 +269,6 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
                           ),
 
                           SizedBox(height: 10.h),
-
-                          // 🔥 Service
                           Text(
                             // "Service: AC Repair",
                             "Service: ${assign.serviceId?.planDetails?.planId?.name ?? ""}",
@@ -279,54 +283,12 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
                           SizedBox(height: 14.h),
                           InkWell(
                             onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   CupertinoPageRoute(
-                              //     builder: (context) => Detilesscreen(
-                              //       requestId: data.data!.list![index].id ?? "",
-                              //       userName: "",
-                              //       userPhone: "",
-                              //       service: "",
-                              //        assignService: "",
-                              // status: "",
-                              //     ),
-                              //   ),
-                              // );
-                              final complete = data.data!.list![index];
                               Navigator.push(
                                 context,
                                 CupertinoPageRoute(
                                   builder: (context) => RequestDetailScreen(
-                                    image: complete.image,
-                                    userName: complete.userId?.fullName ?? "",
-                                    phone: complete.userId?.phone ?? "",
-                                    preferredDate: complete.preferredDate,
-                                    service:
-                                        complete
-                                            .serviceId
-                                            ?.planDetails
-                                            ?.serviceId
-                                            ?.name ??
-                                        "",
-                                    assignService:
-                                        complete
-                                            .serviceId
-                                            ?.planDetails
-                                            ?.planId
-                                            ?.name ??
-                                        "",
-                                    requestNumber: complete.requestNumber,
-                                    description: complete.description ?? "",
-                                    remark: complete.remark,
-                                    rating: complete.rating?.rating ?? 0,
-                                    message: complete.rating?.message ?? "",
-                                    status: complete.status ?? "",
-                                    propertyAddress:
-                                        complete
-                                            .serviceId
-                                            ?.personalInformation
-                                            ?.propertyAddress ??
-                                        "",
+                                    requestId: data.data!.list![index].id
+                                        .toString(),
                                   ),
                                 ),
                               );

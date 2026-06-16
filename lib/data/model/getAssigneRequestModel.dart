@@ -72,6 +72,7 @@ class ListElement {
   String? requestNumber;
   String? description;
   int? preferredDate;
+  int? preferredTime;
   Priority? priority;
   int? completedAt;
   String? image;
@@ -95,6 +96,7 @@ class ListElement {
     this.requestNumber,
     this.description,
     this.preferredDate,
+    this.preferredTime,
     this.priority,
     this.completedAt,
     this.image,
@@ -121,6 +123,7 @@ class ListElement {
     requestNumber: json["requestNumber"],
     description: json['description'],
     preferredDate: json["preferredDate"],
+    preferredTime: json["preferredTime"],
     priority: priorityValues.map[json["priority"]]!,
     completedAt: json["completedAt"],
     image: json["image"],
@@ -145,6 +148,7 @@ class ListElement {
     "requestNumber": requestNumber,
     "description": descriptionValues.reverse[description],
     "preferredDate": preferredDate,
+    "preferredTime": preferredTime,
     "priority": priorityValues.reverse[priority],
     "completedAt": completedAt,
     "image": image,

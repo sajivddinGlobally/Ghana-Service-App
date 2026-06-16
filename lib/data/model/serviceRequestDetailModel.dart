@@ -48,7 +48,7 @@ class Data {
     String? image;
     String? remark;
     String? status;
-    Rating? rating;
+      Rating? rating;
     Issue? issue;
     bool? isDisable;
     bool? isDeleted;
@@ -162,21 +162,25 @@ class Issue {
 
 class Rating {
     String? message;
-    dynamic ratedAt;
+    int? ratedAt;
+    int? rating;
 
     Rating({
         this.message,
         this.ratedAt,
+        this.rating,
     });
 
     factory Rating.fromJson(Map<String, dynamic> json) => Rating(
         message: json["message"],
         ratedAt: json["ratedAt"],
+        rating: json["rating"],
     );
 
     Map<String, dynamic> toJson() => {
         "message": message,
         "ratedAt": ratedAt,
+        "rating": rating,
     };
 }
 
