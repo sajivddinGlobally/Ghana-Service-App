@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 GetServiceRequestDetailsModel getServiceRequestDetailsModelFromJson(
   String str,
 ) => GetServiceRequestDetailsModel.fromJson(json.decode(str));
@@ -48,6 +50,7 @@ class Data {
   String? requestNumber;
   String? description;
   int? preferredDate;
+  int? preferredTime;
   String? priority;
   dynamic completedAt;
   dynamic image;
@@ -72,6 +75,7 @@ class Data {
     this.requestNumber,
     this.description,
     this.preferredDate,
+    this.preferredTime,
     this.priority,
     this.completedAt,
     this.image,
@@ -99,6 +103,7 @@ class Data {
     requestNumber: json["requestNumber"],
     description: json["description"],
     preferredDate: json["preferredDate"],
+    preferredTime: json["preferredTime"],
     priority: json["priority"],
     completedAt: json["completedAt"],
     image: json["image"],
@@ -126,6 +131,7 @@ class Data {
     "requestNumber": requestNumber,
     "description": description,
     "preferredDate": preferredDate,
+    "preferredTime": preferredTime,
     "priority": priority,
     "completedAt": completedAt,
     "image": image,
@@ -169,7 +175,7 @@ class EmployeeId {
   String? experience;
   String? image;
   bool? isActive;
-  int? averageRating;
+  num? averageRating;
   int? totalRatings;
 
   EmployeeId({

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Engineerdetiles extends ConsumerStatefulWidget {
@@ -86,6 +87,9 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
       ),
       body: detailsAsync.when(
         data: (data) {
+          final preferredTime = DateFormat("hh:mm a").format(
+            DateTime.fromMillisecondsSinceEpoch(data.data?.preferredTime ?? 0),
+          );
           return Padding(
             padding: EdgeInsets.only(left: 16.w, right: 16.w),
             child: Column(
@@ -191,7 +195,7 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                           color: AppColors.buttonText,
-                          letterSpacing: -0.64,
+                          letterSpacing: -0.54,
                         ),
                       ),
                       SizedBox(height: 13.sp),
@@ -208,12 +212,12 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                               ),
                             ),
                             TextSpan(
-                              text: " 2:00 PM",
+                              text: " $preferredTime",
                               style: GoogleFonts.parkinsans(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12.sp,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.48,
+                                letterSpacing: -0.1,
                               ),
                             ),
                           ],
@@ -229,7 +233,7 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                                 fontWeight: FontWeight.w600,
                                 fontSize: 12.sp,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.48,
+                                letterSpacing: -0.1,
                               ),
                             ),
                             TextSpan(
@@ -239,7 +243,7 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12.sp,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.48,
+                                letterSpacing: -0.1,
                               ),
                             ),
                           ],
@@ -255,7 +259,7 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                                 fontWeight: FontWeight.w600,
                                 fontSize: 12.sp,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.48,
+                                letterSpacing: -0.1,
                               ),
                             ),
                             TextSpan(
@@ -265,7 +269,7 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12.sp,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.48,
+                                letterSpacing: -0.1,
                               ),
                             ),
                           ],
@@ -293,7 +297,7 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                         color: AppColors.buttonText,
-                        letterSpacing: -0.64,
+                        letterSpacing: -0.1,
                       ),
                     ),
                   ),
@@ -315,8 +319,8 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                         });
                         try {
                           final service = ref.read(authServiceProvider);
-                          final res = await service.employeeArrived(
-                            requestId: widget.requestId,
+                          final res = await service.clientConfirmArrival(
+                            requesId: widget.requestId,
                           );
                           if (res) {
                             setState(() {
@@ -328,13 +332,21 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                           setState(() {
                             isLoading = false;
                           });
+                        } finally {
+                          setState(() {
+                            isLoading = false;
+                          });
                         }
                       },
                       child: isLoading
                           ? Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 1.5,
+                              child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 1.5,
+                                ),
                               ),
                             )
                           : Text(
@@ -343,7 +355,7 @@ class _EngineerdetilesState extends ConsumerState<Engineerdetiles> {
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.64,
+                                letterSpacing: -0.1,
                               ),
                             ),
                     ),

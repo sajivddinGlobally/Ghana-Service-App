@@ -315,51 +315,7 @@ class _OnTheWayScreenState extends ConsumerState<OnTheWayScreen> {
                                 CupertinoPageRoute(
                                   builder: (context) => Detilesscreen(
                                     requestId: data.data!.list![index].id ?? "",
-                                    // userName:
-                                    //     data
-                                    //         .data!
-                                    //         .list![index]
-                                    //         .userId
-                                    //         ?.fullName ??
-                                    //     "N/A",
-                                    // userPhone:
-                                    //     data.data!.list![index].userId?.phone ??
-                                    //     "N/A",
-                                    // service:
-                                    //     data
-                                    //         .data!
-                                    //         .list![index]
-                                    //         .serviceId
-                                    //         ?.planDetails
-                                    //         ?.serviceId
-                                    //         ?.name ??
-                                    //     "N/A",
-                                    // assignService:
-                                    //     data
-                                    //         .data!
-                                    //         .list![index]
-                                    //         .serviceId
-                                    //         ?.planDetails
-                                    //         ?.planId
-                                    //         ?.name ??
-                                    //     "",
-                                    // status:
-                                    //     data.data!.list![index].status ?? "",
-                                    // image: data.data!.list![index].image ?? "",
-                                    // propertyAddress:
-                                    //     data
-                                    //         .data
-                                    //         ?.list?[index]
-                                    //         .serviceId
-                                    //         ?.personalInformation
-                                    //         ?.propertyAddress ??
-                                    //     "",
-                                    // preferredDate:
-                                    //     data.data?.list?[index].preferredDate ??
-                                    //     0,
-                                    // desc:
-                                    //     data.data?.list?[index].description ??
-                                    //     "",
+                                  
                                   ),
                                 ),
                               );

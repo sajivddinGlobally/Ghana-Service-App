@@ -62,7 +62,7 @@ class Data {
         inProgress: json["inProgress"],
         onTheWay: json["onTheWay"],
         arrived: json["arrived"],
-        customerConfirmed: json["customer_confirmed"],
+        customerConfirmed: json["customerConfirmed"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -72,6 +72,6 @@ class Data {
         "inProgress": inProgress,
         "onTheWay": onTheWay,
         "arrived": arrived,
-        "customer_confirmed": customerConfirmed,
+        "customerConfirmed": customerConfirmed,
     };
 }

@@ -2,17 +2,11 @@ import 'dart:developer';
 
 import 'package:dwelleasy_ghana/core/apiService/apiService.dart';
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
-import 'package:dwelleasy_ghana/data/model/getPendingRequestModel.dart';
+import 'package:dwelleasy_ghana/data/model/getcustomerConfirmdModel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// final getPendingRequestProvider =
-//     FutureProvider.autoDispose<GetPendingRequestsModel>((ref) async {
-//       final pendingService = ref.read(authServiceProvider);
-//       return await pendingService.getPendingRequestList();
-//     });
-
-class PendingRequestListnNotifier
-    extends StateNotifier<AsyncValue<GetPendingRequestsModel>> {
+class CustomerConfirmedNotifier
+    extends StateNotifier<AsyncValue<GetCustomerConfirmeModel>> {
   final AuthService authService;
 
   int _currentPage = 1;
@@ -21,39 +15,32 @@ class PendingRequestListnNotifier
 
   final List<ListElement> _fullList = [];
 
-  PendingRequestListnNotifier(this.authService)
+  CustomerConfirmedNotifier(this.authService)
     : super(const AsyncValue.loading()) {
-    pendingReqeustList();
+    customerConfirmed();
   }
 
   bool get isLoadingMore => _isLoadingMore;
   bool get hasMoreData => _currentPage < _totalPages;
 
-  Future<void> pendingReqeustList({bool isRefresh = false}) async {
+  Future<void> customerConfirmed({bool isRefresh = false}) async {
     try {
-      if (isRefresh) {
-        _currentPage = 1;
-        _totalPages = 1;
+      if (isRefresh || _currentPage == 1) {
         _fullList.clear();
-
-        state = const AsyncValue.loading();
       }
 
-      final response = await authService.getPendingRequestList(
-        page: _currentPage,
-      );
+      final response = await authService.customerConfirmed(page: _currentPage);
 
       if (response.code == 0 && response.error == false) {
         _totalPages = response.data?.totalPages ?? 1;
+
         final newList = response.data?.list ?? [];
 
         _fullList.addAll(newList);
 
-        response.data?.list = _fullList;
+        response.data?.list = List.from(_fullList);
 
         state = AsyncValue.data(response);
-      } else {
-        throw Exception(response.message);
       }
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -69,7 +56,7 @@ class PendingRequestListnNotifier
 
       state = AsyncValue.data(state.value!);
 
-      final response = await authService.getPendingRequestList(
+      final response = await authService.customerConfirmed(
         page: _currentPage,
       );
 
@@ -92,11 +79,11 @@ class PendingRequestListnNotifier
   }
 }
 
-final getPendingRequestProvider =
+final getCustomerConfirmedProvider =
     StateNotifierProvider.autoDispose<
-      PendingRequestListnNotifier,
-      AsyncValue<GetPendingRequestsModel>
+      CustomerConfirmedNotifier,
+      AsyncValue<GetCustomerConfirmeModel>
     >((ref) {
       final authService = ref.read(authServiceProvider);
-      return PendingRequestListnNotifier(authService);
+      return CustomerConfirmedNotifier(authService);
     });

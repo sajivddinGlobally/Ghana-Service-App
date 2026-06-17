@@ -943,7 +943,7 @@ class EmployeeId {
     String? experience;
     String? image;
     bool? isActive;
-    int? averageRating;
+    num? averageRating;
     int? totalRatings;
 
     EmployeeId({

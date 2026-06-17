@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/screen/detilesScreen.dart';
+import 'package:dwelleasy_ghana/screen/quickMessageScreenDetiles.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getAssignRequestProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getCompleteRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/getPendingRequestProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/pendingRequestProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/todayPendingRequestProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/requestDetailScreen.dart';
@@ -49,11 +51,47 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
   int select = 0;
   String? loadingRequestId;
   bool isloading = false;
+
+  final ScrollController _scrollController = ScrollController();
+  final ScrollController _completeScrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    _completeScrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.hasClients) {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        ref.read(getPendingRequestProvider.notifier).loadNextPage();
+      }
+    }
+
+    if (_completeScrollController.hasClients) {
+      if (_completeScrollController.position.pixels >=
+          _completeScrollController.position.maxScrollExtent - 200) {
+        ref.read(getCompleteRequestProvider.notifier).loadNextPage();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _completeScrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final assignRequestState = ref.watch(getAssignRequestProvider);
-    final pendingRequestState = ref.watch(pendingRequestProvider);
+    final pendingRequestState = ref.watch(getPendingRequestProvider);
+    final pendingNotifier = ref.read(getPendingRequestProvider.notifier);
     final getCompleteRequestState = ref.watch(getCompleteRequestProvider);
+    final notifier = ref.read(getCompleteRequestProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       appBar: AppBar(
@@ -99,8 +137,8 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                         select = 0;
                       });
                       ref
-                          .read(getAssignRequestProvider.notifier)
-                          .getAssignRequests();
+                          .read(getPendingRequestProvider.notifier)
+                          .pendingReqeustList();
                     },
                     child: Container(
                       height: 37.h,
@@ -188,6 +226,7 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
             if (select == 0)
               pendingRequestState.when(
                 data: (assignData) {
+                  final requestPending = assignData.data?.list ?? [];
                   if (assignData.data?.list == null ||
                       assignData.data!.list!.isEmpty) {
                     return Expanded(
@@ -248,8 +287,23 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                   }
                   return Expanded(
                     child: ListView.builder(
-                      itemCount: assignData.data?.list?.length,
+                      controller: _scrollController,
+                      // itemCount: assignData.data?.list?.length,
+                      itemCount:
+                          requestPending.length +
+                          (pendingNotifier.hasMoreData ? 1 : 0),
                       itemBuilder: (context, index) {
+                        if (index == requestPending.length) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.h),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: Color(0xffF2D701),
+                              ),
+                            ),
+                          );
+                        }
+                        final pending = assignData.data?.list?[index];
                         final assign = assignData.data?.list?[index];
                         final preferredDate =
                             DateTime.fromMillisecondsSinceEpoch(
@@ -293,6 +347,7 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
             if (select == 1)
               getCompleteRequestState.when(
                 data: (completeData) {
+                  final completeList = completeData.data?.list ?? [];
                   if (completeData.data?.list == null ||
                       completeData.data!.list!.isEmpty) {
                     return Expanded(
@@ -353,8 +408,22 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                   }
                   return Expanded(
                     child: ListView.builder(
-                      itemCount: completeData.data?.list?.length,
+                      controller: _completeScrollController,
+                      // itemCount: completeData.data?.list?.length,
+                      itemCount:
+                          completeList.length + (notifier.hasMoreData ? 1 : 0),
                       itemBuilder: (context, index) {
+                        if (index == completeList.length) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.h),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: Color(0xffF2D701),
+                              ),
+                            ),
+                          );
+                        }
+
                         final assign = completeData.data?.list?[index];
                         final preferredDate =
                             DateTime.fromMillisecondsSinceEpoch(
@@ -369,7 +438,7 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                           name:
                               assign?.serviceId?.planDetails?.planId?.name ??
                               "N/A",
-                          client: assign?.userId?.email ?? "N/A",
+                          client: assign?.userId?.fullName ?? "N/A",
                           location:
                               assign
                                   ?.serviceId
@@ -664,17 +733,29 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                         ),
                       ),
                     ),
-                    // SizedBox(width: 12.w),
-                    // Expanded(
-                    //   child: Container(
-                    //     height: 49.h,
-                    //     decoration: BoxDecoration(
-                    //       color: Colors.red,
-                    //       borderRadius: BorderRadius.circular(50.r),
-                    //     ),
-                    //     child: Center(child: Text("Reject")),
-                    //   ),
-                    // ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => Quickmessagescreendetiles(
+                                requestID: loadingRequestId,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          height: 49.h,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(50.r),
+                          ),
+                          child: Center(child: Text("Reject")),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class PendingRequestDetailScreen extends ConsumerStatefulWidget {
   final String requestId;
@@ -88,6 +89,9 @@ class _PendingRequestDetailScreenState
       body: detailsAsync.when(
         data: (data) {
           final status = data.data?.status?.toLowerCase() ?? "";
+          final preferredTime = DateFormat("hh:mm a").format(
+            DateTime.fromMillisecondsSinceEpoch(data.data?.preferredTime ?? 0),
+          );
 
           if (status == "pending") {
             return Center(
@@ -134,8 +138,7 @@ class _PendingRequestDetailScreenState
                   child: Column(
                     children: [
                       Container(
-                        height: 113.h,
-                        width: 113.w,
+                        padding: EdgeInsets.all(4.w),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -143,28 +146,36 @@ class _PendingRequestDetailScreenState
                             width: 3.w,
                           ),
                         ),
-                        child: ClipOval(
-                          child:
-                              (data.data?.employeeId?.image != null &&
-                                  data.data!.employeeId!.image!.isNotEmpty)
-                              ? Image.network(
-                                  data.data!.employeeId!.image!,
-                                  fit: BoxFit.cover,
-                                  width: 113.w,
-                                  height: 113.h,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Icon(
-                                      Icons.person,
-                                      size: 60.sp,
-                                      color: Colors.grey,
-                                    );
-                                  },
-                                )
-                              : Icon(
-                                  Icons.person,
-                                  size: 60.sp,
-                                  color: Colors.grey,
-                                ),
+                        child: Container(
+                          width: 113.w,
+                          height: 113.h,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          child: ClipOval(
+                            child:
+                                (data.data?.employeeId?.image != null &&
+                                    data.data!.employeeId!.image!.isNotEmpty)
+                                ? Image.network(
+                                    data.data!.employeeId!.image!,
+                                    fit: BoxFit.cover,
+                                    width: 113.w,
+                                    height: 113.h,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(
+                                        Icons.person,
+                                        size: 60.sp,
+                                        color: Colors.grey,
+                                      );
+                                    },
+                                  )
+                                : Icon(
+                                    Icons.person,
+                                    size: 60.sp,
+                                    color: Colors.grey,
+                                  ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 15.h),
@@ -186,7 +197,7 @@ class _PendingRequestDetailScreenState
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
                           color: AppColors.buttonText,
-                          letterSpacing: -0.2,
+                          letterSpacing: -0.1,
                         ),
                       ),
                       SizedBox(height: 8.h),
@@ -197,7 +208,7 @@ class _PendingRequestDetailScreenState
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
                           color: AppColors.buttonText,
-                          letterSpacing: -0.2,
+                          letterSpacing: -0.1,
                         ),
                       ),
                     ],
@@ -239,12 +250,12 @@ class _PendingRequestDetailScreenState
                               ),
                             ),
                             TextSpan(
-                              text: " 2:00 PM",
+                              text: " $preferredTime",
                               style: GoogleFonts.parkinsans(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12.sp,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.2,
+                                letterSpacing: -0.1,
                               ),
                             ),
                           ],
@@ -260,7 +271,7 @@ class _PendingRequestDetailScreenState
                                 fontWeight: FontWeight.w600,
                                 fontSize: 12.sp,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.2,
+                                letterSpacing: -0.1,
                               ),
                             ),
                             TextSpan(
@@ -270,7 +281,7 @@ class _PendingRequestDetailScreenState
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12.sp,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.2,
+                                letterSpacing: -0.1,
                               ),
                             ),
                           ],
@@ -286,7 +297,7 @@ class _PendingRequestDetailScreenState
                                 fontWeight: FontWeight.w600,
                                 fontSize: 12.sp,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.2,
+                                letterSpacing: -0.1,
                               ),
                             ),
                             TextSpan(
@@ -296,7 +307,7 @@ class _PendingRequestDetailScreenState
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12.sp,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.2,
+                                letterSpacing: -0.1,
                               ),
                             ),
                           ],
@@ -308,7 +319,6 @@ class _PendingRequestDetailScreenState
                 SizedBox(height: 16.h),
                 getRatingState.when(
                   data: (data) {
-                    final completeJob = data.data?.completeJob ?? 0;
                     return Container(
                       width: double.infinity,
                       padding: EdgeInsets.symmetric(
@@ -357,7 +367,7 @@ class _PendingRequestDetailScreenState
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w400,
                                       color: AppColors.buttonText,
-                                      letterSpacing: -0.2,
+                                      letterSpacing: -0.1,
                                     ),
                                   ),
                                   SizedBox(height: 8.h),
@@ -368,7 +378,7 @@ class _PendingRequestDetailScreenState
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w400,
                                       color: AppColors.buttonText,
-                                      letterSpacing: -0.2,
+                                      letterSpacing: -0.1,
                                       height: 1,
                                     ),
                                   ),

@@ -38,14 +38,16 @@ class Data {
   int? total;
   int? page;
   int? limit;
+  int? totalPages;
   List<ListElement>? list;
 
-  Data({this.total, this.page, this.limit, this.list});
+  Data({this.total, this.page, this.limit, this.list,this.totalPages});
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     total: json["total"],
     page: json["page"],
     limit: json["limit"],
+    totalPages: json["totalPages"],
     list: json["list"] == null
         ? []
         : List<ListElement>.from(
@@ -57,6 +59,7 @@ class Data {
     "total": total,
     "page": page,
     "limit": limit,
+    "totalPages": totalPages,
     "list": list == null
         ? []
         : List<dynamic>.from(list!.map((x) => x.toJson())),

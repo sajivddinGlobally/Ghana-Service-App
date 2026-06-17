@@ -19,6 +19,7 @@ import 'package:dwelleasy_ghana/data/ClientModel/clientGetTicketModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/clientNotificationModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createPlanReqiestBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestBodyModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/customerConfirmArrivalBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getActivePlanModel.dart'
     hide
         PlanDetails,
@@ -92,6 +93,7 @@ import 'package:dwelleasy_ghana/data/model/getPendingRequestModel.dart'
 import 'package:dwelleasy_ghana/data/model/getProfileModel.dart';
 import 'package:dwelleasy_ghana/data/model/getServiceResModel.dart';
 import 'package:dwelleasy_ghana/data/model/getTicketModel.dart';
+import 'package:dwelleasy_ghana/data/model/getcustomerConfirmdModel.dart' hide PersonalInformation, PropertyDetails, PlanDetails, PaymentAndBilling, Declaration;
 import 'package:dwelleasy_ghana/data/model/inProgressModel.dart'
     hide
         PersonalInformation,
@@ -348,9 +350,12 @@ class AuthService {
     }
   }
 
-  Future<GetMyLeaveModel> fetchAllLeave() async {
+  Future<GetMyLeaveModel> fetchAllLeave({
+    required int page,
+    int limit = 10,
+  }) async {
     try {
-      final response = await api.myLeaveRequest();
+      final response = await api.myLeaveRequest(page, limit);
       if (response.error == false && response.code == 1) {
         return response;
       }
@@ -380,9 +385,9 @@ class AuthService {
     }
   }
 
-  Future<GetTicketModel> getTicket() async {
+  Future<GetTicketModel> getTicket({required int page, int limit = 10}) async {
     try {
-      final response = await api.getTicket();
+      final response = await api.getTicket(page, limit);
       if (response.code == 0 && response.error == false) {
         return response;
       }
@@ -435,6 +440,21 @@ class AuthService {
     }
   }
 
+  Future<GetCustomerConfirmeModel> customerConfirmed({
+    required int page,
+    int limit = 10,
+  }) async {
+    try {
+      final response = await api.customerConfirmed(page, limit);
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      return throw Exception(response.message);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<GetCompleteRequestsModel> getCompleteRequestList({
     required int page,
     int limit = 10,
@@ -449,6 +469,8 @@ class AuthService {
       throw Exception(e.toString());
     }
   }
+
+
 
   Future<InProgressModel> getInProgress({
     required int page,
@@ -1121,7 +1143,8 @@ class AuthService {
       }
 
       throw Exception(response.message);
-    } catch (e) {
+    } catch (e, st) {
+      log(st.toString());
       throw Exception(e.toString());
     }
   }
@@ -1299,6 +1322,23 @@ class AuthService {
       return throw Exception(response.message);
     } catch (e) {
       throw Exception(e.toString());
+    }
+  }
+
+  Future<bool> clientConfirmArrival({required String requesId}) async {
+    try {
+      final body = CustomerConfirmArrivalBodyModel(requestId: requesId);
+      final response = await api.customerConfirmArrival(body);
+      if (response.code == 0 && response.error == false) {
+        log(response.message ?? "Login Success");
+        showSuccessSnackBar(response.message ?? "Sucess");
+        return true;
+      }
+      return false;
+    } catch (e, st) {
+      log("ERROR => $e");
+      log("STACK TRACE => $st");
+      return false;
     }
   }
 }

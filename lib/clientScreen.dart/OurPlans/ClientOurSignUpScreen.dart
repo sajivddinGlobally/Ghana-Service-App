@@ -2,6 +2,7 @@ import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientOurPlanProvider
 import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientPaymentScreen.dart';
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
+import 'package:dwelleasy_ghana/core/utils/pretty.dio.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceDetailsModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,12 @@ import 'package:intl/intl.dart';
 class Clientoursignupscreen extends ConsumerStatefulWidget {
   final String serviceId;
   final List<Datum> plantype;
+  final String serviceName;
   const Clientoursignupscreen({
     super.key,
     required this.serviceId,
     required this.plantype,
+    required this.serviceName,
   });
 
   @override
@@ -35,7 +38,12 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
   final singnatureController = TextEditingController();
 
   List<String> bedroomList = ["1-2", "3-4", "5+"];
-  List<String> bathroomList = ["1", "2", "3+"];
+  List<String> bathroomList = ["1", "2", "4", "5"];
+  // List<Map<String, dynamic>> bathroomList = [
+  //   {"label": "1", "value": 1},
+  //   {"label": "2", "value": 2},
+  //   {"label": "3+", "value": 3},
+  // ];
   // List<String> acList = ["0", "1-2", "3-4", "5+"];
   List<String> acList = ["0", "1", "2", "3", "4", "5", "6"];
   List<String> propertyTypeList = [
@@ -49,12 +57,14 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
     "5-10 years",
     "More than 15 years",
   ];
-  List<String> planList = [
-    "Plumbing only",
-    "Electrical only",
-    "Plumbing + Electrical",
-    "Full Bundle(including AC)",
-  ];
+  // List<String> planList = [
+  //   "Plumbing only",
+  //   "Electrical only",
+  //   "Plumbing + Electrical",
+  //   "Full Bundle(including AC)",
+  // ];
+
+  List<String> get planList => [widget.serviceName];
 
   List<String> paymentmethordList = [
     // "Mobile Money (MTN)",
@@ -62,7 +72,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
     // "Mobile Money (AirtelTigo)",
     // "Bank Transfer",
     // "Cash (office only)",
-    "cash",
+    "Cash",
   ];
   List<String> facebookList = [
     "Facebook",
@@ -94,66 +104,17 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
   bool agreeTermsAndConditions = false;
   bool noPreExistingFaults = false;
 
-  // final TextEditingController dobController = TextEditingController();
-  // final TextEditingController prefferingBillingController =
-  //     TextEditingController();
-
-  // DateTime? selectedDate;
-
-  // Future<void> pickDOB() async {
-  //   DateTime initialDate = DateTime.now().subtract(
-  //     const Duration(days: 365 * 18),
-  //   );
-
-  //   final DateTime? pickedDate = await showDatePicker(
-  //     context: context,
-  //     initialDate: initialDate,
-  //     firstDate: DateTime(1950),
-  //     lastDate: DateTime.now(),
-  //   );
-  //   if (pickedDate != null) {
-  //     setState(() {
-  //       selectedDate = pickedDate;
-
-  //       dobController.text = DateFormat("dd-MM-yyyy").format(pickedDate);
-  //     });
-  //   }
-  // }
-
-  // DateTime? selectePrefferBlillingDate;
-
-  // Future<void> picPrefferedBillingDate() async {
-  //   DateTime initialDate = DateTime.now().subtract(
-  //     const Duration(days: 365 * 18),
-  //   );
-
-  //   final DateTime? pickedDatePrefferBilling = await showDatePicker(
-  //     context: context,
-  //     initialDate: initialDate,
-  //     firstDate: DateTime(1950),
-  //     lastDate: DateTime.now(),
-  //   );
-  //   if (pickedDatePrefferBilling != null) {
-  //     setState(() {
-  //       selectePrefferBlillingDate = pickedDatePrefferBilling;
-  //       prefferingBillingController.text = DateFormat(
-  //         "dd-MM-yyyy",
-  //       ).format(pickedDatePrefferBilling);
-  //     });
-  //   }
-  // }
-
   final TextEditingController dobController = TextEditingController();
 
   DateTime? selectedSignedDate;
 
   Future<void> pickSignedDate() async {
-    DateTime initialDate = DateTime.now().subtract(
-      const Duration(days: 365 * 18),
-    );
+    // DateTime initialDate = DateTime.now().subtract(
+    //   const Duration(days: 365 * 18),
+    // );
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: initialDate,
+      initialDate: DateTime.now(),
       firstDate: DateTime(1950),
       lastDate: DateTime.now(),
     );
@@ -210,7 +171,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
               height: 44.h,
               width: 44.w,
               padding: EdgeInsets.only(left: 5.w),
-              margin: EdgeInsets.only(left: 16.w),
+              margin: EdgeInsets.only(left: 16.w, top: 10.h),
               decoration: BoxDecoration(
                 color: AppColors.buttonText,
                 shape: BoxShape.circle,
@@ -225,32 +186,34 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
             ),
           ),
         ),
-        title: Column(
-          children: [
-            Text(
-              "Become a Dwell Easy Member",
-              style: GoogleFonts.outfit(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: Color(0xff000000),
-                letterSpacing: -0.1,
+        title: Padding(
+          padding: EdgeInsets.only(top: 10.h),
+          child: Column(
+            children: [
+              Text(
+                "Become a CSG Maintenance Member",
+                style: GoogleFonts.outfit(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff000000),
+                  letterSpacing: -0.1,
+                ),
               ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              "Fill in your details below to get Planed",
-              style: GoogleFonts.parkinsans(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w500,
-                color: Color(0xff000000),
-                letterSpacing: -0.2,
+              SizedBox(height: 4.h),
+              Text(
+                "Fill in your details below to get Plan",
+                style: GoogleFonts.parkinsans(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff000000),
+                  letterSpacing: -0.2,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1),
+          preferredSize: Size.fromHeight(3),
           child: Divider(thickness: 1, color: AppColors.buttonText),
         ),
       ),
@@ -264,12 +227,12 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
               Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Fill in your details below to get Planed.",
+                  "Fill in your details below to get Plan.",
                   style: GoogleFonts.parkinsans(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.buttonText,
-                    letterSpacing: -0.2,
+                    letterSpacing: -0.1,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -309,7 +272,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
               SizedBox(height: 12.h),
               personalInformation(
                 text: "Alternative Phone Number",
-                hinttext: "Enter Your Phone Number",
+                hinttext: "Enter Your Alternative Phone Number",
                 keybordtype: TextInputType.phone,
                 length: 10,
                 controller: alterNativeController,
@@ -317,7 +280,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
               SizedBox(height: 12.h),
               personalInformation(
                 text: "National ID",
-                hinttext: "Enter Your Phone Number",
+                hinttext: "Enter Your National ID",
                 keybordtype: TextInputType.text,
                 length: 12,
                 controller: nationalIDController,
@@ -348,7 +311,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                     selectBedroom = value;
                   });
                 },
-                hintText: "1-2",
+                hintText: "Select Bedrooms",
                 text: "Bedrooms",
               ),
               SizedBox(height: 16.h),
@@ -360,7 +323,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                     selectBathroom = value;
                   });
                 },
-                hintText: "1",
+                hintText: "Select Bathrooms",
                 text: "Bathrooms",
               ),
               SizedBox(height: 16.h),
@@ -384,7 +347,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                     selectPropertyType = value;
                   });
                 },
-                hintText: "Detached House",
+                hintText: "Select Property Type",
                 text: "Property Type",
               ),
               SizedBox(height: 16.h),
@@ -396,7 +359,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                     selectPropertyAge = value;
                   });
                 },
-                hintText: "Less Than 5 year",
+                hintText: "Select Property Age",
                 text: "Property Age",
               ),
               SizedBox(height: 16.h),
@@ -410,6 +373,17 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                 ),
               ),
               SizedBox(height: 16.h),
+              // chooseYourPlan(
+              //   listname: planList,
+              //   selectname: selectPlan,
+              //   onChanged: (value) {
+              //     setState(() {
+              //       selectPlan = value;
+              //     });
+              //   },
+              //   hintText: "Plumber",
+              //   text: "Plan",
+              // ),
               chooseYourPlan(
                 listname: planList,
                 selectname: selectPlan,
@@ -418,7 +392,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                     selectPlan = value;
                   });
                 },
-                hintText: "Plumber",
+                hintText: "Select Plan Service",
                 text: "Plan",
               ),
               SizedBox(height: 16.h),
@@ -524,7 +498,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                     selectPaymentMethod = value;
                   });
                 },
-                hintText: "Mobile Money (MTN)",
+                hintText: "Select Payment Method",
                 text: "Payment Method",
               ),
               SizedBox(height: 16.h),
@@ -534,46 +508,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                 keybordtype: TextInputType.number,
                 controller: mobileMoneyNumberController,
               ),
-              // SizedBox(height: 16.h),
-              // Text(
-              //   "Preferred Billing Date",
-              //   style: GoogleFonts.outfit(
-              //     fontSize: 14.sp,
-              //     fontWeight: FontWeight.w500,
-              //     color: Color(0xff777676),
-              //     letterSpacing: -0.3,
-              //   ),
-              // ),
-              // SizedBox(height: 8.h),
-              // TextField(
-              //   controller: preferredBillingDayController,
-              //   readOnly: true,
-              //   decoration: InputDecoration(
-              //     isDense: true,
-              //     hintText: "Select day (1-31)",
-              //     hintStyle: GoogleFonts.parkinsans(
-              //       fontSize: 16.sp,
-              //       fontWeight: FontWeight.w400,
-              //       color: Color.fromRGBO(87, 87, 87, 0.6),
-              //     ),
-              //     suffixIcon: InkWell(
-              //       onTap: pickPreferredBillingDay,
-              //       child: Icon(Icons.date_range, color: AppColors.buttonText),
-              //     ),
-              //     border: OutlineInputBorder(
-              //       borderRadius: BorderRadius.circular(10.r),
-              //       borderSide: BorderSide(color: AppColors.buttonText),
-              //     ),
-              //     focusedBorder: OutlineInputBorder(
-              //       borderRadius: BorderRadius.circular(10.r),
-              //       borderSide: BorderSide(color: AppColors.buttonText),
-              //     ),
-              //     enabledBorder: OutlineInputBorder(
-              //       borderRadius: BorderRadius.circular(10.r),
-              //       borderSide: BorderSide(color: AppColors.buttonText),
-              //     ),
-              //   ),
-              // ),
+
               SizedBox(height: 16.h),
               chooseYourPlan(
                 listname: preffereBillingList,
@@ -620,7 +555,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
               ),
 
               customCheckBox(
-                title: "Planage starts after 14 days",
+                title: "Plan starts after 14 days",
                 value: planStartsAfter14Days,
                 onChanged: (value) {
                   setState(() {
@@ -716,6 +651,123 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                     ),
                   ),
                   onPressed: () async {
+                    if (fullNameController.text.trim().isEmpty) {
+                      showErrorSnackBar("Please enter full name");
+                      return;
+                    }
+
+                    if (emaiController.text.trim().isEmpty) {
+                      showErrorSnackBar("Please enter email address");
+                      return;
+                    }
+
+                    if (phoneNumberController.text.trim().isEmpty) {
+                      showErrorSnackBar("Please enter phone number");
+                      return;
+                    }
+
+                    if (alterNativeController.text.trim().isEmpty) {
+                      showErrorSnackBar(
+                        "Please enter alternative phone number",
+                      );
+                      return;
+                    }
+
+                    if (nationalIDController.text.trim().isEmpty) {
+                      showErrorSnackBar("Please enter national ID");
+                      return;
+                    }
+
+                    if (propertyAddressController.text.trim().isEmpty) {
+                      showErrorSnackBar("Please enter full property address");
+                      return;
+                    }
+
+                    if (selectBedroom == null) {
+                      showErrorSnackBar("Please select bedrooms");
+                      return;
+                    }
+
+                    if (selectBathroom == null) {
+                      showErrorSnackBar("Please select bathrooms");
+                      return;
+                    }
+
+                    if (selectAc == null) {
+                      showErrorSnackBar("Please select AC units");
+                      return;
+                    }
+
+                    if (selectPropertyType == null) {
+                      showErrorSnackBar("Please select property type");
+                      return;
+                    }
+
+                    if (selectPropertyAge == null) {
+                      showErrorSnackBar("Please select property age");
+                      return;
+                    }
+
+                    if (selectPlan == null) {
+                      showErrorSnackBar("Please select plan");
+                      return;
+                    }
+
+                    if (selectPlanType == null) {
+                      showErrorSnackBar("Please select plan type");
+                      return;
+                    }
+
+                    if (selectPaymentMethod == null) {
+                      showErrorSnackBar("Please select payment method");
+                      return;
+                    }
+
+                    if (mobileMoneyNumberController.text.trim().isEmpty) {
+                      showErrorSnackBar("Please enter mobile money number");
+                      return;
+                    }
+
+                    if (selectPrefferedBilling == null) {
+                      showErrorSnackBar("Please select preferred billing date");
+                      return;
+                    }
+
+                    if (selectfacebook == null) {
+                      showErrorSnackBar("Please select how you heard about us");
+                      return;
+                    }
+
+                    if (!informationAccurate) {
+                      showErrorSnackBar(
+                        "Please confirm information is accurate",
+                      );
+                      return;
+                    }
+
+                    if (!planStartsAfter14Days) {
+                      showErrorSnackBar(
+                        "Please confirm plan starts after 14 days",
+                      );
+                      return;
+                    }
+
+                    if (!agreeTermsAndConditions) {
+                      showErrorSnackBar("Please agree to Terms & Conditions");
+                      return;
+                    }
+
+                    if (!noPreExistingFaults) {
+                      showErrorSnackBar(
+                        "Please confirm no pre-existing faults",
+                      );
+                      return;
+                    }
+
+                    if (singnatureController.text.trim().isEmpty) {
+                      showErrorSnackBar("Please enter electronic signature");
+                      return;
+                    }
                     setState(() {
                       isLoading = true;
                     });
@@ -741,29 +793,19 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                           mobileMoneyNumber: mobileMoneyNumberController.text
                               .trim(),
 
-                          // preferredBillingDate: DateFormat("dd-MM-yyyy").format(
-                          //   selectePrefferBlillingDate ?? DateTime.now(),
-                          // ),
-                          // preferredBillingDate:
-                          //     selectedPreferredBillingDate?.day ??
-                          //     DateTime.now().day,
                           preferredBillingDate: int.parse(
                             selectPrefferedBilling!.replaceAll(
                               RegExp(r'[^0-9]'),
                               '',
                             ),
                           ),
-
                           howDidYouHearAboutUs: selectfacebook!,
                           informationAccurate: informationAccurate,
                           planStartsAfter14Days: planStartsAfter14Days,
                           agreeTermsAndConditions: agreeTermsAndConditions,
                           noPreExistingFaults: noPreExistingFaults,
                           electronicSignature: singnatureController.text.trim(),
-                          // date: selectedDate ?? DateTime.now(),
-                          // date: DateFormat(
-                          //   "dd-MM-yyyy",
-                          // ).format(selectedDate ?? DateTime.now()),
+
                           date: DateFormat("yyyy-MM-dd").format(DateTime.now()),
                         );
                     Navigator.push(

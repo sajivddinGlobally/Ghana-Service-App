@@ -15,9 +15,33 @@ class Leavestatusscreen extends ConsumerStatefulWidget {
 }
 
 class _LeavestatusscreenState extends ConsumerState<Leavestatusscreen> {
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // जब यूज़र लिस्ट के बिल्कुल नीचे पहुँचने वाला हो (200px पहले)
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
+      ref.read(leaveRequestProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final leaveState = ref.watch(leaveRequestProvider);
+    final leaveNotifier = ref.read(leaveRequestProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       appBar: AppBar(
@@ -73,6 +97,7 @@ class _LeavestatusscreenState extends ConsumerState<Leavestatusscreen> {
       ),
       body: leaveState.when(
         data: (data) {
+          final notifications = data.data?.docs ?? [];
           if (data.data?.docs?.isEmpty ?? true) {
             return Center(
               child: Padding(
@@ -121,9 +146,31 @@ class _LeavestatusscreenState extends ConsumerState<Leavestatusscreen> {
             );
           }
           return ListView.builder(
+            controller: _scrollController,
             padding: EdgeInsets.zero,
-            itemCount: data.data?.docs?.length,
+            // itemCount: data.data?.docs?.length,
+            itemCount:
+                notifications.length +
+                ((leaveNotifier.hasMoreData || leaveNotifier.isLoadingMore)
+                    ? 1
+                    : 0),
+
             itemBuilder: (context, index) {
+              if (index == notifications.length) {
+                return leaveNotifier.isLoadingMore
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.h),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.buttonBg,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink();
+              }
+
+              final leave = notifications[index];
+
               return Padding(
                 padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 20.h),
                 child: Column(
@@ -143,7 +190,7 @@ class _LeavestatusscreenState extends ConsumerState<Leavestatusscreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Leave Request - ${DateFormat('dd MMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(data.data!.docs![index].leaveDate!))}",
+                            "Leave Request - ${DateFormat('dd MMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(leave.leaveDate!))}",
                             style: GoogleFonts.outfit(
                               fontSize: 18.sp,
                               color: Color(0xffFFFFFF),
@@ -165,7 +212,7 @@ class _LeavestatusscreenState extends ConsumerState<Leavestatusscreen> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: "${data.data?.docs?[index].reason}",
+                                  text: "${leave.reason}",
                                   style: GoogleFonts.parkinsans(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w400,
@@ -186,7 +233,7 @@ class _LeavestatusscreenState extends ConsumerState<Leavestatusscreen> {
                             ),
                             child: Center(
                               child: Text(
-                                data.data!.docs?[index].status ?? "",
+                                leave.status ?? "",
                                 style: GoogleFonts.outfit(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w500,

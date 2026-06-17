@@ -310,7 +310,7 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                     children: [
                                       Text(
                                         // "4.9",
-                                        data.data?.totalRatings.toString() ??
+                                        data.data?.averageRating.toString() ??
                                             "0",
                                         style: GoogleFonts.outfit(
                                           fontSize: 21.w,

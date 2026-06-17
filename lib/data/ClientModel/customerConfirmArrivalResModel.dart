@@ -1,27 +1,27 @@
 // To parse this JSON data, do
 //
-//     final getArriveModel = getArriveModelFromJson(jsonString);
+//     final customerConfirmArrivalResModel = customerConfirmArrivalResModelFromJson(jsonString);
 
 import 'dart:convert';
 
-GetArriveModel getArriveModelFromJson(String str) => GetArriveModel.fromJson(json.decode(str));
+CustomerConfirmArrivalResModel customerConfirmArrivalResModelFromJson(String str) => CustomerConfirmArrivalResModel.fromJson(json.decode(str));
 
-String getArriveModelToJson(GetArriveModel data) => json.encode(data.toJson());
+String customerConfirmArrivalResModelToJson(CustomerConfirmArrivalResModel data) => json.encode(data.toJson());
 
-class GetArriveModel {
+class CustomerConfirmArrivalResModel {
     String? message;
     int? code;
     bool? error;
     Data? data;
 
-    GetArriveModel({
+    CustomerConfirmArrivalResModel({
         this.message,
         this.code,
         this.error,
         this.data,
     });
 
-    factory GetArriveModel.fromJson(Map<String, dynamic> json) => GetArriveModel(
+    factory CustomerConfirmArrivalResModel.fromJson(Map<String, dynamic> json) => CustomerConfirmArrivalResModel(
         message: json["message"],
         code: json["code"],
         error: json["error"],
@@ -37,53 +37,20 @@ class GetArriveModel {
 }
 
 class Data {
-    int? total;
-    int? totalPages;
-    int? page;
-    int? limit;
-    List<ListElement>? list;
-
-    Data({
-        this.total,
-        this.totalPages,
-        this.page,
-        this.limit,
-        this.list,
-    });
-
-    factory Data.fromJson(Map<String, dynamic> json) => Data(
-        total: json["total"],
-        totalPages: json["totalPages"],
-        page: json["page"],
-        limit: json["limit"],
-        list: json["list"] == null ? [] : List<ListElement>.from(json["list"]!.map((x) => ListElement.fromJson(x))),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "total": total,
-        "totalPages": totalPages,
-        "page": page,
-        "limit": limit,
-        "list": list == null ? [] : List<dynamic>.from(list!.map((x) => x.toJson())),
-    };
-}
-
-class ListElement {
     Rating? rating;
     Issue? issue;
-    dynamic reason;
     String? id;
     UserId? userId;
-    ListServiceId? serviceId;
+    DataServiceId? serviceId;
     String? requestNumber;
     String? description;
     int? preferredDate;
-    int? preferredTime;
     String? priority;
-    int? completedAt;
-    String? image;
-    String? remark;
+    dynamic completedAt;
+    dynamic image;
+    dynamic remark;
     String? status;
+    String? reason;
     bool? isDisable;
     bool? isDeleted;
     int? date;
@@ -93,22 +60,21 @@ class ListElement {
     int? updatedAt;
     String? employeeId;
 
-    ListElement({
+    Data({
         this.rating,
         this.issue,
-        this.reason,
         this.id,
         this.userId,
         this.serviceId,
         this.requestNumber,
         this.description,
         this.preferredDate,
-        this.preferredTime,
         this.priority,
         this.completedAt,
         this.image,
         this.remark,
         this.status,
+        this.reason,
         this.isDisable,
         this.isDeleted,
         this.date,
@@ -119,22 +85,21 @@ class ListElement {
         this.employeeId,
     });
 
-    factory ListElement.fromJson(Map<String, dynamic> json) => ListElement(
+    factory Data.fromJson(Map<String, dynamic> json) => Data(
         rating: json["rating"] == null ? null : Rating.fromJson(json["rating"]),
         issue: json["issue"] == null ? null : Issue.fromJson(json["issue"]),
-        reason: json["reason"],
         id: json["_id"],
         userId: json["userId"] == null ? null : UserId.fromJson(json["userId"]),
-        serviceId: json["serviceId"] == null ? null : ListServiceId.fromJson(json["serviceId"]),
+        serviceId: json["serviceId"] == null ? null : DataServiceId.fromJson(json["serviceId"]),
         requestNumber: json["requestNumber"],
         description: json["description"],
         preferredDate: json["preferredDate"],
-        preferredTime: json["preferredTime"],
         priority: json["priority"],
         completedAt: json["completedAt"],
         image: json["image"],
         remark: json["remark"],
         status: json["status"],
+        reason: json["reason"],
         isDisable: json["isDisable"],
         isDeleted: json["isDeleted"],
         date: json["date"],
@@ -148,19 +113,18 @@ class ListElement {
     Map<String, dynamic> toJson() => {
         "rating": rating?.toJson(),
         "issue": issue?.toJson(),
-        "reason": reason,
         "_id": id,
         "userId": userId?.toJson(),
         "serviceId": serviceId?.toJson(),
         "requestNumber": requestNumber,
         "description": description,
         "preferredDate": preferredDate,
-        "preferredTime": preferredTime,
         "priority": priority,
         "completedAt": completedAt,
         "image": image,
         "remark": remark,
         "status": status,
+        "reason": reason,
         "isDisable": isDisable,
         "isDeleted": isDeleted,
         "date": date,
@@ -216,7 +180,7 @@ class Rating {
     };
 }
 
-class ListServiceId {
+class DataServiceId {
     PersonalInformation? personalInformation;
     PropertyDetails? propertyDetails;
     PlanDetails? planDetails;
@@ -237,7 +201,7 @@ class ListServiceId {
     int? v;
     String? approvedBy;
 
-    ListServiceId({
+    DataServiceId({
         this.personalInformation,
         this.propertyDetails,
         this.planDetails,
@@ -259,7 +223,7 @@ class ListServiceId {
         this.approvedBy,
     });
 
-    factory ListServiceId.fromJson(Map<String, dynamic> json) => ListServiceId(
+    factory DataServiceId.fromJson(Map<String, dynamic> json) => DataServiceId(
         personalInformation: json["personalInformation"] == null ? null : PersonalInformation.fromJson(json["personalInformation"]),
         propertyDetails: json["propertyDetails"] == null ? null : PropertyDetails.fromJson(json["propertyDetails"]),
         planDetails: json["planDetails"] == null ? null : PlanDetails.fromJson(json["planDetails"]),
@@ -310,7 +274,6 @@ class Declaration {
     bool? agreeTermsAndConditions;
     bool? noPreExistingFaults;
     String? electronicSignature;
-    String? signature;
     DateTime? date;
 
     Declaration({
@@ -319,7 +282,6 @@ class Declaration {
         this.agreeTermsAndConditions,
         this.noPreExistingFaults,
         this.electronicSignature,
-        this.signature,
         this.date,
     });
 
@@ -329,7 +291,6 @@ class Declaration {
         agreeTermsAndConditions: json["agreeTermsAndConditions"],
         noPreExistingFaults: json["noPreExistingFaults"],
         electronicSignature: json["electronicSignature"],
-        signature: json["signature"],
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
     );
 
@@ -339,7 +300,6 @@ class Declaration {
         "agreeTermsAndConditions": agreeTermsAndConditions,
         "noPreExistingFaults": noPreExistingFaults,
         "electronicSignature": electronicSignature,
-        "signature": signature,
         "date": date?.toIso8601String(),
     };
 }
@@ -613,29 +573,93 @@ class PropertyDetails {
 }
 
 class UserId {
+    int? averageRating;
+    int? totalRatings;
     String? id;
+    String? userType;
+    String? loginType;
     String? fullName;
     String? email;
     String? phone;
+    String? password;
+    String? deviceId;
+    bool? isActive;
+    bool? isDisable;
+    bool? isDeleted;
+    int? date;
+    int? month;
+    int? year;
+    int? createdAt;
+    int? updatedAt;
+    String? address;
+    String? image;
 
     UserId({
+        this.averageRating,
+        this.totalRatings,
         this.id,
+        this.userType,
+        this.loginType,
         this.fullName,
         this.email,
         this.phone,
+        this.password,
+        this.deviceId,
+        this.isActive,
+        this.isDisable,
+        this.isDeleted,
+        this.date,
+        this.month,
+        this.year,
+        this.createdAt,
+        this.updatedAt,
+        this.address,
+        this.image,
     });
 
     factory UserId.fromJson(Map<String, dynamic> json) => UserId(
+        averageRating: json["averageRating"],
+        totalRatings: json["totalRatings"],
         id: json["_id"],
+        userType: json["userType"],
+        loginType: json["loginType"],
         fullName: json["fullName"],
         email: json["email"],
         phone: json["phone"],
+        password: json["password"],
+        deviceId: json["deviceId"],
+        isActive: json["isActive"],
+        isDisable: json["isDisable"],
+        isDeleted: json["isDeleted"],
+        date: json["date"],
+        month: json["month"],
+        year: json["year"],
+        createdAt: json["createdAt"],
+        updatedAt: json["updatedAt"],
+        address: json["address"],
+        image: json["image"],
     );
 
     Map<String, dynamic> toJson() => {
+        "averageRating": averageRating,
+        "totalRatings": totalRatings,
         "_id": id,
+        "userType": userType,
+        "loginType": loginType,
         "fullName": fullName,
         "email": email,
         "phone": phone,
+        "password": password,
+        "deviceId": deviceId,
+        "isActive": isActive,
+        "isDisable": isDisable,
+        "isDeleted": isDeleted,
+        "date": date,
+        "month": month,
+        "year": year,
+        "createdAt": createdAt,
+        "updatedAt": updatedAt,
+        "address": address,
+        "image": image,
     };
 }

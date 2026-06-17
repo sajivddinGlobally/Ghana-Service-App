@@ -1,27 +1,27 @@
 // To parse this JSON data, do
 //
-//     final getArriveModel = getArriveModelFromJson(jsonString);
+//     final getCustomerConfirmeModel = getCustomerConfirmeModelFromJson(jsonString);
 
 import 'dart:convert';
 
-GetArriveModel getArriveModelFromJson(String str) => GetArriveModel.fromJson(json.decode(str));
+GetCustomerConfirmeModel getCustomerConfirmeModelFromJson(String str) => GetCustomerConfirmeModel.fromJson(json.decode(str));
 
-String getArriveModelToJson(GetArriveModel data) => json.encode(data.toJson());
+String getCustomerConfirmeModelToJson(GetCustomerConfirmeModel data) => json.encode(data.toJson());
 
-class GetArriveModel {
+class GetCustomerConfirmeModel {
     String? message;
     int? code;
     bool? error;
     Data? data;
 
-    GetArriveModel({
+    GetCustomerConfirmeModel({
         this.message,
         this.code,
         this.error,
         this.data,
     });
 
-    factory GetArriveModel.fromJson(Map<String, dynamic> json) => GetArriveModel(
+    factory GetCustomerConfirmeModel.fromJson(Map<String, dynamic> json) => GetCustomerConfirmeModel(
         message: json["message"],
         code: json["code"],
         error: json["error"],
@@ -37,41 +37,40 @@ class GetArriveModel {
 }
 
 class Data {
+    List<ListElement>? list;
     int? total;
-    int? totalPages;
     int? page;
     int? limit;
-    List<ListElement>? list;
+    int? totalPages;
 
     Data({
+        this.list,
         this.total,
-        this.totalPages,
         this.page,
         this.limit,
-        this.list,
+        this.totalPages,
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
+        list: json["list"] == null ? [] : List<ListElement>.from(json["list"]!.map((x) => ListElement.fromJson(x))),
         total: json["total"],
-        totalPages: json["totalPages"],
         page: json["page"],
         limit: json["limit"],
-        list: json["list"] == null ? [] : List<ListElement>.from(json["list"]!.map((x) => ListElement.fromJson(x))),
+        totalPages: json["totalPages"],
     );
 
     Map<String, dynamic> toJson() => {
+        "list": list == null ? [] : List<dynamic>.from(list!.map((x) => x.toJson())),
         "total": total,
-        "totalPages": totalPages,
         "page": page,
         "limit": limit,
-        "list": list == null ? [] : List<dynamic>.from(list!.map((x) => x.toJson())),
+        "totalPages": totalPages,
     };
 }
 
 class ListElement {
     Rating? rating;
     Issue? issue;
-    dynamic reason;
     String? id;
     UserId? userId;
     ListServiceId? serviceId;
@@ -80,10 +79,11 @@ class ListElement {
     int? preferredDate;
     int? preferredTime;
     String? priority;
-    int? completedAt;
-    String? image;
-    String? remark;
+    dynamic completedAt;
+    dynamic image;
+    dynamic remark;
     String? status;
+    String? reason;
     bool? isDisable;
     bool? isDeleted;
     int? date;
@@ -96,7 +96,6 @@ class ListElement {
     ListElement({
         this.rating,
         this.issue,
-        this.reason,
         this.id,
         this.userId,
         this.serviceId,
@@ -109,6 +108,7 @@ class ListElement {
         this.image,
         this.remark,
         this.status,
+        this.reason,
         this.isDisable,
         this.isDeleted,
         this.date,
@@ -122,7 +122,6 @@ class ListElement {
     factory ListElement.fromJson(Map<String, dynamic> json) => ListElement(
         rating: json["rating"] == null ? null : Rating.fromJson(json["rating"]),
         issue: json["issue"] == null ? null : Issue.fromJson(json["issue"]),
-        reason: json["reason"],
         id: json["_id"],
         userId: json["userId"] == null ? null : UserId.fromJson(json["userId"]),
         serviceId: json["serviceId"] == null ? null : ListServiceId.fromJson(json["serviceId"]),
@@ -135,6 +134,7 @@ class ListElement {
         image: json["image"],
         remark: json["remark"],
         status: json["status"],
+        reason: json["reason"],
         isDisable: json["isDisable"],
         isDeleted: json["isDeleted"],
         date: json["date"],
@@ -148,7 +148,6 @@ class ListElement {
     Map<String, dynamic> toJson() => {
         "rating": rating?.toJson(),
         "issue": issue?.toJson(),
-        "reason": reason,
         "_id": id,
         "userId": userId?.toJson(),
         "serviceId": serviceId?.toJson(),
@@ -161,6 +160,7 @@ class ListElement {
         "image": image,
         "remark": remark,
         "status": status,
+        "reason": reason,
         "isDisable": isDisable,
         "isDeleted": isDeleted,
         "date": date,
@@ -310,7 +310,6 @@ class Declaration {
     bool? agreeTermsAndConditions;
     bool? noPreExistingFaults;
     String? electronicSignature;
-    String? signature;
     DateTime? date;
 
     Declaration({
@@ -319,7 +318,6 @@ class Declaration {
         this.agreeTermsAndConditions,
         this.noPreExistingFaults,
         this.electronicSignature,
-        this.signature,
         this.date,
     });
 
@@ -329,7 +327,6 @@ class Declaration {
         agreeTermsAndConditions: json["agreeTermsAndConditions"],
         noPreExistingFaults: json["noPreExistingFaults"],
         electronicSignature: json["electronicSignature"],
-        signature: json["signature"],
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
     );
 
@@ -339,7 +336,6 @@ class Declaration {
         "agreeTermsAndConditions": agreeTermsAndConditions,
         "noPreExistingFaults": noPreExistingFaults,
         "electronicSignature": electronicSignature,
-        "signature": signature,
         "date": date?.toIso8601String(),
     };
 }

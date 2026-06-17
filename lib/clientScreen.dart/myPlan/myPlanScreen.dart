@@ -1,5 +1,4 @@
 import 'dart:developer' show log;
-
 import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/Provider/GetMyPlanRequestProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/myPlanDetailScreen.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
@@ -244,7 +243,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                             Row(
                               children: [
                                 Text(
-                                  "Used Requests:",
+                                  "Use Requests:",
                                   style: GoogleFonts.parkinsans(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w500,

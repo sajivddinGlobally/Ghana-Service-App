@@ -289,11 +289,18 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                 }
                 return Expanded(
                   child: ListView.builder(
+                    controller: _scrollController,
                     padding: EdgeInsets.zero,
                     // itemCount: todayData.data?.list?.length,
                     itemCount:
                         todayData.data!.list!.length +
                         (todayPendingNotofier.hasMoreData ? 1 : 0),
+                    // itemCount:
+                    //     todayData.data!.list!.length +
+                    //     ((todayPendingNotofier.hasMoreData ||
+                    //             todayPendingNotofier.isLoadingMore)
+                    //         ? 1
+                    //         : 0),
                     itemBuilder: (context, index) {
                       if (index == todayData.data!.list!.length) {
                         return Padding(
@@ -403,8 +410,12 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                                         todayData.data!.list?[index].id ?? "",
                                   );
                                   if (res.code == 0 && res.error == false) {
-                                    ref.invalidate(todayPendingRequestProvider);
-                                    Navigator.pushReplacement(
+                                    ref
+                                        .read(
+                                          todayPendingRequestProvider.notifier,
+                                        )
+                                        .getPendingRequest();
+                                    Navigator.push(
                                       context,
                                       CupertinoPageRoute(
                                         builder: (context) => Detilesscreen(
@@ -587,13 +598,13 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                 }
                 return Expanded(
                   child: ListView.builder(
+                    controller: _completeScrollController,
                     padding: EdgeInsets.zero,
                     // itemCount: completeData.data?.list?.length,
                     itemCount:
                         notifications.length +
                         (completeNotifier.hasMoreData ? 1 : 0),
                     itemBuilder: (context, index) {
-                      
                       if (index == notifications.length) {
                         return Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.h),

@@ -324,6 +324,52 @@ class _RequestDetailScreenState extends ConsumerState<RequestDetailScreen> {
                               ),
                             ),
                           ],
+                          if (requestItem?.issue != null &&
+                              requestItem?.issue?.reportedAt != null) ...[
+                            SizedBox(height: 14.h),
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.all(12.r),
+                              decoration: BoxDecoration(
+                                color: const Color(0xff545B64),
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Client Reported",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xffF2D701),
+                                    ),
+                                  ),
+
+                                  SizedBox(height: 10.h),
+
+                                  Text(
+                                    requestItem?.issue?.issueType ?? "",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 15.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+
+                                  SizedBox(height: 10.h),
+                                  Text(
+                                    requestItem?.issue?.description ?? "",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 15.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),

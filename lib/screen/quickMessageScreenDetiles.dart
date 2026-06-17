@@ -3,6 +3,7 @@ import 'dart:isolate';
 
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/todayPendingRequestProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -177,7 +178,11 @@ class _QuickmessagescreendetilesState
                         message: messageController.text.trim(),
                       );
                       if (isSucess == true) {
+                        ref
+                            .read(todayPendingRequestProvider.notifier)
+                            .getPendingRequest();
                         messageController.clear();
+                        Navigator.pop(context);
                       }
                     } catch (e) {
                       log(e.toString());

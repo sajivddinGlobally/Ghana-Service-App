@@ -17,6 +17,7 @@ import 'package:dwelleasy_ghana/screen/profileScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/arriveScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/assignedScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/compleScreen.dart';
+import 'package:dwelleasy_ghana/screen/work/customerConfirmScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/inProgresScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/ontheWayScreen.dart';
 import 'package:dwelleasy_ghana/screen/work/pendingScreen.dart';
@@ -526,219 +527,131 @@ class _HomescreenState extends ConsumerState<Homescreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // SizedBox(height: 15.h),
-            // Padding(
-            //   padding: EdgeInsets.only(left: 16.w, right: 16.w),
-            //   child: Row(
-            //     children: [
-            //       Expanded(
-            //         child: TextField(
-            //           style: GoogleFonts.parkinsans(
-            //             fontSize: 16.sp,
-            //             fontWeight: FontWeight.w400,
-            //             color: Colors.white,
-            //           ),
-            //           cursorColor: Colors.white,
-            //           decoration: InputDecoration(
-            //             filled: true,
-            //             fillColor: const Color(0xff34383D),
-            //             hint: Text(
-            //               "Search Services...",
-            //               style: GoogleFonts.parkinsans(
-            //                 fontWeight: FontWeight.w400,
-            //                 color: Color.fromRGBO(255, 255, 255, 0.5),
-            //                 fontSize: 16.sp,
-            //                 letterSpacing: -0.64,
-            //               ),
-            //             ),
-            //             hintStyle: GoogleFonts.parkinsans(
-            //               fontSize: 16.sp,
-            //               fontWeight: FontWeight.w400,
-            //               color: Colors.grey,
-            //             ),
-            //             prefixIcon: const Icon(
-            //               Icons.search,
-            //               color: Colors.white,
-            //             ),
-            //             contentPadding: EdgeInsets.symmetric(vertical: 18.h),
-            //             border: OutlineInputBorder(
-            //               borderRadius: BorderRadius.circular(14.r),
-            //               borderSide: BorderSide.none,
-            //             ),
-            //             enabledBorder: OutlineInputBorder(
-            //               borderRadius: BorderRadius.circular(14.r),
-            //               borderSide: BorderSide.none,
-            //             ),
-            //             focusedBorder: OutlineInputBorder(
-            //               borderRadius: BorderRadius.circular(14.r),
-            //               borderSide: BorderSide.none,
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //       // SizedBox(width: 16.w),
-            //       // Container(
-            //       //   padding: EdgeInsets.all(14),
-            //       //   decoration: BoxDecoration(
-            //       //     color: Color(0xffF2D701),
-            //       //     borderRadius: BorderRadius.circular(4.r),
-            //       //   ),
-            //       //   child: Center(
-            //       //     child: Icon(
-            //       //       Icons.menu,
-            //       //       color: Color(0xff04254E),
-            //       //       size: 22.sp,
-            //       //     ),
-            //       //   ),
-            //       // ),
-            //     ],
-            //   ),
-            // ),
-            SizedBox(height: 24.h),
-            SizedBox(
-              height: 160.h,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   CupertinoPageRoute(
-                      //     builder: (context) => Assignedscreen(),
-                      //   ),
-                      // );
-                      widget.onJobTap();
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(left: 12.w, right: 10.w),
-                      child: Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20.r),
-                            child: Image.asset(
-                              "assets/WhatsApp Image 2026-05-07 at 12.12.29 PM.jpeg",
-                              width: 365.w,
-                              height: 159.h,
-                              fit: BoxFit.cover,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(getAssignCountProvider);
+          ref.invalidate(getProfileProvider);
+        },
+
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              // SizedBox(height: 15.h),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 16.w, right: 16.w),
+              //   child: Row(
+              //     children: [
+              //       Expanded(
+              //         child: TextField(
+              //           style: GoogleFonts.parkinsans(
+              //             fontSize: 16.sp,
+              //             fontWeight: FontWeight.w400,
+              //             color: Colors.white,
+              //           ),
+              //           cursorColor: Colors.white,
+              //           decoration: InputDecoration(
+              //             filled: true,
+              //             fillColor: const Color(0xff34383D),
+              //             hint: Text(
+              //               "Search Services...",
+              //               style: GoogleFonts.parkinsans(
+              //                 fontWeight: FontWeight.w400,
+              //                 color: Color.fromRGBO(255, 255, 255, 0.5),
+              //                 fontSize: 16.sp,
+              //                 letterSpacing: -0.64,
+              //               ),
+              //             ),
+              //             hintStyle: GoogleFonts.parkinsans(
+              //               fontSize: 16.sp,
+              //               fontWeight: FontWeight.w400,
+              //               color: Colors.grey,
+              //             ),
+              //             prefixIcon: const Icon(
+              //               Icons.search,
+              //               color: Colors.white,
+              //             ),
+              //             contentPadding: EdgeInsets.symmetric(vertical: 18.h),
+              //             border: OutlineInputBorder(
+              //               borderRadius: BorderRadius.circular(14.r),
+              //               borderSide: BorderSide.none,
+              //             ),
+              //             enabledBorder: OutlineInputBorder(
+              //               borderRadius: BorderRadius.circular(14.r),
+              //               borderSide: BorderSide.none,
+              //             ),
+              //             focusedBorder: OutlineInputBorder(
+              //               borderRadius: BorderRadius.circular(14.r),
+              //               borderSide: BorderSide.none,
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //       // SizedBox(width: 16.w),
+              //       // Container(
+              //       //   padding: EdgeInsets.all(14),
+              //       //   decoration: BoxDecoration(
+              //       //     color: Color(0xffF2D701),
+              //       //     borderRadius: BorderRadius.circular(4.r),
+              //       //   ),
+              //       //   child: Center(
+              //       //     child: Icon(
+              //       //       Icons.menu,
+              //       //       color: Color(0xff04254E),
+              //       //       size: 22.sp,
+              //       //     ),
+              //       //   ),
+              //       // ),
+              //     ],
+              //   ),
+              // ),
+              SizedBox(height: 24.h),
+              SizedBox(
+                height: 160.h,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   CupertinoPageRoute(
+                        //     builder: (context) => Assignedscreen(),
+                        //   ),
+                        // );
+                        widget.onJobTap();
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 12.w, right: 10.w),
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(20.r),
+                              child: Image.asset(
+                                "assets/WhatsApp Image 2026-05-07 at 12.12.29 PM.jpeg",
+                                width: 365.w,
+                                height: 159.h,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                          Positioned(
-                            left: 15.w,
-                            top: 16.h,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Welcome, Employee",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.buttonText,
-                                    letterSpacing: -0.1,
-                                  ),
-                                ),
-                                SizedBox(height: 4.h),
-                                Text(
-                                  "Here is your job\n summary for today",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.buttonText,
-                                    letterSpacing: -0.2,
-                                  ),
-                                ),
-                                SizedBox(height: 12.h),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 10.h,
-                                    horizontal: 40.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.buttonText,
-                                    borderRadius: BorderRadius.circular(50.r),
-                                  ),
-                                  child: Text(
-                                    "View Job",
+                            Positioned(
+                              left: 15.w,
+                              top: 16.h,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Welcome, Employee",
                                     style: GoogleFonts.outfit(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.buttonBg,
-                                      letterSpacing: -0.2,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.buttonText,
+                                      letterSpacing: -0.1,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   CupertinoPageRoute(
-                      //     builder: (context) =>
-                      //         Yourschedulescreen(isShowBack: true),
-                      //   ),
-                      // );
-                      widget.onScheduleTap();
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(left: 12.w, right: 10.w),
-                      child: Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20.r),
-                            child: Image.asset(
-                              "assets/emaployee_image.jpeg",
-                              width: 365.w,
-                              height: 159.h,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Positioned(
-                            left: 15.w,
-                            top: 16.h,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Today's Shift",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.buttonBg,
-                                    letterSpacing: -0.1,
-                                  ),
-                                ),
-                                SizedBox(height: 4.h),
-                                Text(
-                                  "Time:9:00 AM -1:00 PM",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.buttonBg,
-                                    letterSpacing: -0.2,
-                                  ),
-                                ),
-                                SizedBox(height: 12.h),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 10.h,
-                                    horizontal: 40.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.buttonBg,
-                                    borderRadius: BorderRadius.circular(50.r),
-                                  ),
-                                  child: Text(
-                                    "View Schedule",
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    "Here is your job\n summary for today",
                                     style: GoogleFonts.outfit(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w500,
@@ -746,310 +659,460 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                                       letterSpacing: -0.2,
                                     ),
                                   ),
-                                ),
-                              ],
+                                  SizedBox(height: 12.h),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.h,
+                                      horizontal: 40.w,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.buttonText,
+                                      borderRadius: BorderRadius.circular(50.r),
+                                    ),
+                                    child: Text(
+                                      "View Job",
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.buttonBg,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    InkWell(
+                      onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   CupertinoPageRoute(
+                        //     builder: (context) =>
+                        //         Yourschedulescreen(isShowBack: true),
+                        //   ),
+                        // );
+                        widget.onScheduleTap();
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 12.w, right: 10.w),
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(20.r),
+                              child: Image.asset(
+                                "assets/emaployee_image.jpeg",
+                                width: 365.w,
+                                height: 159.h,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Positioned(
+                              left: 15.w,
+                              top: 16.h,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Today's Shift",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.buttonBg,
+                                      letterSpacing: -0.1,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    "Time:9:00 AM -1:00 PM",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.buttonBg,
+                                      letterSpacing: -0.2,
+                                    ),
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.h,
+                                      horizontal: 40.w,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.buttonBg,
+                                      borderRadius: BorderRadius.circular(50.r),
+                                    ),
+                                    child: Text(
+                                      "View Schedule",
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.buttonText,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 33.h),
-            assignCountState.when(
-              data: (countData) {
-                final assign = countData.data?.assigned;
-                final pending = countData.data?.pending;
-                final complete = countData.data?.completed;
-                final inProgress = countData.data?.inProgress;
-                final onTheWay = countData.data?.onTheWay;
-                final arrived = countData.data?.arrived;
-                final customerConfirmed = countData.data?.customerConfirmed;
+              SizedBox(height: 33.h),
+              assignCountState.when(
+                data: (countData) {
+                  final assign = countData.data?.assigned;
+                  final pending = countData.data?.pending;
+                  final complete = countData.data?.completed;
+                  final inProgress = countData.data?.inProgress;
+                  final onTheWay = countData.data?.onTheWay;
+                  final arrived = countData.data?.arrived;
+                  final customerConfirmed = countData.data?.customerConfirmed;
 
-                return Padding(
-                  padding: EdgeInsets.only(left: 16.w, right: 16.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          _complete(assign.toString(), "Assigned", () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => Assignedscreen(),
+                  return Padding(
+                    padding: EdgeInsets.only(left: 16.w, right: 16.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _complete(
+                                assign.toString(),
+                                "Assigned",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => Assignedscreen(),
+                                    ),
+                                  );
+                                  // widget.onJobTap();
+                                },
                               ),
-                            );
-                            // widget.onJobTap();
-                          }),
-                          SizedBox(width: 16.w),
-                          _complete(pending.toString(), "Pending", () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => PendingScreen(),
+                            ),
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: _complete(
+                                pending.toString(),
+                                "Pending",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => PendingScreen(),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          }),
-                        ],
-                      ),
-                      SizedBox(height: 16.w),
-                      Row(
-                        children: [
-                          _complete(inProgress.toString(), "In Progress", () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => InProgresScreen(),
+                            ),
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: _complete(
+                                inProgress.toString(),
+                                "In Progress",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => InProgresScreen(),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          }),
-                          SizedBox(width: 16.w),
-                          _complete(onTheWay.toString(), "On The Way", () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => OnTheWayScreen(),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.w),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _complete(
+                                onTheWay.toString(),
+                                "On The Way",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => OnTheWayScreen(),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          }),
-                        ],
-                      ),
-                      SizedBox(height: 16.w),
-                      Row(
-                        children: [
-                          _complete(arrived.toString(), "Arrived", () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => ArriveScreen(),
+                            ),
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: _complete(
+                                arrived.toString(),
+                                "Arrived",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => ArriveScreen(),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          }),
-                          SizedBox(width: 16.w),
-                          _complete(complete.toString(), "Completed", () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => Completescreen(),
+                            ),
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: _complete(
+                                customerConfirmed.toString(),
+                                "Customer Confirm",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          CustomerConfirmScreen(),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          }),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-              error: (error, stackTrace) {
-                log(error.toString());
-                return Center(child: Text("something went wrong"));
-              },
-              loading: () => Center(
-                child: CircularProgressIndicator(color: AppColors.buttonBg),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.w),
+                        Row(
+                          children: [
+                            Container(
+                              width: 122.w,
+                              height: 108.h,
+                              child: _complete(
+                                complete.toString(),
+                                "Completed",
+                                () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => Completescreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                error: (error, stackTrace) {
+                  log(error.toString());
+                  return Center(child: Text("something went wrong"));
+                },
+                loading: () => Center(
+                  child: CircularProgressIndicator(color: AppColors.buttonBg),
+                ),
               ),
-            ),
-            SizedBox(height: 20.h),
-            // Padding(
-            //   padding: EdgeInsets.only(left: 21.w, right: 16.w),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       Text(
-            //         "Subcategories",
-            //         style: GoogleFonts.outfit(
-            //           fontWeight: FontWeight.w500,
-            //           color: Colors.white,
-            //           fontSize: 18.sp,
-            //           letterSpacing: -0.5,
-            //         ),
-            //       ),
-            //       Text(
-            //         "View All",
-            //         style: GoogleFonts.outfit(
-            //           fontSize: 13.sp,
-            //           color: Color(0xffF2D701),
-            //           fontWeight: FontWeight.w500,
-            //           letterSpacing: -0.5,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // SizedBox(height: 20.h),
-            // Padding(
-            //   padding: EdgeInsets.only(left: 16.w, right: 10.w),
-            //   child: Row(
-            //     children: List.generate(items.length, (index) {
-            //       bool isSelected = selectedIndex == index;
-            //       return GestureDetector(
-            //         onTap: () {
-            //           setState(() {
-            //             selectedIndex = index;
-            //           });
-            //         },
-            //         child: Padding(
-            //           padding: EdgeInsets.only(right: 22.w),
-            //           child: Column(
-            //             children: [
-            //               Container(
-            //                 height: 67.h,
-            //                 width: 67.w,
-            //                 alignment: Alignment.center,
-            //                 decoration: BoxDecoration(
-            //                   shape: BoxShape.circle,
-            //                   color: isSelected
-            //                       ? const Color(0xFFF2D701)
-            //                       : const Color(0xff34383D),
-            //                 ),
-            //                 child: Image.asset(
-            //                   items[index]["icon"]!,
-            //                   height: 22.h,
-            //                   width: 22.w,
-            //                   color: isSelected
-            //                       ? const Color(0xff04254E)
-            //                       : Colors.white,
-            //                 ),
-            //               ),
-            //               SizedBox(height: 8.h),
-            //               SizedBox(
-            //                 height: 40.h,
-            //                 child: Text(
-            //                   items[index]["label"]!,
-            //                   textAlign: TextAlign.center,
-            //                   maxLines: 2,
-            //                   overflow: TextOverflow.ellipsis,
-            //                   style: GoogleFonts.outfit(
-            //                     fontSize: 14.sp,
-            //                     color: Colors.white,
-            //                     fontWeight: FontWeight.w500,
-            //                     letterSpacing: -0.4,
-            //                   ),
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       );
-            //     }),
-            //   ),
-            // ),
-            // SizedBox(height: 27.h),
-            // Padding(
-            //   padding: EdgeInsets.only(left: 16.w, right: 16.w),
-            //   child: InkWell(
-            //     onTap: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(builder: (context) => Detilesscreen()),
-            //       );
-            //     },
-            //     child: GridView.builder(
-            //       shrinkWrap: true,
-            //       physics: const NeverScrollableScrollPhysics(),
-            //       itemCount: item.length,
-            //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //         crossAxisCount: 2,
-            //         crossAxisSpacing: 20.w,
-            //         // mainAxisSpacing: 29.h,
-            //         childAspectRatio: 0.70,
-            //       ),
-            //       itemBuilder: (context, index) {
-            //         return Column(
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             ClipRRect(
-            //               borderRadius: BorderRadius.only(
-            //                 topLeft: Radius.circular(16.r),
-            //                 topRight: Radius.circular(16.r),
-            //               ),
-            //               child: Image.asset(
-            //                 item[index]["image"],
-            //                 width: double.infinity,
-            //                 // height: 140.h,
-            //                 fit: BoxFit.cover,
-            //               ),
-            //             ),
-            //             Container(
-            //               width: double.infinity,
-            //               padding: EdgeInsets.all(10.w),
-            //               decoration: BoxDecoration(
-            //                 border: Border(
-            //                   left: BorderSide(color: const Color(0xffF2D701)),
-            //                   right: BorderSide(color: const Color(0xffF2D701)),
-            //                   bottom: BorderSide(
-            //                     color: const Color(0xffF2D701),
-            //                   ),
-            //                   top: BorderSide.none,
-            //                 ),
-            //                 borderRadius: BorderRadius.only(
-            //                   bottomLeft: Radius.circular(16.r),
-            //                   bottomRight: Radius.circular(16.r),
-            //                 ),
-            //               ),
-            //               child: Column(
-            //                 crossAxisAlignment: CrossAxisAlignment.start,
-            //                 children: [
-            //                   Text(
-            //                     item[index]["name"],
-            //                     style: GoogleFonts.outfit(
-            //                       fontSize: 16.sp,
-            //                       fontWeight: FontWeight.w500,
-            //                       color: Colors.white,
-            //                       letterSpacing: -0.5,
-            //                     ),
-            //                   ),
-            //                   SizedBox(height: 10.h),
-            //                   Row(
-            //                     children: [
-            //                       Icon(
-            //                         Icons.star,
-            //                         color: Color(0xffF2D701),
-            //                         size: 15.sp,
-            //                       ),
-            //                       SizedBox(width: 4.w),
-            //                       Text(
-            //                         "4.9",
-            //                         style: GoogleFonts.inter(
-            //                           fontSize: 18.sp,
-            //                           fontWeight: FontWeight.w500,
-            //                           color: Colors.white,
-            //                           letterSpacing: -0.5,
-            //                         ),
-            //                       ),
-            //                       SizedBox(width: 6.w),
-            //                       Text(
-            //                         "(500+ Reviews)",
-            //                         style: GoogleFonts.inter(
-            //                           color: Color(0xff808080),
-            //                           fontSize: 14.sp,
-            //                           letterSpacing: -0.5,
-            //                         ),
-            //                       ),
-            //                     ],
-            //                   ),
-            //                   SizedBox(height: 10.h),
-            //                   Text(
-            //                     "Customer: John Doe",
-            //                     style: GoogleFonts.parkinsans(
-            //                       color: Color(0xffF2D701),
-            //                       fontSize: 13.sp,
-            //                       fontWeight: FontWeight.w500,
-            //                       letterSpacing: -0.5,
-            //                     ),
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //           ],
-            //         );
-            //       },
-            //     ),
-            //   ),
-            // ),
-          ],
+              SizedBox(height: 20.h),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 21.w, right: 16.w),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Text(
+              //         "Subcategories",
+              //         style: GoogleFonts.outfit(
+              //           fontWeight: FontWeight.w500,
+              //           color: Colors.white,
+              //           fontSize: 18.sp,
+              //           letterSpacing: -0.5,
+              //         ),
+              //       ),
+              //       Text(
+              //         "View All",
+              //         style: GoogleFonts.outfit(
+              //           fontSize: 13.sp,
+              //           color: Color(0xffF2D701),
+              //           fontWeight: FontWeight.w500,
+              //           letterSpacing: -0.5,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // SizedBox(height: 20.h),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 16.w, right: 10.w),
+              //   child: Row(
+              //     children: List.generate(items.length, (index) {
+              //       bool isSelected = selectedIndex == index;
+              //       return GestureDetector(
+              //         onTap: () {
+              //           setState(() {
+              //             selectedIndex = index;
+              //           });
+              //         },
+              //         child: Padding(
+              //           padding: EdgeInsets.only(right: 22.w),
+              //           child: Column(
+              //             children: [
+              //               Container(
+              //                 height: 67.h,
+              //                 width: 67.w,
+              //                 alignment: Alignment.center,
+              //                 decoration: BoxDecoration(
+              //                   shape: BoxShape.circle,
+              //                   color: isSelected
+              //                       ? const Color(0xFFF2D701)
+              //                       : const Color(0xff34383D),
+              //                 ),
+              //                 child: Image.asset(
+              //                   items[index]["icon"]!,
+              //                   height: 22.h,
+              //                   width: 22.w,
+              //                   color: isSelected
+              //                       ? const Color(0xff04254E)
+              //                       : Colors.white,
+              //                 ),
+              //               ),
+              //               SizedBox(height: 8.h),
+              //               SizedBox(
+              //                 height: 40.h,
+              //                 child: Text(
+              //                   items[index]["label"]!,
+              //                   textAlign: TextAlign.center,
+              //                   maxLines: 2,
+              //                   overflow: TextOverflow.ellipsis,
+              //                   style: GoogleFonts.outfit(
+              //                     fontSize: 14.sp,
+              //                     color: Colors.white,
+              //                     fontWeight: FontWeight.w500,
+              //                     letterSpacing: -0.4,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //       );
+              //     }),
+              //   ),
+              // ),
+              // SizedBox(height: 27.h),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 16.w, right: 16.w),
+              //   child: InkWell(
+              //     onTap: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(builder: (context) => Detilesscreen()),
+              //       );
+              //     },
+              //     child: GridView.builder(
+              //       shrinkWrap: true,
+              //       physics: const NeverScrollableScrollPhysics(),
+              //       itemCount: item.length,
+              //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //         crossAxisCount: 2,
+              //         crossAxisSpacing: 20.w,
+              //         // mainAxisSpacing: 29.h,
+              //         childAspectRatio: 0.70,
+              //       ),
+              //       itemBuilder: (context, index) {
+              //         return Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             ClipRRect(
+              //               borderRadius: BorderRadius.only(
+              //                 topLeft: Radius.circular(16.r),
+              //                 topRight: Radius.circular(16.r),
+              //               ),
+              //               child: Image.asset(
+              //                 item[index]["image"],
+              //                 width: double.infinity,
+              //                 // height: 140.h,
+              //                 fit: BoxFit.cover,
+              //               ),
+              //             ),
+              //             Container(
+              //               width: double.infinity,
+              //               padding: EdgeInsets.all(10.w),
+              //               decoration: BoxDecoration(
+              //                 border: Border(
+              //                   left: BorderSide(color: const Color(0xffF2D701)),
+              //                   right: BorderSide(color: const Color(0xffF2D701)),
+              //                   bottom: BorderSide(
+              //                     color: const Color(0xffF2D701),
+              //                   ),
+              //                   top: BorderSide.none,
+              //                 ),
+              //                 borderRadius: BorderRadius.only(
+              //                   bottomLeft: Radius.circular(16.r),
+              //                   bottomRight: Radius.circular(16.r),
+              //                 ),
+              //               ),
+              //               child: Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.start,
+              //                 children: [
+              //                   Text(
+              //                     item[index]["name"],
+              //                     style: GoogleFonts.outfit(
+              //                       fontSize: 16.sp,
+              //                       fontWeight: FontWeight.w500,
+              //                       color: Colors.white,
+              //                       letterSpacing: -0.5,
+              //                     ),
+              //                   ),
+              //                   SizedBox(height: 10.h),
+              //                   Row(
+              //                     children: [
+              //                       Icon(
+              //                         Icons.star,
+              //                         color: Color(0xffF2D701),
+              //                         size: 15.sp,
+              //                       ),
+              //                       SizedBox(width: 4.w),
+              //                       Text(
+              //                         "4.9",
+              //                         style: GoogleFonts.inter(
+              //                           fontSize: 18.sp,
+              //                           fontWeight: FontWeight.w500,
+              //                           color: Colors.white,
+              //                           letterSpacing: -0.5,
+              //                         ),
+              //                       ),
+              //                       SizedBox(width: 6.w),
+              //                       Text(
+              //                         "(500+ Reviews)",
+              //                         style: GoogleFonts.inter(
+              //                           color: Color(0xff808080),
+              //                           fontSize: 14.sp,
+              //                           letterSpacing: -0.5,
+              //                         ),
+              //                       ),
+              //                     ],
+              //                   ),
+              //                   SizedBox(height: 10.h),
+              //                   Text(
+              //                     "Customer: John Doe",
+              //                     style: GoogleFonts.parkinsans(
+              //                       color: Color(0xffF2D701),
+              //                       fontSize: 13.sp,
+              //                       fontWeight: FontWeight.w500,
+              //                       letterSpacing: -0.5,
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //           ],
+              //         );
+              //       },
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
     );
@@ -1057,44 +1120,42 @@ class _HomescreenState extends ConsumerState<Homescreen> {
 }
 
 Widget _complete(String text, String title, VoidCallback onTap) {
-  return Expanded(
-    child: InkWell(
-      onTap: onTap,
-      child: Container(
-        height: 108.h,
-        width: 122.w,
-        decoration: BoxDecoration(
-          color: const Color(0xffF2D701),
-          borderRadius: BorderRadius.circular(4.r),
-        ),
+  return InkWell(
+    onTap: onTap,
+    child: Container(
+      height: 108.h,
+      width: 122.w,
+      decoration: BoxDecoration(
+        color: const Color(0xffF2D701),
+        borderRadius: BorderRadius.circular(4.r),
+      ),
 
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              text,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 22.sp,
-                fontWeight: FontWeight.w600,
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            text,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(
+              fontSize: 22.sp,
+              fontWeight: FontWeight.w600,
             ),
+          ),
 
-            SizedBox(height: 6.h),
+          SizedBox(height: 6.h),
 
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.parkinsans(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xff424242),
-                letterSpacing: -0.2,
-              ),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.parkinsans(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xff424242),
+              letterSpacing: -0.2,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     ),
   );

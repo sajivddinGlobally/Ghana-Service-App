@@ -22,6 +22,8 @@ import 'package:dwelleasy_ghana/data/ClientModel/createPlanReqiestBodyModel.dart
 import 'package:dwelleasy_ghana/data/ClientModel/createPlanRequestResModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestResModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/customerConfirmArrivalBodyModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/customerConfirmArrivalResModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getActivePlanModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getDashbordCountModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getMyPlanRequestServiceModel.dart';
@@ -49,6 +51,7 @@ import 'package:dwelleasy_ghana/data/model/getPendingRequestModel.dart';
 import 'package:dwelleasy_ghana/data/model/getProfileModel.dart';
 import 'package:dwelleasy_ghana/data/model/getServiceResModel.dart';
 import 'package:dwelleasy_ghana/data/model/getTicketModel.dart';
+import 'package:dwelleasy_ghana/data/model/getcustomerConfirmdModel.dart';
 import 'package:dwelleasy_ghana/data/model/inProgressModel.dart';
 import 'package:dwelleasy_ghana/data/model/jobDoneModel.dart';
 import 'package:dwelleasy_ghana/data/model/loginBodyModel.dart';
@@ -120,14 +123,20 @@ abstract class ApiStateNetwork {
     @Body() CreateLeaveRquestBodyModel body,
   );
 
-  @GET("/api/v1/employee/get-my-leave-requests?page=1&limit=10")
-  Future<GetMyLeaveModel> myLeaveRequest();
+  @GET("/api/v1/employee/get-my-leave-requests")
+  Future<GetMyLeaveModel> myLeaveRequest(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
   @POST("/api/v1/employee/create-ticket")
   Future<CreateTicketResModel> createTicket(@Body() CreateTicketBodyModel body);
 
-  @GET("/api/v1/employee/get-tickets?page=1&limit=10")
-  Future<GetTicketModel> getTicket();
+  @GET("/api/v1/employee/get-tickets")
+  Future<GetTicketModel> getTicket(
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
 
   @GET("/api/v1/employee/get-assign-count")
   Future<GetAssignCount> getAssignCount();
@@ -146,7 +155,13 @@ abstract class ApiStateNetwork {
 
   @GET("/api/v1/employee/get-completed-requests")
   Future<GetCompleteRequestsModel> getCompleteRequest(
-     @Query("page") int page,
+    @Query("page") int page,
+    @Query("limit") int limit,
+  );
+
+    @GET("/api/v1/employee/get-customer-confirmed-requests")
+  Future<GetCustomerConfirmeModel> customerConfirmed(
+    @Query("page") int page,
     @Query("limit") int limit,
   );
 
@@ -177,9 +192,7 @@ abstract class ApiStateNetwork {
   });
 
   @GET("/api/v1/employee/get-pending-requests?page=1&limit=10")
-  Future<TodayPendingRequestModel> pendingReqeust(
-    
-  );
+  Future<TodayPendingRequestModel> pendingReqeust();
 
   @GET("/api/v1/employee/get-on-the-way-requests")
   Future<GetOnTheWayModel> getOnTheWay(
@@ -338,4 +351,9 @@ abstract class ApiStateNetwork {
 
   @GET("/api/v1/user/get-employee-rating")
   Future<GetRatingModel> clientGetRating(@Query('requestId') String requestId);
+
+  @POST("/api/v1/user/customer-confirmed-arrival")
+  Future<CustomerConfirmArrivalResModel> customerConfirmArrival(
+    @Body() CustomerConfirmArrivalBodyModel body,
+  );
 }

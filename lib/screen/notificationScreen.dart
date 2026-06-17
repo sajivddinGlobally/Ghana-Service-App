@@ -44,8 +44,6 @@ class _NotificationscreenState extends ConsumerState<Notificationscreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final notification = ref.watch(getNotificationProvider);
-    // स्टेट और नोटिफायर दोनों को वॉच/रीड करना
     final notificationState = ref.watch(getNotificationProvider);
     final notifier = ref.read(getNotificationProvider.notifier);
 
@@ -77,7 +75,6 @@ class _NotificationscreenState extends ConsumerState<Notificationscreen> {
       //       final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
       //       return timeago.format(dateTime);
       //     }
-
       //     if (notifications.isEmpty) {
       //       return Center(
       //         child: Column(
@@ -155,7 +152,6 @@ class _NotificationscreenState extends ConsumerState<Notificationscreen> {
       //                           ),
       //                         ),
       //                       ),
-
       //                       SizedBox(width: 10.w),
       //                       Expanded(
       //                         child: Column(
@@ -170,9 +166,7 @@ class _NotificationscreenState extends ConsumerState<Notificationscreen> {
       //                                 letterSpacing: -0.64,
       //                               ),
       //                             ),
-
       //                             SizedBox(height: 10.h),
-
       //                             Text(
       //                               item.message ?? "",
       //                               style: GoogleFonts.outfit(
@@ -185,9 +179,7 @@ class _NotificationscreenState extends ConsumerState<Notificationscreen> {
       //                           ],
       //                         ),
       //                       ),
-
       //                       SizedBox(width: 10.w),
-
       //                       Text(
       //                         getTimeAgo(item.createdAt ?? 0),
       //                         style: GoogleFonts.outfit(

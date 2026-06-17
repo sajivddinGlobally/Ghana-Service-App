@@ -44,7 +44,7 @@ class GetOnTheWayNotifier extends StateNotifier<AsyncValue<GetOnTheWayModel>> {
       final response = await authService.getOnTheWayData(page: _currentPage);
 
       if (response.code == 0 && response.error == false) {
-        _totalPages = response.data?.total ?? 1;
+        _totalPages = response.data?.totalPages ?? 1;
         final newList = response.data?.list ?? [];
 
         _fullList.addAll(newList);

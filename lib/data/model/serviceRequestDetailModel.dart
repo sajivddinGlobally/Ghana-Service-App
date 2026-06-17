@@ -137,9 +137,9 @@ class Data {
 }
 
 class Issue {
-    dynamic issueType;
-    dynamic description;
-    dynamic reportedAt;
+    String? issueType;
+    String ?description;
+    int? reportedAt;
 
     Issue({
         this.issueType,

@@ -245,7 +245,8 @@ class _NewPlanDetailScreenState extends ConsumerState<NewPlanDetailScreen> {
                       ),
                     ),
                     Positioned(
-                      top: 260.h,
+                      // top: 260.h,
+                      bottom: -160.h,
                       left: 0,
                       right: 0,
                       child: Column(
@@ -574,6 +575,7 @@ class _NewPlanDetailScreenState extends ConsumerState<NewPlanDetailScreen> {
                                   builder: (context) => Clientoursignupscreen(
                                     serviceId: widget.id,
                                     plantype: data.data!,
+                                    serviceName: serviceName,
                                   ),
                                 ),
                               );

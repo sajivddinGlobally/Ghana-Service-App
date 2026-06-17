@@ -1,4 +1,4 @@
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA3MTE0MzMzNjRlNTQwYmE3MzM5NmIiLCJ1c2VyVHlwZSI6ImVtcGxveWVlIiwiaWF0IjoxNzgxNTkxOTgzLCJleHAiOjE4MTMxMjc5ODN9.p9WuHDO_bPF5q1O0b6Cg2QShekgMyw_gh2yh9KQz6Jk
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA3MTE0MzMzNjRlNTQwYmE3MzM5NmIiLCJ1c2VyVHlwZSI6ImVtcGxveWVlIiwiaWF0IjoxNzgxNjg3Mzg1LCJleHAiOjE4MTMyMjMzODV9.h_WvhZ-_xV9p5FG8Fak_YuvGlidpSW-V2COyjXLG1Qk
 # @url =  http://localhost:4567
 # @url =  http://192.168.1.43:4567
 # @url =  https://qnr9g6df-4567.inc1.devtunnels.ms
@@ -15,7 +15,7 @@
 # Authorization: {{admin}}
 
 # {
-#   "userId": "6a0fdef2ef370acb5a24ae71"
+#   "userId": "6a328d0a45023e6c4e2369c0"
 # }
 
 
@@ -294,6 +294,15 @@ Content-type: application/json
       "phone": "98776593211",
       "password": "123456",
       "deviceId": ""
+}
+
+### customer-confirmed-arrival
+POST {{url}}/api/v1/user/customer-confirmed-arrival HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "requestId":"6a31256d1533bcda3328cbc6"
 }
 
 //login

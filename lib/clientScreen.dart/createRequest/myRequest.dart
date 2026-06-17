@@ -396,7 +396,7 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                   fontWeight: FontWeight.w500,
                   height: 1.4,
                   color: const Color(0xff04254E),
-                  letterSpacing: -0.2,
+                  // letterSpacing: -0.1,
                 ),
               ),
               SizedBox(height: 8.h),
@@ -407,7 +407,7 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                   fontWeight: FontWeight.w500,
                   height: 1.4,
                   color: const Color(0xff04254E),
-                  letterSpacing: -0.2,
+                  // letterSpacing: -0.2,
                 ),
               ),
               SizedBox(height: 8.h),
@@ -464,53 +464,100 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
               ],
 
               SizedBox(height: 10.h),
-              SizedBox(
-                width: 131.w,
-                height: 30.h,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF2D701),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
+              InkWell(
+                onTap: () {
+                  if (type == "pending" || type == "assigned") {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) =>
+                            PendingRequestDetailScreen(requestId: item.id),
+                      ),
+                    );
+                  } else if (type == "in_progress" ||
+                      type == "on_the_way" ||
+                      type == "arrived") {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (_) => Engineerdetiles(requestId: item.id),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (_) => EmployeeDetails(item.id),
+                      ),
+                    );
+                  }
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15.w,
+                    vertical: 12.h,
                   ),
-                  onPressed: () {
-                    if (type == "pending" || type == "assigned") {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) =>
-                              PendingRequestDetailScreen(requestId: item.id),
-                        ),
-                      );
-                    } else if (type == "in_progress" || type == "arrived") {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (_) => Engineerdetiles(requestId: item.id),
-                        ),
-                      );
-                    } else {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (_) => EmployeeDetails(item.id),
-                        ),
-                      );
-                    }
-                  },
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.r),
+                    color: Color(0xFFF2D701),
+                  ),
                   child: Text(
                     "View Details",
                     style: GoogleFonts.parkinsans(
-                      fontSize: 10.sp,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF04254E),
-                      letterSpacing: -0.2,
+                      // letterSpacing: -0.2,
                     ),
                   ),
                 ),
               ),
+              // ElevatedButton(
+              //   style: ElevatedButton.styleFrom(
+              //     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 0),
+              //     backgroundColor: const Color(0xFFF2D701),
+              //     elevation: 0,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(4.r),
+              //     ),
+              //   ),
+              //   onPressed: () {
+              //     if (type == "pending" || type == "assigned") {
+              //       Navigator.push(
+              //         context,
+              //         CupertinoPageRoute(
+              //           builder: (context) =>
+              //               PendingRequestDetailScreen(requestId: item.id),
+              //         ),
+              //       );
+              //     } else if (type == "in_progress" ||
+              //         type == "on_the_way" ||
+              //         type == "arrived") {
+              //       Navigator.push(
+              //         context,
+              //         CupertinoPageRoute(
+              //           builder: (_) => Engineerdetiles(requestId: item.id),
+              //         ),
+              //       );
+              //     } else {
+              //       Navigator.push(
+              //         context,
+              //         CupertinoPageRoute(
+              //           builder: (_) => EmployeeDetails(item.id),
+              //         ),
+              //       );
+              //     }
+              //   },
+              //   child: Text(
+              //     "View Details",
+              //     style: GoogleFonts.parkinsans(
+              //       fontSize: 12.sp,
+              //       fontWeight: FontWeight.w500,
+              //       color: Color(0xFF04254E),
+              //       // letterSpacing: -0.2,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         );

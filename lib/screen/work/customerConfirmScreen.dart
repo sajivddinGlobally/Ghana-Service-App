@@ -1,11 +1,7 @@
 import 'dart:developer';
-
-import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/screen/detilesScreen.dart';
-import 'package:dwelleasy_ghana/screen/quickMessageScreenDetiles.dart';
-import 'package:dwelleasy_ghana/screen/work/provider/getAssignRequestProvider.dart';
-import 'package:dwelleasy_ghana/screen/work/provider/getPendingRequestProvider.dart';
+import 'package:dwelleasy_ghana/screen/work/provider/customerConfirmProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/requestDetailScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,16 +10,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class PendingScreen extends ConsumerStatefulWidget {
-  const PendingScreen({super.key});
+class CustomerConfirmScreen extends ConsumerStatefulWidget {
+  const CustomerConfirmScreen({super.key});
 
   @override
-  ConsumerState<PendingScreen> createState() => _PendingScreenState();
+  ConsumerState<CustomerConfirmScreen> createState() =>
+      _CustomerConfirmScreenState();
 }
 
-class _PendingScreenState extends ConsumerState<PendingScreen> {
+class _CustomerConfirmScreenState extends ConsumerState<CustomerConfirmScreen> {
   final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     // TODO: implement initState
@@ -36,7 +32,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       // Notifier के loadNextPage फ़ंक्शन को कॉल करें
-      ref.read(getPendingRequestProvider.notifier).loadNextPage();
+      ref.read(getCustomerConfirmedProvider.notifier).loadNextPage();
     }
   }
 
@@ -46,11 +42,10 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
     super.dispose();
   }
 
-  bool isloading = false;
   @override
   Widget build(BuildContext context) {
-    final pendingRequestState = ref.watch(getPendingRequestProvider);
-    final pendingNotifier = ref.read(getPendingRequestProvider.notifier);
+    final completeRequestState = ref.watch(getCustomerConfirmedProvider);
+    final notifier = ref.read(getCustomerConfirmedProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       body: Column(
@@ -94,7 +89,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Pending",
+                      "Customer Confirmed",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.outfit(
                         fontSize: 16.sp,
@@ -108,7 +103,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                     SizedBox(height: 8.h),
 
                     Text(
-                      "Task Awaiting Update",
+                      "Work Successfully Completed",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.parkinsans(
                         fontSize: 14.sp,
@@ -124,9 +119,10 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
             ),
           ),
           SizedBox(height: 16.h),
-          pendingRequestState.when(
+          completeRequestState.when(
             data: (data) {
-              final requestPending = data.data?.list ?? [];
+              final completeList = data.data?.list ?? [];
+
               if (data.data?.list == null || data.data!.list!.isEmpty) {
                 return Expanded(
                   child: Center(
@@ -156,7 +152,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                           SizedBox(height: 20.h),
 
                           Text(
-                            "No Pending Jobs",
+                            "No Completed Jobs",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.outfit(
                               fontSize: 20.sp,
@@ -169,7 +165,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                           SizedBox(height: 10.h),
 
                           Text(
-                            "You don't have any pending work requests yet.",
+                            "You don't have any completed work requests yet.",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.parkinsans(
                               fontSize: 13.sp,
@@ -190,10 +186,9 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                   padding: EdgeInsets.zero,
                   // itemCount: data.data?.list?.length,
                   itemCount:
-                      requestPending.length +
-                      (pendingNotifier.hasMoreData ? 1 : 0),
+                      completeList.length + (notifier.hasMoreData ? 1 : 0),
                   itemBuilder: (context, index) {
-                    if (index == requestPending.length) {
+                    if (index == completeList.length) {
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: 16.h),
                         child: const Center(
@@ -203,17 +198,19 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                         ),
                       );
                     }
-                    final pending = data.data?.list?[index];
-                    final prefferedDate = DateTime.fromMillisecondsSinceEpoch(
-                      pending?.preferredDate ?? 0,
+                    final complete = data.data!.list![index];
+
+                    final prefferedDate = DateTime.fromMicrosecondsSinceEpoch(
+                      complete.preferredDate ?? 0,
                     );
+                  
                     final formattedDate = DateFormat(
                       "dd MMM yyyy",
                     ).format(prefferedDate);
 
                     final preferredTime = DateFormat("hh:mm a").format(
                       DateTime.fromMillisecondsSinceEpoch(
-                        pending?.preferredTime ?? 0,
+                        complete.preferredTime ?? 0,
                       ),
                     );
 
@@ -252,26 +249,33 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                                   ),
                                 ),
                               ),
-                              // Container(
-                              //   width: 99.w,
-                              //   height: 33.h,
-                              //   decoration: BoxDecoration(
-                              //     color: const Color.fromRGBO(242, 215, 1, 0.3),
-                              //     borderRadius: BorderRadius.circular(40.r),
-                              //   ),
-                              //   child: Center(
-                              //     child: Text(
-                              //       // "Pending",
-                              //       pending?.status ?? "",
-                              //       style: GoogleFonts.outfit(
-                              //         fontWeight: FontWeight.w500,
-                              //         fontSize: 13.sp,
-                              //         color: AppColors.buttonBg,
-                              //         letterSpacing: -0.2,
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8.h,
+                                  horizontal: 10.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color.fromRGBO(
+                                    108,
+                                    226,
+                                    39,
+                                    0.3,
+                                  ),
+                                  borderRadius: BorderRadius.circular(40.r),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    // "Completed",
+                                    complete.status ?? "",
+                                    style: GoogleFonts.outfit(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13.sp,
+                                      color: Color(0xff6CE227),
+                                      letterSpacing: -0.2,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
 
@@ -290,7 +294,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
 
                           SizedBox(height: 10.h),
                           Text(
-                            "Area: ${pending?.serviceId?.personalInformation?.propertyAddress ?? ""}",
+                            "Area: ${complete.serviceId?.personalInformation?.propertyAddress ?? ""}",
                             style: GoogleFonts.parkinsans(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
@@ -304,7 +308,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                           // 🔥 Service
                           Text(
                             // "Service: AC Repair",
-                            "Service: ${pending?.serviceId?.planDetails?.planId?.name ?? ""}",
+                            "Service: ${complete.serviceId?.planDetails?.planId?.name ?? ""}",
                             style: GoogleFonts.parkinsans(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
@@ -314,100 +318,36 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                           ),
 
                           SizedBox(height: 14.h),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () async {
-                                    setState(() {
-                                      isloading = true;
-                                    });
-                                    try {
-                                      final acceptService = ref.read(
-                                        authServiceProvider,
-                                      );
-                                      final res = await acceptService
-                                          .acceptRequest(
-                                            requestId: pending!.id.toString(),
-                                          );
-                                      if (res.code == 0 && res.error == false) {
-                                        // ref.invalidate(getPendingRequestProvider.notifier);
-                                        Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (context) => Detilesscreen(
-                                              requestId: pending.id.toString(),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    } catch (e, st) {
-                                      log(e.toString());
-                                    } finally {
-                                      setState(() {
-                                        isloading = false;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 49.h,
-                                    decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.circular(50.r),
-                                    ),
-                                    child: Center(
-                                      child: isloading
-                                          ? Center(
-                                              child: SizedBox(
-                                                width: 20,
-                                                height: 20.h,
-                                                child: Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        color: Colors.white,
-                                                        strokeWidth: 1.w,
-                                                      ),
-                                                ),
-                                              ),
-                                            )
-                                          : Text(
-                                              "Approve",
-                                              style: GoogleFonts.outfit(
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: const Color(0xff04254E),
-                                                letterSpacing: -0.2,
-                                              ),
-                                            ),
-                                    ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => Detilesscreen(
+                                    requestId: data.data!.list![index].id
+                                        .toString(),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 9.h),
+                              decoration: BoxDecoration(
+                                color: Color(0xffF2D701),
+                                borderRadius: BorderRadius.circular(50.r),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "View Details",
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xff04254E),
+                                    letterSpacing: -0.64,
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 20.w),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) =>
-                                            Quickmessagescreendetiles(
-                                              requestID: pending!.id.toString(),
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 49.h,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(50.r),
-                                    ),
-                                    child: Center(child: Text("Reject")),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),

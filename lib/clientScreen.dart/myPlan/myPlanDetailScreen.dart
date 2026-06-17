@@ -162,7 +162,7 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                   Row(
                     children: [
                       Text(
-                        "Used Requests:",
+                        "Use Requests:",
                         style: GoogleFonts.parkinsans(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
@@ -196,7 +196,7 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                     ),
                     child: Text(
                       // "Active",
-                      planData.status?.name ?? "",
+                      planData.planDetails?.planId?.status ?? "",
                       style: GoogleFonts.outfit(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,

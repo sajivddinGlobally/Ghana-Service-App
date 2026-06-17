@@ -57,8 +57,8 @@ class Data {
   String? city;
   String? experience;
   String? image;
-  int? totalRatings;
-  int? averageRating;
+  num? totalRatings;
+  num? averageRating;
 
   Data({
     this.id,

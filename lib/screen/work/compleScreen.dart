@@ -20,9 +20,33 @@ class Completescreen extends ConsumerStatefulWidget {
 }
 
 class _CompletescreenState extends ConsumerState<Completescreen> {
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // जब यूज़र लिस्ट के बिल्कुल नीचे पहुँचने वाला हो (200px पहले)
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
+      ref.read(getCompleteRequestProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final completeRequestState = ref.watch(getCompleteRequestProvider);
+    final notifier = ref.read(getCompleteRequestProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       body: Column(
@@ -98,6 +122,8 @@ class _CompletescreenState extends ConsumerState<Completescreen> {
           SizedBox(height: 16.h),
           completeRequestState.when(
             data: (data) {
+              final completeList = data.data?.list ?? [];
+
               if (data.data?.list == null || data.data!.list!.isEmpty) {
                 return Expanded(
                   child: Center(
@@ -157,17 +183,37 @@ class _CompletescreenState extends ConsumerState<Completescreen> {
               }
               return Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: EdgeInsets.zero,
-                  itemCount: data.data?.list?.length,
+                  // itemCount: data.data?.list?.length,
+                  itemCount:
+                      completeList.length + (notifier.hasMoreData ? 1 : 0),
                   itemBuilder: (context, index) {
+                    if (index == completeList.length) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: Color(0xffF2D701),
+                          ),
+                        ),
+                      );
+                    }
                     final complete = data.data!.list![index];
 
                     final prefferedDate = DateTime.fromMicrosecondsSinceEpoch(
-                      complete.date ?? 0,
+                      complete.preferredDate ?? 0,
                     );
-                    final formaateDate = DateFormat(
-                      'dd MM yyyy',
+                    final formattedDate = DateFormat(
+                      "dd MMM yyyy",
                     ).format(prefferedDate);
+
+                    final preferredTime = DateFormat("hh:mm a").format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                        complete.preferredTime ?? 0,
+                      ),
+                    );
+
                     return Container(
                       margin: EdgeInsets.only(
                         left: 16.w,
@@ -194,7 +240,7 @@ class _CompletescreenState extends ConsumerState<Completescreen> {
                               Expanded(
                                 child: Text(
                                   // "20 Apr 2025",
-                                  formaateDate,
+                                  formattedDate,
                                   style: GoogleFonts.parkinsans(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18.sp,
@@ -235,7 +281,7 @@ class _CompletescreenState extends ConsumerState<Completescreen> {
 
                           // 🔥 Time
                           Text(
-                            "Time: 9:00 AM - 1:00 PM",
+                            "Time: $preferredTime",
                             style: GoogleFonts.parkinsans(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
@@ -272,25 +318,12 @@ class _CompletescreenState extends ConsumerState<Completescreen> {
                           SizedBox(height: 14.h),
                           InkWell(
                             onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   CupertinoPageRoute(
-                              //     builder: (context) => Detilesscreen(
-                              //       requestId: data.data!.list![index].id ?? "",
-                              //       userName: "",
-                              //       userPhone: "",
-                              //       service: "",
-                              //       assignService: "",
-                              //       status: "",
-                              //     ),
-                              //   ),
-                              // );
-                              final complete = data.data!.list![index];
                               Navigator.push(
                                 context,
                                 CupertinoPageRoute(
                                   builder: (context) => RequestDetailScreen(
-                                   requestId: data.data!.list![index].id.toString(),
+                                    requestId: data.data!.list![index].id
+                                        .toString(),
                                   ),
                                 ),
                               );

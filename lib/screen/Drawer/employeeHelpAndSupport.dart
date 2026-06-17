@@ -32,9 +32,33 @@ class _EmployeeHelpAndsupportState
     }
   }
 
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // जब यूज़र लिस्ट के बिल्कुल नीचे पहुँचने वाला हो (200px पहले)
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
+      ref.read(getTicketProvider.notifier).loadNextPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final getTicketState = ref.watch(getTicketProvider);
+    final ticketNotifier = ref.watch(getTicketProvider.notifier);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
       appBar: AppBar(
@@ -89,6 +113,7 @@ class _EmployeeHelpAndsupportState
         ),
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Padding(
           padding: EdgeInsets.only(left: 16.w, right: 16.w),
           child: Column(
@@ -305,12 +330,27 @@ class _EmployeeHelpAndsupportState
 
               getTicketState.when(
                 data: (data) {
+                  final ticketData = data.data?.list ?? [];
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: data.data?.list?.length ?? 0,
+                    // itemCount: data.data?.list?.length ?? 0,
+                    itemCount:
+                        ticketData.length +
+                        (ticketNotifier.hasMoreData ? 1 : 0),
                     itemBuilder: (context, index) {
-                      final ticket = data.data?.list?[index];
+                      // अगर इंडेक्स लिस्ट के अंत में है, तो लोडिंग स्पिनर दिखाएं
+                      if (index == ticketData.length) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: Color(0xffF2D701),
+                            ),
+                          ),
+                        );
+                      }
+                      final ticket = ticketData[index];
 
                       final createdAt = DateTime.fromMillisecondsSinceEpoch(
                         ticket?.createdAt ?? 0,

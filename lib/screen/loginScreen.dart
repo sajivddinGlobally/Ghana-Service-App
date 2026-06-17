@@ -133,8 +133,8 @@ class _LoginscreenState extends ConsumerState<Loginscreen> {
 
                   final authService = ref.read(authServiceProvider);
                   final success = await authService.employeeLogin(
-                    email: emailController.text,
-                    password: passwordController.text,
+                    email: emailController.text.trim(),
+                    password: passwordController.text.trim(),
                     context: context,
                   );
                   setState(() {

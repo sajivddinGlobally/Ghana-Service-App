@@ -512,6 +512,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
                 }
                 return Column(
                   children: [
+                    SizedBox(height: 20.h),
                     getPlanServiceState.when(
                       data: (data) {
                         return ListView.builder(

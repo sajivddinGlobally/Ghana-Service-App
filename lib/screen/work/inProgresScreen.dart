@@ -180,170 +180,184 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
                 );
               }
               return Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  // itemCount: data.data?.list?.length,
-                  itemCount:
-                      inProgr.length + (clientNotifier.hasMoreData ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index == inProgr.length) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.h),
-                        child: const Center(
-                          child: CircularProgressIndicator(
-                            color: Color(0xffF2D701),
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    ref
+                        .read(getInProgressProvider.notifier)
+                        .getInProgressRequest();
+                  },
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: EdgeInsets.zero,
+                    // itemCount: data.data?.list?.length,
+                    itemCount:
+                        inProgr.length + (clientNotifier.hasMoreData ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == inProgr.length) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: Color(0xffF2D701),
+                            ),
                           ),
+                        );
+                      }
+
+                      final pending = inProgr[index];
+
+                      final preferredDate = DateTime.fromMillisecondsSinceEpoch(
+                        pending?.preferredDate ?? 0,
+                      );
+
+                      final formattedDate = DateFormat(
+                        "dd MMM yyyy",
+                      ).format(preferredDate);
+
+                      final preferredTime = DateFormat("hh:mm a").format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                          pending?.preferredTime ?? 0,
                         ),
                       );
-                    }
 
-                    final pending = inProgr[index];
+                      return Container(
+                        margin: EdgeInsets.only(
+                          left: 16.w,
+                          right: 16.w,
+                          bottom: 16.h,
+                        ),
+                        padding: EdgeInsets.only(
+                          top: 15.h,
+                          left: 15.w,
+                          right: 15.w,
+                          bottom: 13.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff34383D),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
 
-                    final preferredDate = DateTime.fromMillisecondsSinceEpoch(
-                      pending?.preferredDate ?? 0,
-                    );
-
-                    final formattedDate = DateFormat(
-                      "dd MMM yyyy",
-                    ).format(preferredDate);
-
-                    final preferredTime = DateFormat("hh:mm a").format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                        pending?.preferredTime ?? 0,
-                      ),
-                    );
-
-                    return Container(
-                      margin: EdgeInsets.only(
-                        left: 16.w,
-                        right: 16.w,
-                        bottom: 16.h,
-                      ),
-                      padding: EdgeInsets.only(
-                        top: 15.h,
-                        left: 15.w,
-                        right: 15.w,
-                        bottom: 13.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xff34383D),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 🔥 Date
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  // "20 Apr 2025",
-                                  formattedDate,
-                                  style: GoogleFonts.parkinsans(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18.sp,
-                                    color: Colors.white,
-                                    letterSpacing: -0.1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 🔥 Date
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    // "20 Apr 2025",
+                                    formattedDate,
+                                    style: GoogleFonts.parkinsans(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 18.sp,
+                                      color: Colors.white,
+                                      letterSpacing: -0.1,
+                                    ),
                                   ),
                                 ),
+                                Container(
+                                  width: 99.w,
+                                  height: 33.h,
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromRGBO(
+                                      242,
+                                      215,
+                                      1,
+                                      0.3,
+                                    ),
+                                    borderRadius: BorderRadius.circular(40.r),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      // "Pending",
+                                      pending?.status ?? "",
+                                      style: GoogleFonts.outfit(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 13.sp,
+                                        color: AppColors.buttonBg,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            SizedBox(height: 14.h),
+
+                            // 🔥 Time
+                            Text(
+                              "Time: $preferredTime",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.sp,
+                                color: Colors.white,
+                                letterSpacing: -0.1,
                               ),
-                              Container(
-                                width: 99.w,
-                                height: 33.h,
+                            ),
+
+                            SizedBox(height: 10.h),
+                            Text(
+                              "Area: ${pending?.serviceId?.personalInformation?.propertyAddress ?? ""}",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.sp,
+                                color: Colors.white,
+                                letterSpacing: -0.1,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+
+                            // 🔥 Service
+                            Text(
+                              // "Service: AC Repair",
+                              "Service: ${pending?.serviceId?.planDetails?.planId?.name ?? ""}",
+                              style: GoogleFonts.parkinsans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.sp,
+                                color: Colors.white,
+                                letterSpacing: -0.1,
+                              ),
+                            ),
+
+                            SizedBox(height: 14.h),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => Detilesscreen(
+                                      requestId:
+                                          data.data!.list![index].id ?? "",
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 9.h),
                                 decoration: BoxDecoration(
-                                  color: const Color.fromRGBO(242, 215, 1, 0.3),
-                                  borderRadius: BorderRadius.circular(40.r),
+                                  color: Color(0xffF2D701),
+                                  borderRadius: BorderRadius.circular(50.r),
                                 ),
                                 child: Center(
                                   child: Text(
-                                    // "Pending",
-                                    pending?.status ?? "",
+                                    "View Details",
                                     style: GoogleFonts.outfit(
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 13.sp,
-                                      color: AppColors.buttonBg,
-                                      letterSpacing: -0.2,
+                                      color: Color(0xff04254E),
+                                      letterSpacing: -0.1,
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-
-                          SizedBox(height: 14.h),
-
-                          // 🔥 Time
-                          Text(
-                            "Time: $preferredTime",
-                            style: GoogleFonts.parkinsans(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.sp,
-                              color: Colors.white,
-                              letterSpacing: -0.1,
                             ),
-                          ),
-
-                          SizedBox(height: 10.h),
-                          Text(
-                            "Area: ${pending?.serviceId?.personalInformation?.propertyAddress ?? ""}",
-                            style: GoogleFonts.parkinsans(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.sp,
-                              color: Colors.white,
-                              letterSpacing: -0.1,
-                            ),
-                          ),
-
-                          SizedBox(height: 10.h),
-
-                          // 🔥 Service
-                          Text(
-                            // "Service: AC Repair",
-                            "Service: ${pending?.serviceId?.planDetails?.planId?.name ?? ""}",
-                            style: GoogleFonts.parkinsans(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.sp,
-                              color: Colors.white,
-                              letterSpacing: -0.1,
-                            ),
-                          ),
-
-                          SizedBox(height: 14.h),
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => Detilesscreen(
-                                    requestId: data.data!.list![index].id ?? "",
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 9.h),
-                              decoration: BoxDecoration(
-                                color: Color(0xffF2D701),
-                                borderRadius: BorderRadius.circular(50.r),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "View Details",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xff04254E),
-                                    letterSpacing: -0.1,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               );
             },
@@ -359,7 +373,7 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
               ),
             ),
           ),
-          SizedBox(height: 35.h),
+          SizedBox(height: 25.h),
         ],
       ),
     );

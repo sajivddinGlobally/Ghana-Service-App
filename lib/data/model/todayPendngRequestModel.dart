@@ -38,12 +38,14 @@ class TodayPendingRequestModel {
 
 class Data {
     int? total;
+    int? totalPages;
     int? page;
     int? limit;
     List<ListElement>? list;
 
     Data({
         this.total,
+        this.totalPages,
         this.page,
         this.limit,
         this.list,
@@ -51,6 +53,7 @@ class Data {
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         total: json["total"],
+        totalPages: json["totalPages"],
         page: json["page"],
         limit: json["limit"],
         list: json["list"] == null ? [] : List<ListElement>.from(json["list"]!.map((x) => ListElement.fromJson(x))),
@@ -58,6 +61,7 @@ class Data {
 
     Map<String, dynamic> toJson() => {
         "total": total,
+        "totalPages": totalPages,
         "page": page,
         "limit": limit,
         "list": list == null ? [] : List<dynamic>.from(list!.map((x) => x.toJson())),

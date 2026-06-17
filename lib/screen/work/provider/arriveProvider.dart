@@ -36,7 +36,7 @@ class GetArriveNotifier extends StateNotifier<AsyncValue<GetArriveModel>> {
       final response = await authService.getArriveData(page: _currentPage);
 
       if (response.code == 0 && response.error == false) {
-        _totalPages = response.data?.total ?? 1;
+        _totalPages = response.data?.totalPages ?? 1;
         final newList = response.data?.list ?? [];
 
         _fullList.addAll(newList);

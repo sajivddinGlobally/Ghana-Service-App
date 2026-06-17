@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/myPlanDetailScreen.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/data/provider/getActivePlanProvider.dart';
 import 'package:flutter/cupertino.dart';
@@ -91,7 +92,19 @@ class _ActiveplanlistscreenState extends ConsumerState<Activeplanlistscreen> {
     final getActivePlanState = ref.watch(getActivePlanProvider);
     final notifier = ref.read(getActivePlanProvider.notifier);
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: AppColors.backgroungBg,
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroungBg,
+        title: Text(
+          "Avtive Plan",
+          style: GoogleFonts.outfit(
+            fontWeight: FontWeight.w600,
+            color: AppColors.buttonText,
+            fontSize: 18.sp,
+            letterSpacing: -0.1,
+          ),
+        ),
+      ),
       body: Padding(
         padding: EdgeInsets.only(left: 16.w, right: 16.w),
         child: getActivePlanState.when(
@@ -119,83 +132,173 @@ class _ActiveplanlistscreenState extends ConsumerState<Activeplanlistscreen> {
 
                 final item = list[index];
                 final imageData = planList[index % planList.length];
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 20.h),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12.r),
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   CupertinoPageRoute(
-                      //     builder: (context) => NewPlanDetailScreen(
-                      //       id: data.data![index].id.toString(),
-                      //     ),
-                      //   ),
-                      // );
-                    },
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadiusGeometry.circular(12.r),
-                          child: Image.asset(
-                            // planList[index]['image'],
-                            imageData['image'],
-                            width: double.infinity,
-                            height: 159.h,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                          left: 15.w,
-                          top: 0.h,
-                          bottom: 0,
-                          child: Container(
-                            width: 190.w,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  // planList[index]['title'],
-                                  data
-                                          .data
-                                          ?.list?[index]
-                                          .planDetails
-                                          ?.serviceId
-                                          ?.name ??
-                                      "",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: imageData['titleColor'],
-                                    letterSpacing: -0.80,
-                                  ),
-                                ),
-                                SizedBox(height: 5.h),
 
-                                Text(
-                                  data
-                                          .data
-                                          ?.list?[index]
-                                          .planDetails
-                                          ?.serviceId
-                                          ?.description ??
-                                      "",
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.parkinsans(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: imageData['subtitleColor'],
-                                    letterSpacing: -0.48,
-                                  ),
-                                ),
-                              ],
+                return Container(
+                  margin: EdgeInsets.only(bottom: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.h,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.buttonText),
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.planDetails?.serviceId?.name ?? "",
+                        style: GoogleFonts.outfit(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.buttonText,
+                          letterSpacing: -0.1,
+                        ),
+                      ),
+
+                      SizedBox(height: 13.h),
+
+                      Row(
+                        children: [
+                          Text(
+                            "Services:",
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.buttonText,
                             ),
                           ),
+                          const Spacer(),
+                          Text(
+                            "${item?.planDetails?.planId?.name ?? ""} (${item?.planDetails!.planId?.tier ?? ""})",
+                            textAlign: TextAlign.end,
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.buttonText,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 12.h),
+
+                      Row(
+                        children: [
+                          Text(
+                            "Validity:",
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.buttonText,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            item?.planDetails?.planId?.durationType ?? "",
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.buttonText,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 12.h),
+
+                      Row(
+                        children: [
+                          Text(
+                            "Used Requests:",
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.buttonText,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            item?.planDetails?.planId?.isUnlimited == true
+                                ? "Unlimited"
+                                : "${item?.planDetails?.planId?.callLimit ?? 0}",
+
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.buttonText,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 12.h),
+
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 27.w,
+                          vertical: 4.h,
                         ),
-                      ],
-                    ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(44.r),
+                          color: const Color.fromARGB(51, 108, 226, 39),
+                        ),
+                        child: Text(
+                          item?.planDetails?.planId?.status ?? "",
+                          style: GoogleFonts.outfit(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.buttonText,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 12.h),
+
+                      // ClipRRect(
+                      //   borderRadius: BorderRadius.circular(30.r),
+                      //   child: LinearProgressIndicator(
+                      //     value: 0.6,
+                      //     minHeight: 2.h,
+                      //     backgroundColor: AppColors.buttonText,
+                      //     valueColor: const AlwaysStoppedAnimation<Color>(
+                      //       Color(0xFF0072FF),
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(height: 20.h),/
+                      // SizedBox(
+                      //   width: double.infinity,
+                      //   height: 50.h,
+                      //   child: ElevatedButton(
+                      //     style: ElevatedButton.styleFrom(
+                      //       elevation: 0,
+                      //       backgroundColor: AppColors.buttonBg,
+                      //       shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(50.r),
+                      //       ),
+                      //     ),
+                      //     onPressed: () {
+                      //       Navigator.push(
+                      //         context,
+                      //         CupertinoPageRoute(
+                      //           builder: (context) => MyPlanDetailScreen(
+                      //             data: data.data!.list?[index],
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //     child: Text(
+                      //       "View Details",
+                      //       style: GoogleFonts.outfit(
+                      //         fontSize: 16.sp,
+                      //         fontWeight: FontWeight.w500,
+                      //         color: AppColors.buttonText,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
                   ),
                 );
               },

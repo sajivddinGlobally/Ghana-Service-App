@@ -118,6 +118,7 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
           SizedBox(height: 16.h),
           assignRequestState.when(
             data: (data) {
+              final list = data.data?.list ?? [];
               if (data.data?.list == null || data.data!.list!.isEmpty) {
                 return Expanded(
                   child: Center(
@@ -177,14 +178,16 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
               }
               return Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: EdgeInsets.zero,
                   // itemCount: data.data?.list?.length,
+                  // itemCount: (list.length) + (notifier.hasMoreData ? 1 : 0),
                   itemCount:
-                      (data.data?.list?.length ?? 0) +
-                      (notifier.hasMoreData ? 1 : 0),
+                      list.length +
+                      ((notifier.hasMoreData || notifier.isLoadingMore)
+                          ? 1
+                          : 0),
                   itemBuilder: (context, index) {
-                    final list = data.data?.list ?? [];
-
                     if (index == list.length) {
                       return Padding(
                         padding: EdgeInsets.all(16.w),
@@ -331,7 +334,7 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
               ),
             ),
           ),
-          SizedBox(height: 40.h),
+          SizedBox(height: 20.h),
         ],
       ),
     );
