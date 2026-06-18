@@ -641,6 +641,30 @@ class ActivePlans extends ConsumerStatefulWidget {
 }
 
 class _ActivePlansState extends ConsumerState<ActivePlans> {
+  List<Map<String, dynamic>> recentRequestList = [
+    {
+      "image": "assets/ClientImage/acman.png",
+      "title": "AC Repair Service",
+      "rating": "4.9",
+      "review": "(500+ Review)",
+      "name": "Engineer: Dakarai",
+    },
+    {
+      "image": "assets/ClientImage/electricman.png",
+      "title": " Electrical Service",
+      "rating": "4.9",
+      "review": "(500+ Review)",
+      "name": "Engineer: Zyaire",
+    },
+    {
+      "image": "assets/ClientImage/plumbingman.png",
+      "title": "Plumbing Service",
+      "rating": "4.9",
+      "review": "(500+ Review)",
+      "name": "Engineer: Dakarai",
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     final getDashbordCountState = ref.watch(getDashbordCountProvider);
@@ -1036,7 +1060,8 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
             ),
             SizedBox(height: 20.h),
             Text(
-              "Recent Requests",
+              // "Recent Requests",
+              "Service Available",
               style: GoogleFonts.outfit(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
@@ -1048,12 +1073,12 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: 3,
+              itemCount: recentRequestList.length,
               padding: EdgeInsets.zero,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 20.w,
-                childAspectRatio: 0.74,
+                childAspectRatio: 0.70,
               ),
               itemBuilder: (context, index) {
                 return Column(
@@ -1065,7 +1090,8 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                         topRight: Radius.circular(16.r),
                       ),
                       child: Image.asset(
-                        "assets/Rectangle 4.png",
+                        // "assets/Rectangle 4.png",
+                        recentRequestList[index]['image'],
                         width: 189.w,
                         height: 138.h,
                         fit: BoxFit.cover,
@@ -1090,7 +1116,8 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "AC Repair Service",
+                            // "AC Repair Service",
+                            recentRequestList[index]['title'],
                             style: GoogleFonts.outfit(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w500,
@@ -1108,7 +1135,8 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                               ),
                               SizedBox(width: 4.w),
                               Text(
-                                "4.9",
+                                // "4.9",
+                                recentRequestList[index]['rating'],
                                 style: GoogleFonts.inter(
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.w500,
@@ -1118,7 +1146,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                               ),
                               SizedBox(width: 6.w),
                               Text(
-                                "(500+ Reviews)",
+                                recentRequestList[index]['review'],
                                 style: GoogleFonts.inter(
                                   color: Color(0xff808080),
                                   fontSize: 14.sp,
@@ -1129,7 +1157,8 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                           ),
                           SizedBox(height: 10.h),
                           Text(
-                            "Engineer: Dakarai",
+                            // "Engineer: Dakarai",
+                            recentRequestList[index]['name'],
                             style: GoogleFonts.parkinsans(
                               color: AppColors.buttonText,
                               fontSize: 13.sp,

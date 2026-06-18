@@ -243,7 +243,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                             Row(
                               children: [
                                 Text(
-                                  "Use Requests:",
+                                  "Call Limit:",
                                   style: GoogleFonts.parkinsans(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w500,
@@ -277,7 +277,9 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                                 color: const Color.fromARGB(51, 108, 226, 39),
                               ),
                               child: Text(
-                                item?.planDetails?.planId?.status ?? "",
+                                item?.planDetails?.planId?.status == "active"
+                                    ? "Active"
+                                    : "InActive" ?? "",
                                 style: GoogleFonts.outfit(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w400,

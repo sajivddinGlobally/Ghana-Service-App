@@ -494,8 +494,8 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 15.w,
-                    vertical: 12.h,
+                    horizontal: 16.w,
+                    vertical: 10.h,
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4.r),

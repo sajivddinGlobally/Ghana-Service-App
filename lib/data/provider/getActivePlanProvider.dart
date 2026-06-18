@@ -52,6 +52,7 @@ class ActivePlanNotifier extends StateNotifier<AsyncValue<GetActivePlanModel>> {
 
       state = AsyncData(response);
     } catch (e, st) {
+      log(st.toString());
       state = AsyncError(e, st);
     }
   }

@@ -136,9 +136,10 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                       setState(() {
                         select = 0;
                       });
-                      ref
-                          .read(getPendingRequestProvider.notifier)
-                          .pendingReqeustList();
+                      ref.invalidate(getPendingRequestProvider);
+                      // ref
+                      //     .read(getPendingRequestProvider.notifier)
+                      //     .pendingReqeustList();
                     },
                     child: Container(
                       height: 37.h,
@@ -595,48 +596,7 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                     letterSpacing: -0.1,
                   ),
                 ),
-                // SizedBox(height: 12.h),
-                // InkWell(
-                //   onTap: () {
-                //     // Navigator.push(
-                //     //   context,
-                //     //   MaterialPageRoute(
-                //     //     builder: (context) => Detilesscreen(
-                //     //       requestId: '',
-                //     //       userName: "",
-                //     //       userPhone: "",
-                //     //       service: "",
-                //     //       assignService: "",
-                //     //       status: "",
-                //     //     ),
-                //     //   ),
-                //     // );
-                //     // Navigator.push(
-                //     //   context,
-                //     //   CupertinoPageRoute(
-                //     //     builder: (context) => RequestDetailScreen(),
-                //     //   ),
-                //     // );
-                //   },
-                //   child: Container(
-                //     height: 49.h,
-                //     decoration: BoxDecoration(
-                //       color: Color(0xffF2D701),
-                //       borderRadius: BorderRadius.circular(50.r),
-                //     ),
-                //     child: Center(
-                //       child: Text(
-                //         "View Details",
-                //         style: GoogleFonts.outfit(
-                //           fontSize: 16.sp,
-                //           fontWeight: FontWeight.w500,
-                //           color: Color(0xff04254E),
-                //           letterSpacing: -0.64,
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
+
                 SizedBox(height: 16.h),
                 Row(
                   children: [
@@ -658,36 +618,6 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                                 CupertinoPageRoute(
                                   builder: (context) => Detilesscreen(
                                     requestId: loadingRequestId,
-                                    // userName:
-                                    //     res.data?.userId?.fullName ?? "N/A",
-                                    // userPhone: res.data?.userId?.phone ?? "N/A",
-                                    // service:
-                                    //     res
-                                    //         .data
-                                    //         ?.serviceId
-                                    //         ?.planDetails
-                                    //         ?.serviceId
-                                    //         ?.name ??
-                                    //     "N/A",
-                                    // assignService:
-                                    //     res
-                                    //         .data
-                                    //         ?.serviceId
-                                    //         ?.planDetails
-                                    //         ?.serviceId
-                                    //         ?.name ??
-                                    //     "",
-                                    // status: res.data?.status ?? "",
-                                    // image: res.data?.image ?? "",
-                                    // propertyAddress:
-                                    //     res
-                                    //         .data
-                                    //         ?.serviceId
-                                    //         ?.personalInformation
-                                    //         ?.propertyAddress ??
-                                    //     "",
-                                    // preferredDate: res.data?.preferredDate ?? 0,
-                                    // desc: res.data?.description ?? "",
                                   ),
                                 ),
                               );
@@ -725,8 +655,9 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                                     style: GoogleFonts.outfit(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w500,
-                                      color: const Color(0xff04254E),
-                                      letterSpacing: -0.2,
+                                      // color: const Color(0xff04254E),
+                                      color: Colors.white,
+                                      letterSpacing: -0.1,
                                     ),
                                   ),
                           ),
@@ -752,7 +683,18 @@ class _JobscreenState extends ConsumerState<Jobscreen> {
                             color: Colors.red,
                             borderRadius: BorderRadius.circular(50.r),
                           ),
-                          child: Center(child: Text("Reject")),
+                          child: Center(
+                            child: Text(
+                              "Reject",
+                              style: GoogleFonts.outfit(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                // color: const Color(0xff04254E),
+                                color: Colors.white,
+                                letterSpacing: -0.1,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),

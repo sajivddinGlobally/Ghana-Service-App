@@ -210,7 +210,7 @@ class _ActiveplanlistscreenState extends ConsumerState<Activeplanlistscreen> {
                       Row(
                         children: [
                           Text(
-                            "Used Requests:",
+                            "Call Limit:",
                             style: GoogleFonts.parkinsans(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
@@ -254,50 +254,6 @@ class _ActiveplanlistscreenState extends ConsumerState<Activeplanlistscreen> {
                       ),
 
                       SizedBox(height: 12.h),
-
-                      // ClipRRect(
-                      //   borderRadius: BorderRadius.circular(30.r),
-                      //   child: LinearProgressIndicator(
-                      //     value: 0.6,
-                      //     minHeight: 2.h,
-                      //     backgroundColor: AppColors.buttonText,
-                      //     valueColor: const AlwaysStoppedAnimation<Color>(
-                      //       Color(0xFF0072FF),
-                      //     ),
-                      //   ),
-                      // ),
-                      // SizedBox(height: 20.h),/
-                      // SizedBox(
-                      //   width: double.infinity,
-                      //   height: 50.h,
-                      //   child: ElevatedButton(
-                      //     style: ElevatedButton.styleFrom(
-                      //       elevation: 0,
-                      //       backgroundColor: AppColors.buttonBg,
-                      //       shape: RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.circular(50.r),
-                      //       ),
-                      //     ),
-                      //     onPressed: () {
-                      //       Navigator.push(
-                      //         context,
-                      //         CupertinoPageRoute(
-                      //           builder: (context) => MyPlanDetailScreen(
-                      //             data: data.data!.list?[index],
-                      //           ),
-                      //         ),
-                      //       );
-                      //     },
-                      //     child: Text(
-                      //       "View Details",
-                      //       style: GoogleFonts.outfit(
-                      //         fontSize: 16.sp,
-                      //         fontWeight: FontWeight.w500,
-                      //         color: AppColors.buttonText,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 );

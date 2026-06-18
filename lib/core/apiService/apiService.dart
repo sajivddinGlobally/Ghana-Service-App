@@ -93,7 +93,13 @@ import 'package:dwelleasy_ghana/data/model/getPendingRequestModel.dart'
 import 'package:dwelleasy_ghana/data/model/getProfileModel.dart';
 import 'package:dwelleasy_ghana/data/model/getServiceResModel.dart';
 import 'package:dwelleasy_ghana/data/model/getTicketModel.dart';
-import 'package:dwelleasy_ghana/data/model/getcustomerConfirmdModel.dart' hide PersonalInformation, PropertyDetails, PlanDetails, PaymentAndBilling, Declaration;
+import 'package:dwelleasy_ghana/data/model/getcustomerConfirmdModel.dart'
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
 import 'package:dwelleasy_ghana/data/model/inProgressModel.dart'
     hide
         PersonalInformation,
@@ -469,8 +475,6 @@ class AuthService {
       throw Exception(e.toString());
     }
   }
-
-
 
   Future<InProgressModel> getInProgress({
     required int page,
@@ -965,8 +969,8 @@ class AuthService {
     required String nationalId,
     required String propertyAddress,
     required String bedrooms,
-    required int bathrooms,
-    required int acUnits,
+    required String bathrooms,
+    required String acUnits,
     required String propertyType,
     required String propertyAge,
     required String serviceId,
@@ -1308,7 +1312,8 @@ class AuthService {
         return response;
       }
       return throw Exception(response.message);
-    } catch (e) {
+    } catch (e, st) {
+      log(st.toString());
       throw Exception(e.toString());
     }
   }

@@ -55,6 +55,36 @@ class TodayPendingRequestNotifier
   bool get isLoadingMore => _isLoadingMore;
   bool get hasMoreData => _currentPage < _totalPages;
 
+  // Future<void> getPendingRequest({bool isRefresh = false}) async {
+  //   try {
+  //     if (isRefresh) {
+  //       _currentPage = 1;
+  //       _totalPages = 1;
+  //       _fullList.clear();
+
+  //       state = const AsyncValue.loading();
+  //     }
+
+  //     final response = await authService.todayPendingRequest(
+  //       page: _currentPage,
+  //     );
+
+  //     if (response.code == 0 && response.error == false) {
+  //       _totalPages = response.data?.totalPages ?? 1;
+  //       final newList = response.data?.list ?? [];
+
+  //       _fullList.addAll(newList);
+
+  //       response.data?.list = _fullList;
+
+  //       state = AsyncValue.data(response);
+  //     } else {
+  //       throw Exception(response.message);
+  //     }
+  //   } catch (e, st) {
+  //     state = AsyncValue.error(e, st);
+  //   }
+  // }
   Future<void> getPendingRequest({bool isRefresh = false}) async {
     try {
       if (isRefresh) {
@@ -71,11 +101,16 @@ class TodayPendingRequestNotifier
 
       if (response.code == 0 && response.error == false) {
         _totalPages = response.data?.totalPages ?? 1;
+
         final newList = response.data?.list ?? [];
+
+        if (_currentPage == 1) {
+          _fullList.clear();
+        }
 
         _fullList.addAll(newList);
 
-        response.data?.list = _fullList;
+        response.data?.list = List<ListElement>.from(_fullList);
 
         state = AsyncValue.data(response);
       } else {

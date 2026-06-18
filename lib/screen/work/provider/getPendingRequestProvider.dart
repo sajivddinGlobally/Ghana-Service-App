@@ -29,14 +29,42 @@ class PendingRequestListnNotifier
   bool get isLoadingMore => _isLoadingMore;
   bool get hasMoreData => _currentPage < _totalPages;
 
+  // Future<void> pendingReqeustList({bool isRefresh = false}) async {
+  //   try {
+  //     if (isRefresh) {
+  //       _currentPage = 1;
+  //       _totalPages = 1;
+  //       _fullList.clear();
+
+  //       state = const AsyncValue.loading();
+  //     }
+
+  //     final response = await authService.getPendingRequestList(
+  //       page: _currentPage,
+  //     );
+
+  //     if (response.code == 0 && response.error == false) {
+  //       _totalPages = response.data?.totalPages ?? 1;
+  //       final newList = response.data?.list ?? [];
+
+  //       _fullList.addAll(newList);
+
+  //       response.data?.list = _fullList;
+
+  //       state = AsyncValue.data(response);
+  //     } else {
+  //       throw Exception(response.message);
+  //     }
+  //   } catch (e, st) {
+  //     state = AsyncValue.error(e, st);
+  //   }
+  // }
   Future<void> pendingReqeustList({bool isRefresh = false}) async {
     try {
       if (isRefresh) {
         _currentPage = 1;
         _totalPages = 1;
         _fullList.clear();
-
-        state = const AsyncValue.loading();
       }
 
       final response = await authService.getPendingRequestList(
@@ -45,15 +73,16 @@ class PendingRequestListnNotifier
 
       if (response.code == 0 && response.error == false) {
         _totalPages = response.data?.totalPages ?? 1;
-        final newList = response.data?.list ?? [];
 
-        _fullList.addAll(newList);
+        if (isRefresh) {
+          _fullList.clear();
+        }
 
-        response.data?.list = _fullList;
+        _fullList.addAll(response.data?.list ?? []);
+
+        response.data?.list = List.from(_fullList);
 
         state = AsyncValue.data(response);
-      } else {
-        throw Exception(response.message);
       }
     } catch (e, st) {
       state = AsyncValue.error(e, st);

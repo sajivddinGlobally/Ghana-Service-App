@@ -440,21 +440,17 @@ class _NewPlanDetailScreenState extends ConsumerState<NewPlanDetailScreen> {
                             letterSpacing: -0.1,
                           ),
                         ),
-
-                        SizedBox(height: 2.h),
-
-                        Text(
-                          "Plumbing & Drains",
-                          style: GoogleFonts.outfit(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.buttonText,
-                            letterSpacing: -0.2,
-                          ),
-                        ),
-
+                        // SizedBox(height: 2.h),
+                        // Text(
+                        //   "Plumbing & Drains",
+                        //   style: GoogleFonts.outfit(
+                        //     fontSize: 13.sp,
+                        //     fontWeight: FontWeight.w500,
+                        //     color: AppColors.buttonText,
+                        //     letterSpacing: -0.2,
+                        //   ),
+                        // ),
                         SizedBox(height: 6.h),
-
                         Text(
                           "What's Planned: Burst pipes, leaks, blocked drains, faulty taps,\n"
                           "toilet cisterns, accidental damage.",
@@ -546,7 +542,6 @@ class _NewPlanDetailScreenState extends ConsumerState<NewPlanDetailScreen> {
                             ),
                           ),
                         ),
-
                         SizedBox(height: 20.h),
 
                         /// BUTTON

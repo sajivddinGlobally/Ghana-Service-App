@@ -259,14 +259,14 @@ class _CEditProfileScreenState extends ConsumerState<CEditProfileScreen> {
               SizedBox(height: 20.h),
               edit(
                 text: "Full Name",
-                hinttext: "Azibo",
+                hinttext: "Enter Full Name",
                 keybordtype: TextInputType.name,
                 controller: fullNameController,
               ),
               SizedBox(height: 14.h),
               edit(
                 text: "Phone Number",
-                hinttext: "+44-0000-000-000",
+                hinttext: "Enter Phone Number",
                 keybordtype: TextInputType.number,
                 length: 10,
                 controller: phoneController,
@@ -274,14 +274,14 @@ class _CEditProfileScreenState extends ConsumerState<CEditProfileScreen> {
               SizedBox(height: 14.h),
               edit(
                 text: "Email",
-                hinttext: "Azibo@Email.com",
+                hinttext: "Enter Email",
                 keybordtype: TextInputType.emailAddress,
                 controller: emailController,
               ),
               SizedBox(height: 14.h),
               edit(
                 text: "Address",
-                hinttext: "Thema",
+                hinttext: "Enter Address",
                 keybordtype: TextInputType.streetAddress,
                 controller: addressController,
               ),

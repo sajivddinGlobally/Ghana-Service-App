@@ -12,8 +12,8 @@ class CreatePlanFormState {
 
   /// PROPERTY DETAILS
   String bedrooms;
-  int bathrooms;
-  int acUnits;
+  String bathrooms;
+  String acUnits;
   String propertyType;
   String propertyAge;
 
@@ -46,8 +46,8 @@ class CreatePlanFormState {
     this.nationalId = "",
     this.propertyAddress = "",
     this.bedrooms = "",
-    this.bathrooms = 0,
-    this.acUnits = 0,
+    this.bathrooms = "",
+    this.acUnits = "",
     this.propertyType = "",
     this.propertyAge = "",
     this.serviceId = "",
@@ -74,8 +74,8 @@ class CreatePlanFormState {
     String? nationalId,
     String? propertyAddress,
     String? bedrooms,
-    int? bathrooms,
-    int? acUnits,
+    String? bathrooms,
+    String? acUnits,
     String? propertyType,
     String? propertyAge,
     String? serviceId,
@@ -138,8 +138,8 @@ class CreatePlanFormNotifier extends StateNotifier<CreatePlanFormState> {
     required String nationalId,
     required String propertyAddress,
     required String bedrooms,
-    required int bathrooms,
-    required int acUnits,
+    required String bathrooms,
+    required String acUnits,
     required String propertyType,
     required String propertyAge,
     required String serviceId,

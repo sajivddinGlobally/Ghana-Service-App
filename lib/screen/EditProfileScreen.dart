@@ -260,14 +260,14 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _register(
-                    hintText: "Jelani",
+                    hintText: "Enter Full Name",
                     text: "Full Name",
                     keyBord: TextInputType.name,
                     controller: fullNameController,
                   ),
                   SizedBox(height: 14.h),
                   _register(
-                    hintText: "+44-0000-000-000",
+                    hintText: "Enter Phone Number",
                     text: "Phone Number",
                     keyBord: TextInputType.number,
                     length: 10,
@@ -275,21 +275,21 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
                   ),
                   SizedBox(height: 14.h),
                   _register(
-                    hintText: "Jelani@example.com",
+                    hintText: "Enter Email",
                     text: "Email",
                     keyBord: TextInputType.emailAddress,
                     controller: emailController,
                   ),
                   SizedBox(height: 14.h),
                   _register(
-                    hintText: "Thema",
+                    hintText: "Enter Experience",
                     text: "Experience",
                     keyBord: TextInputType.name,
                     controller: experienceController,
                   ),
                   SizedBox(height: 14.h),
                   _register(
-                    hintText: "Thema",
+                    hintText: "Enter City",
                     text: "City",
                     keyBord: TextInputType.streetAddress,
                     controller: cityController,

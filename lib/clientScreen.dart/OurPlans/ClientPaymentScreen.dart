@@ -30,14 +30,19 @@ class Clientpaymentscreen extends ConsumerStatefulWidget {
 class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
   String? selectedPayment;
 
-  List<String> paymentList = [
-    // "Mobile Money (MTN)",
-    // "Mobile Money (Vodafone)",
-    // "Mobile Money (Airteltigo)",
-    // "Bank Transfer",
-    // "Cash (Office Only)",
-    "cash",
+  // List<String> paymentList = [
+  //   // "Mobile Money (MTN)",
+  //   // "Mobile Money (Vodafone)",
+  //   // "Mobile Money (Airteltigo)",
+  //   // "Bank Transfer",
+  //   // "Cash (Office Only)",
+  //   "cash",
+  // ];
+
+  List<Map<String, String>> paymentList = [
+    {"label": "Cash", "value": "cash"},
   ];
+
   void showPaymentDialog() {
     showDialog(
       context: context,
@@ -154,7 +159,6 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
       appBar: AppBar(
         backgroundColor: AppColors.backgroungBg,
         centerTitle: true,
-
         leading: Center(
           child: GestureDetector(
             onTap: () {
@@ -376,11 +380,11 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                   ),
                   items: paymentList.map((item) {
                     return DropdownMenuItem<String>(
-                      value: item,
+                      value: item["value"],
                       child: Padding(
                         padding: EdgeInsets.only(left: 8.w),
                         child: Text(
-                          item,
+                          item["label"]!,
                           style: GoogleFonts.outfit(
                             fontSize: 14.sp,
                             color: AppColors.buttonText,
@@ -424,7 +428,6 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                           ref
                               .read(createPlanFormProvider.notifier)
                               .createPlanRequestStep2(
-                                // paymentMethod: 'cash',
                                 paymentMethod: selectedPayment!,
                               );
 

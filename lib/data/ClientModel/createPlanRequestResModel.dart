@@ -246,8 +246,8 @@ class PlanDetails {
 
 class PropertyDetails {
     String? bedrooms;
-    int? bathrooms;
-    int? acUnits;
+    String? bathrooms;
+    String? acUnits;
     String? propertyType;
     String? propertyAge;
 

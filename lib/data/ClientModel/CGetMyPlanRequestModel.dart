@@ -578,8 +578,8 @@ final serviceIdNameValues = EnumValues({
 
 class PropertyDetails {
   String? bedrooms;
-  int? bathrooms;
-  int? acUnits;
+  String? bathrooms;
+  String? acUnits;
   PropertyType? propertyType;
   PropertyAge? propertyAge;
 

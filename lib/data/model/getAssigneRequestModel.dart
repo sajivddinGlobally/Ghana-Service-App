@@ -41,7 +41,7 @@ class Data {
   int? totalPages;
   List<ListElement>? list;
 
-  Data({this.total, this.page, this.limit, this.list,this.totalPages});
+  Data({this.total, this.page, this.limit, this.list, this.totalPages});
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     total: json["total"],
@@ -290,7 +290,7 @@ class ListServiceId {
         ? null
         : Declaration.fromJson(json["declaration"]),
     id: json["_id"],
-    userId: userIdEnumValues.map[json["userId"]]!,
+    userId: userIdEnumValues.map[json["userId"]],
     paymentMethod: json["paymentMethod"],
     status: json["status"],
     adminRemark: json["adminRemark"],
@@ -612,8 +612,8 @@ class PlanDetailsServiceId {
 
 class PropertyDetails {
   String? bedrooms;
-  int? bathrooms;
-  int? acUnits;
+  String? bathrooms;
+  String? acUnits;
   String? propertyType;
   String? propertyAge;
 

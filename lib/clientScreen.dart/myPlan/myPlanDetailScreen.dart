@@ -19,6 +19,45 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final planData = widget.data;
+    final startDate = DateTime.fromMillisecondsSinceEpoch(
+      planData.planDetails?.planId?.date ?? 0,
+    );
+
+    DateTime expiryDate;
+
+    switch (planData.planDetails?.planId?.durationType?.toLowerCase()) {
+      case 'day':
+        expiryDate = startDate.add(const Duration(days: 1));
+        break;
+
+      case 'week':
+        expiryDate = startDate.add(const Duration(days: 7));
+        break;
+
+      case 'month':
+        expiryDate = DateTime(
+          startDate.year,
+          startDate.month + 1,
+          startDate.day,
+        );
+        break;
+
+      case 'year':
+        expiryDate = DateTime(
+          startDate.year + 1,
+          startDate.month,
+          startDate.day,
+        );
+        break;
+
+      default:
+        expiryDate = startDate;
+    }
+
+    final formattedStartDate = DateFormat('dd MMM yyyy').format(startDate);
+
+    final formattedExpiryDate = DateFormat('dd MMM yyyy').format(expiryDate);
+
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: AppBar(
@@ -122,11 +161,7 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                       Spacer(),
                       Text(
                         // "01 Jan 2026",
-                        DateFormat('dd MMMM yyyy').format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                            planData.planDetails?.planId?.date ?? 0,
-                          ),
-                        ),
+                        formattedStartDate,
                         style: GoogleFonts.parkinsans(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
@@ -149,7 +184,8 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                       ),
                       Spacer(),
                       Text(
-                        "31 Dec 2026",
+                        // "31 Dec 2026",
+                        formattedExpiryDate,
                         style: GoogleFonts.parkinsans(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
@@ -162,7 +198,7 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                   Row(
                     children: [
                       Text(
-                        "Use Requests:",
+                        "Call Limit:",
                         style: GoogleFonts.parkinsans(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
@@ -187,8 +223,8 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                   SizedBox(height: 12.h),
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 27.w,
-                      vertical: 4.h,
+                      horizontal: 25.w,
+                      vertical: 5.h,
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(44.r),
@@ -196,7 +232,9 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                     ),
                     child: Text(
                       // "Active",
-                      planData.planDetails?.planId?.status ?? "",
+                      planData.planDetails?.planId?.status == "active"
+                          ? "Active"
+                          : "InActive" ?? "",
                       style: GoogleFonts.outfit(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,

@@ -442,7 +442,8 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                                       horizontal: 34.w,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xff6CE227),
+                                      // color: const Color(0xff6CE227),
+                                      color: Colors.green,
                                       borderRadius: BorderRadius.circular(50.r),
                                     ),
                                     alignment: Alignment.center,
@@ -465,8 +466,9 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                                             style: GoogleFonts.outfit(
                                               fontSize: 14.sp,
                                               fontWeight: FontWeight.w500,
-                                              color: const Color(0xff04254E),
-                                              letterSpacing: -0.2,
+                                              // color: const Color(0xff04254E),
+                                              color: Colors.white,
+                                              letterSpacing: -0.1,
                                             ),
                                           ),
                                   ),
@@ -505,8 +507,9 @@ class _YourschedulescreenState extends ConsumerState<Yourschedulescreen> {
                                         style: GoogleFonts.outfit(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w500,
-                                          color: const Color(0xff04254E),
-                                          letterSpacing: -0.2,
+                                          // color: const Color(0xff04254E),
+                                          color: Colors.white,
+                                          letterSpacing: -0.1,
                                         ),
                                       ),
                                     ),

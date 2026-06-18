@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:dwelleasy_ghana/clientScreen.dart/ClientProfile/CEditProfileScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/ClientProfile/ClientProfileProvider/CProfileProvider.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/Provider/GetMyPlanRequestProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class _CProfileScreenState extends ConsumerState<CProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final clientProfileState = ref.watch(clientProfileProvider);
+    final planSubcription = ref.watch(myPlanRequestProvider);
+
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: AppBar(
@@ -319,13 +322,37 @@ class _CProfileScreenState extends ConsumerState<CProfileScreen> {
                                 ),
                               ),
                               Spacer(),
-                              Text(
-                                "Premium",
-                                style: GoogleFonts.parkinsans(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15.sp,
-                                  color: AppColors.buttonText,
-                                  letterSpacing: -0.1,
+                              planSubcription.when(
+                                data: (data) {
+                                  final planSubs =
+                                      data
+                                          .data
+                                          ?.list
+                                          ?.first
+                                          ?.planDetails
+                                          ?.planId
+                                          ?.name ??
+                                      "N/A";
+                                  // final planService =
+                                  return Text(
+                                    planSubs,
+                                    style: GoogleFonts.parkinsans(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15.sp,
+                                      color: AppColors.buttonText,
+                                      letterSpacing: -0.1,
+                                    ),
+                                  );
+                                },
+                                error: (error, stackTrace) =>
+                                    Center(child: Text("Something went wrong")),
+                                loading: () => SizedBox(
+                                  width: 20.w,
+                                  height: 20.h,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.buttonText,
+                                    strokeWidth: 1.5,
+                                  ),
                                 ),
                               ),
                             ],

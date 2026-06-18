@@ -63,7 +63,7 @@ class _ClientloginscreenState extends ConsumerState<Clientloginscreen> {
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  "Create your Client account",
+                  "Sign in to access your dashboard",
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w400,
                     color: Color(0xff747474),
@@ -74,7 +74,7 @@ class _ClientloginscreenState extends ConsumerState<Clientloginscreen> {
                 SizedBox(height: 59.h),
                 _login(
                   lable: "Email  / Phone",
-                  hint: "Kenny@example.com",
+                  hint: "Enter Email",
                   controller: emailController,
                   type: TextInputType.emailAddress,
                 ),

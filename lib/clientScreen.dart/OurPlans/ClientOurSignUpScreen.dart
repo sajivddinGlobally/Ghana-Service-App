@@ -38,14 +38,10 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
   final singnatureController = TextEditingController();
 
   List<String> bedroomList = ["1-2", "3-4", "5+"];
-  List<String> bathroomList = ["1", "2", "4", "5"];
-  // List<Map<String, dynamic>> bathroomList = [
-  //   {"label": "1", "value": 1},
-  //   {"label": "2", "value": 2},
-  //   {"label": "3+", "value": 3},
-  // ];
-  // List<String> acList = ["0", "1-2", "3-4", "5+"];
-  List<String> acList = ["0", "1", "2", "3", "4", "5", "6"];
+  List<String> bathroomList = ["1", "2", "3+"];
+
+  List<String> acList = ["1-2", "3-4", "5+"];
+  // List<String> acList = ["0", "1", "2", "3", "4", "5", "6"];
   List<String> propertyTypeList = [
     "Detached house",
     "Semi-detached",
@@ -291,6 +287,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                 hinttext: ".......",
                 keybordtype: TextInputType.multiline,
                 controller: propertyAddressController,
+                maxLines: 2,
               ),
               SizedBox(height: 16.h),
               Text(
@@ -783,8 +780,8 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                           propertyAddress: propertyAddressController.text
                               .trim(),
                           bedrooms: selectBedroom!,
-                          bathrooms: int.parse(selectBathroom!),
-                          acUnits: int.parse(selectAc!),
+                          bathrooms: selectBathroom!,
+                          acUnits: selectAc!,
                           propertyType: selectPropertyType!,
                           propertyAge: selectPropertyAge!,
                           serviceId: widget.serviceId,
@@ -792,7 +789,6 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                           paymentMethod1: selectPaymentMethod!,
                           mobileMoneyNumber: mobileMoneyNumberController.text
                               .trim(),
-
                           preferredBillingDate: int.parse(
                             selectPrefferedBilling!.replaceAll(
                               RegExp(r'[^0-9]'),
@@ -848,6 +844,7 @@ Widget personalInformation({
   int? length,
   Widget? icon,
   required TextEditingController controller,
+  int? maxLines,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -866,6 +863,7 @@ Widget personalInformation({
         controller: controller,
         keyboardType: keybordtype,
         maxLength: length,
+        maxLines: maxLines,
         cursorColor: Colors.black,
         cursorHeight: 17,
         decoration: InputDecoration(
