@@ -1,21 +1,205 @@
+import 'dart:developer';
+
+import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CGetMyPlanRequestModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
-class MyPlanDetailScreen extends StatefulWidget {
+class MyPlanDetailScreen extends ConsumerStatefulWidget {
   final ListElement data;
   const MyPlanDetailScreen({super.key, required this.data});
 
   @override
-  State<MyPlanDetailScreen> createState() => _MyPlanDetailScreenState();
+  ConsumerState<MyPlanDetailScreen> createState() => _MyPlanDetailScreenState();
 }
 
-class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
+class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
+  bool isUpgrade = false;
+  bool isRenew = false;
+  void showPlanDialog({
+    required String title,
+    required String message,
+    required VoidCallback onConfirm,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: const Color(0xff04254E),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(20.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 70.h,
+                  width: 70.w,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffF2D701).withOpacity(0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.workspace_premium_rounded,
+                    color: const Color(0xffF2D701),
+                    size: 35.sp,
+                  ),
+                ),
+
+                SizedBox(height: 20.h),
+
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.outfit(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+
+                SizedBox(height: 10.h),
+
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.outfit(
+                    fontSize: 14.sp,
+                    color: Colors.white70,
+                  ),
+                ),
+
+                SizedBox(height: 25.h),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xffF2D701)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50.r),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Cancel",
+                          style: GoogleFonts.outfit(color: Colors.white),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(width: 12.w),
+
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xffF2D701),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50.r),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          onConfirm();
+                        },
+                        child: Text(
+                          "Continue",
+                          style: GoogleFonts.outfit(
+                            color: const Color(0xff04254E),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String getStatusText(String? status) {
+    switch (status?.toLowerCase()) {
+      case "success":
+        return "Active";
+
+      case "pending":
+        return "Pending";
+
+      case "processing":
+        return "Processing";
+
+      case "failed":
+        return "Failed";
+
+      case "cancelled":
+        return "Cancelled";
+
+      case "expired":
+        return "Expired";
+
+      case "refunded":
+        return "Refunded";
+
+      case "upgraded":
+        return "Upgraded";
+
+      case "renewed":
+        return "Renewed";
+
+      default:
+        return "Unknown";
+    }
+  }
+
+  Color getStatusColor(String? status) {
+    switch (status?.toLowerCase()) {
+      case "success":
+        return const Color(0xFF4CAF50);
+
+      case "pending":
+        return Colors.orange;
+
+      case "processing":
+        return Colors.blue;
+
+      case "failed":
+        return Colors.red;
+
+      case "cancelled":
+        return Colors.redAccent;
+
+      case "expired":
+        return Colors.grey;
+
+      case "refunded":
+        return Colors.purple;
+
+      case "upgraded":
+        return Colors.teal;
+
+      case "renewed":
+        return Colors.green;
+
+      default:
+        return Colors.black54;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final planData = widget.data;
@@ -221,25 +405,22 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                     ],
                   ),
                   SizedBox(height: 12.h),
+
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 25.w,
-                      vertical: 5.h,
+                      horizontal: 27.w,
+                      vertical: 4.h,
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(44.r),
-                      color: Color.fromARGB(51, 108, 226, 39),
+                      color: getStatusColor(planData.status).withOpacity(0.15),
                     ),
                     child: Text(
-                      // "Active",
-                      planData.planDetails?.planId?.status == "active"
-                          ? "Active"
-                          : "InActive" ?? "",
+                      getStatusText(planData.status),
                       style: GoogleFonts.outfit(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.buttonText,
-                        letterSpacing: -0.2,
+                        color: getStatusColor(planData.status),
                       ),
                     ),
                   ),
@@ -332,58 +513,7 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
             //   ),
             // ),
             SizedBox(height: 20.h),
-            // Container(
-            //   width: double.infinity,
-            //   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-            //   decoration: BoxDecoration(
-            //     border: Border.all(color: AppColors.buttonText),
-            //     borderRadius: BorderRadius.circular(10.r),
-            //   ),
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Text(
-            //         "Usage History",
-            //         style: GoogleFonts.parkinsans(
-            //           fontSize: 14.sp,
-            //           fontWeight: FontWeight.w400,
-            //           color: AppColors.buttonText,
-            //           letterSpacing: -0.56,
-            //         ),
-            //       ),
-            //       SizedBox(height: 15.h),
-            //       Text(
-            //         "AC Repair - 10 Feb",
-            //         style: GoogleFonts.parkinsans(
-            //           fontSize: 14.sp,
-            //           fontWeight: FontWeight.w400,
-            //           color: AppColors.buttonText,
-            //           letterSpacing: -0.56,
-            //         ),
-            //       ),
-            //       SizedBox(height: 4.h),
-            //       Text(
-            //         "Plumbing Fix - 05 Mar",
-            //         style: GoogleFonts.parkinsans(
-            //           fontSize: 14.sp,
-            //           fontWeight: FontWeight.w400,
-            //           color: AppColors.buttonText,
-            //           letterSpacing: -0.56,
-            //         ),
-            //       ),
-            //       SizedBox(height: 4.h),
-            //       Text(
-            //         "Electrical Issue - 20 Mar",
-            //         style: GoogleFonts.parkinsans(
-            //           fontSize: 14.sp,
-            //           fontWeight: FontWeight.w400,
-            //           color: AppColors.buttonText,
-            //           letterSpacing: -0.56,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+
             SizedBox(height: 20.h),
             SizedBox(
               width: double.infinity,
@@ -396,16 +526,51 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                     borderRadius: BorderRadius.circular(60.r),
                   ),
                 ),
-                onPressed: () {},
-                child: Text(
-                  "Renew Plan",
-                  style: GoogleFonts.outfit(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.buttonText,
-                    letterSpacing: -0.1,
-                  ),
-                ),
+                onPressed: () {
+                  showPlanDialog(
+                    title: "Renew Plan",
+                    message: "Are you sure you want to renew this plan?",
+                    onConfirm: () async {
+                      setState(() {
+                        isRenew = true;
+                      });
+                      try {
+                        final service = ref.read(authServiceProvider);
+                        final isSucess = await service.renewPlan();
+                        if (isSucess) {
+                          Navigator.pop(context);
+                        }
+                      } catch (e, st) {
+                        setState(() {
+                          isRenew = false;
+                        });
+                        log(e.toString());
+                      } finally {
+                        setState(() {
+                          isRenew = false;
+                        });
+                      }
+                    },
+                  );
+                },
+                child: isRenew
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 1.5,
+                        ),
+                      )
+                    : Text(
+                        "Renew Plan",
+                        style: GoogleFonts.outfit(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.buttonText,
+                          letterSpacing: -0.1,
+                        ),
+                      ),
               ),
             ),
             SizedBox(height: 20.h),
@@ -420,16 +585,51 @@ class _MyPlanDetailScreenState extends State<MyPlanDetailScreen> {
                     borderRadius: BorderRadius.circular(60.r),
                   ),
                 ),
-                onPressed: () {},
-                child: Text(
-                  "Upgrade Plan",
-                  style: GoogleFonts.outfit(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.buttonText,
-                    letterSpacing: -0.1,
-                  ),
-                ),
+                onPressed: () async {
+                  showPlanDialog(
+                    title: "Upgrade Plan",
+                    message: "Are you sure you want to renew this plan?",
+                    onConfirm: () async {
+                      setState(() {
+                        isUpgrade = true;
+                      });
+                      try {
+                        final service = ref.read(authServiceProvider);
+                        final isSucess = await service.upgradePlan();
+                        if (isSucess) {
+                          Navigator.pop(context);
+                        }
+                      } catch (e, st) {
+                        setState(() {
+                          isUpgrade = false;
+                        });
+                        log(e.toString());
+                      } finally {
+                        setState(() {
+                          isUpgrade = false;
+                        });
+                      }
+                    },
+                  );
+                },
+                child: isUpgrade
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 1.5,
+                        ),
+                      )
+                    : Text(
+                        "Upgrade Plan",
+                        style: GoogleFonts.outfit(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.buttonText,
+                          letterSpacing: -0.1,
+                        ),
+                      ),
               ),
             ),
           ],

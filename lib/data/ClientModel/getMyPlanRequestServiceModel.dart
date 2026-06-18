@@ -38,32 +38,44 @@ class GetMyPlanRequestServiceModel {
 
 class Datum {
     String? requestId;
-    String? id;
-    String? name;
+    String? planName;
     String? tier;
     int? priceMonthly;
+    String? serviceName;
+    String? fullName;
+    String? email;
+    String? phoneNumber;
 
     Datum({
         this.requestId,
-        this.id,
-        this.name,
+        this.planName,
         this.tier,
         this.priceMonthly,
+        this.serviceName,
+        this.fullName,
+        this.email,
+        this.phoneNumber,
     });
 
     factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         requestId: json["requestId"],
-        id: json["_id"],
-        name: json["name"],
+        planName: json["planName"],
         tier: json["tier"],
         priceMonthly: json["priceMonthly"],
+        serviceName: json["serviceName"],
+        fullName: json["fullName"],
+        email: json["email"],
+        phoneNumber: json["phoneNumber"],
     );
 
     Map<String, dynamic> toJson() => {
         "requestId": requestId,
-        "_id": id,
-        "name": name,
+        "planName": planName,
         "tier": tier,
         "priceMonthly": priceMonthly,
+        "serviceName": serviceName,
+        "fullName": fullName,
+        "email": email,
+        "phoneNumber": phoneNumber,
     };
 }

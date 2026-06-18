@@ -31,7 +31,9 @@ import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceDetailsModel.dart
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceListModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getRatingModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getServiceRequestModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/renewPlanModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/reportIssueResModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/upgradePlanModel.dart';
 import 'package:dwelleasy_ghana/data/model/acceptRequestBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/acceptRequestResModel.dart';
 import 'package:dwelleasy_ghana/data/model/createLeaveRequestBodyModel.dart';
@@ -356,4 +358,10 @@ abstract class ApiStateNetwork {
   Future<CustomerConfirmArrivalResModel> customerConfirmArrival(
     @Body() CustomerConfirmArrivalBodyModel body,
   );
+
+    @POST("/api/v1/user/renew-plan")
+  Future<RenewPlanModel> renewPlan();
+
+      @POST("/api/v1/user/upgrade-plan")
+  Future<UpgradePlanModel> upgradePlan();
 }

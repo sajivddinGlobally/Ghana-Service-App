@@ -40,6 +40,74 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
     super.dispose();
   }
 
+  String getStatusText(String? status) {
+    switch (status?.toLowerCase()) {
+      case "success":
+        return "Active";
+
+      case "pending":
+        return "Pending";
+
+      case "processing":
+        return "Processing";
+
+      case "failed":
+        return "Failed";
+
+      case "cancelled":
+        return "Cancelled";
+
+      case "expired":
+        return "Expired";
+
+      case "refunded":
+        return "Refunded";
+
+      case "upgraded":
+        return "Upgraded";
+
+      case "renewed":
+        return "Renewed";
+
+      default:
+        return "Unknown";
+    }
+  }
+
+  Color getStatusColor(String? status) {
+    switch (status?.toLowerCase()) {
+      case "success":
+        return const Color(0xFF4CAF50);
+
+      case "pending":
+        return Colors.orange;
+
+      case "processing":
+        return Colors.blue;
+
+      case "failed":
+        return Colors.red;
+
+      case "cancelled":
+        return Colors.redAccent;
+
+      case "expired":
+        return Colors.grey;
+
+      case "refunded":
+        return Colors.purple;
+
+      case "upgraded":
+        return Colors.teal;
+
+      case "renewed":
+        return Colors.green;
+
+      default:
+        return Colors.black54;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(myPlanRequestProvider);
@@ -274,16 +342,16 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                               ),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(44.r),
-                                color: const Color.fromARGB(51, 108, 226, 39),
+                                color: getStatusColor(
+                                  item.status,
+                                ).withOpacity(0.15),
                               ),
                               child: Text(
-                                item?.planDetails?.planId?.status == "active"
-                                    ? "Active"
-                                    : "InActive" ?? "",
+                                getStatusText(item.status),
                                 style: GoogleFonts.outfit(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w400,
-                                  color: AppColors.buttonText,
+                                  color: getStatusColor(item.status),
                                 ),
                               ),
                             ),

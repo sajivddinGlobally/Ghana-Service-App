@@ -373,7 +373,7 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                item.serviceId?.planDetails?.planId?.name ?? "N/A",
+                item.serviceId?.planDetails?.serviceId?.name ?? "N/A",
                 style: GoogleFonts.outfit(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,

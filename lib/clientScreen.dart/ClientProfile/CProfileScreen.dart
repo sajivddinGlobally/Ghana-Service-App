@@ -324,16 +324,19 @@ class _CProfileScreenState extends ConsumerState<CProfileScreen> {
                               Spacer(),
                               planSubcription.when(
                                 data: (data) {
+                                  final planList = data.data?.list ?? [];
+
                                   final planSubs =
-                                      data
-                                          .data
-                                          ?.list
-                                          ?.first
-                                          ?.planDetails
-                                          ?.planId
-                                          ?.name ??
-                                      "N/A";
-                                  // final planService =
+                                      (data.data?.list?.isNotEmpty ?? false)
+                                      ? data
+                                                .data!
+                                                .list!
+                                                .first
+                                                .planDetails
+                                                ?.planId
+                                                ?.name ??
+                                            "N/A"
+                                      : "No Plan";
                                   return Text(
                                     planSubs,
                                     style: GoogleFonts.parkinsans(

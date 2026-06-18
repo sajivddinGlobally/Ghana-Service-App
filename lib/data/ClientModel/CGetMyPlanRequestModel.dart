@@ -66,7 +66,7 @@ class ListElement {
   String? id;
   UserId? userId;
   PaymentMethod? paymentMethod;
-  ListStatus? status;
+  String? status;
   AdminRemark? adminRemark;
   bool? isDisable;
   bool? isDeleted;
@@ -119,7 +119,7 @@ class ListElement {
     id: json["_id"],
     userId: userIdValues.map[json["userId"]],
     paymentMethod: paymentMethodValues.map[json["paymentMethod"]]!,
-    status: listStatusValues.map[json["status"]]!,
+    status: json["status"],
     adminRemark: adminRemarkValues.map[json["adminRemark"]]!,
     isDisable: json["isDisable"],
     isDeleted: json["isDeleted"],
@@ -141,7 +141,7 @@ class ListElement {
     "_id": id,
     "userId": userIdValues.reverse[userId],
     "paymentMethod": paymentMethodValues.reverse[paymentMethod],
-    "status": listStatusValues.reverse[status],
+    "status": status,
     "adminRemark": adminRemarkValues.reverse[adminRemark],
     "isDisable": isDisable,
     "isDeleted": isDeleted,

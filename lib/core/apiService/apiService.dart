@@ -757,6 +757,36 @@ class AuthService {
     }
   }
 
+  Future<bool> renewPlan() async {
+    try {
+      final response = await api.renewPlan();
+      if (response.code == 0 && response.error == false) {
+        log(response.message ?? "Login Success");
+        return true;
+      }
+      return false;
+    } catch (e, st) {
+      log("ERROR => $e");
+      log("STACK TRACE => $st");
+      return false;
+    }
+  }
+
+  Future<bool> upgradePlan() async {
+    try {
+      final response = await api.upgradePlan();
+      if (response.code == 0 && response.error == false) {
+        log(response.message ?? "Login Success");
+        return true;
+      }
+      return false;
+    } catch (e, st) {
+      log("ERROR => $e");
+      log("STACK TRACE => $st");
+      return false;
+    }
+  }
+
   /////////////////////////////////  Client (User) //////////////////////////////
   Future<bool> clientRegister({
     required String fullName,

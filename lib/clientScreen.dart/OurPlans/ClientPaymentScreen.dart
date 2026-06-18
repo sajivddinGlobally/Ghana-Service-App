@@ -15,11 +15,13 @@ class Clientpaymentscreen extends ConsumerStatefulWidget {
   final Datum selectedPlan;
   final String customerName;
   final String selectedDate;
+  final String serviceName;
   const Clientpaymentscreen({
     super.key,
     required this.selectedPlan,
     required this.customerName,
     required this.selectedDate,
+    required this.serviceName,
   });
 
   @override
@@ -252,7 +254,7 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                           ),
                         ),
                         TextSpan(
-                          text: "Sign Up",
+                          text: widget.serviceName,
                           style: GoogleFonts.parkinsans(
                             fontSize: 12.sp,
                             color: AppColors.buttonText,

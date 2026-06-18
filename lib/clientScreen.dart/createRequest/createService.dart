@@ -207,7 +207,7 @@ class _CreateServiceState extends ConsumerState<CreateService> {
                                   child: Padding(
                                     padding: EdgeInsets.only(left: 8.w),
                                     child: Text(
-                                      "${item.name ?? "N/A"} (${item.tier ?? "N/A"})",
+                                      "${item.serviceName ?? "N/A"} (${item.planName ?? "N/A"})",
                                     ),
                                   ),
                                 );
