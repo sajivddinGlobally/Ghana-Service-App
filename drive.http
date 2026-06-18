@@ -5,18 +5,18 @@
 @url =  https://dwell.themediaradar.com
 
 
-# @admin = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTE1NDE2NWVmYmNjYzIzOWM4YjdlMWIiLCJpYXQiOjE3Nzk3Nzc5NjAsImV4cCI6MTgxMTMxMzk2MH0.9OU4ODFMZLVlNaaFoZLYEhdzdzzoe66K3bv1ij_LVzU
+@admin = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTE1NDE2NWVmYmNjYzIzOWM4YjdlMWIiLCJpYXQiOjE3Nzk3Nzc5NjAsImV4cCI6MTgxMTMxMzk2MH0.9OU4ODFMZLVlNaaFoZLYEhdzdzzoe66K3bv1ij_LVzU
 
 
-# # //onlyForSaji
-# # ###
-# POST {{url}}/api/v1/admin/onlyForSaji HTTP/1.1
-# Content-type: application/json
-# Authorization: {{admin}}
+# //onlyForSaji
+# ###
+POST {{url}}/api/v1/admin/onlyForSaji HTTP/1.1
+Content-type: application/json
+Authorization: {{admin}}
 
-# {
-#   "userId": "6a0fdef2ef370acb5a24ae71"
-# }
+{
+  "userId": "6a0fdef2ef370acb5a24ae71"
+}
 
 
 //Register for employee

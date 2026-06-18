@@ -21,6 +21,31 @@ class PendingRequestDetailScreen extends ConsumerStatefulWidget {
 
 class _PendingRequestDetailScreenState
     extends ConsumerState<PendingRequestDetailScreen> {
+  String getStatusText(String? status) {
+    switch (status?.toLowerCase()) {
+      case "pending":
+        return "Pending";
+
+      case "in_progress":
+        return "In Progress";
+
+      case "on_the_way":
+        return "On The Way";
+
+      case "arrived":
+        return "Arrived";
+
+      case "customer_confirmed":
+        return "Customer Confirmed";
+
+      case "completed":
+        return "Completed";
+
+      default:
+        return "Unknown";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final detailsAsync = ref.watch(
@@ -128,6 +153,7 @@ class _PendingRequestDetailScreenState
               ),
             );
           }
+
           return Padding(
             padding: EdgeInsets.only(left: 16.w, right: 16.w),
             child: Column(
@@ -302,7 +328,9 @@ class _PendingRequestDetailScreenState
                             ),
                             TextSpan(
                               // text: "  On the way",
-                              text: "  ${data.data!.status ?? ""}",
+                              // text: "  ${data.data!.status ?? ""}",
+                              text:
+                                  "  ${getStatusText(data.data?.status ?? "")}",
                               style: GoogleFonts.parkinsans(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12.sp,

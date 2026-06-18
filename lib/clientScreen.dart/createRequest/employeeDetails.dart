@@ -19,6 +19,31 @@ class EmployeeDetails extends ConsumerStatefulWidget {
 }
 
 class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
+  String getStatusText(String? status) {
+    switch (status?.toLowerCase()) {
+      case "pending":
+        return "Pending";
+
+      case "in_progress":
+        return "In Progress";
+
+      case "on_the_way":
+        return "On The Way";
+
+      case "arrived":
+        return "Arrived";
+
+      case "customer_confirmed":
+        return "Customer Confirmed";
+
+      case "completed":
+        return "Completed";
+
+      default:
+        return "Unknown";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final detailsAsync = ref.watch(

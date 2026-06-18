@@ -24,6 +24,34 @@ class RequestDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _RequestDetailScreenState extends ConsumerState<RequestDetailScreen> {
+  String getStatusText(String? status) {
+    switch (status?.toLowerCase()) {
+      case "assigned":
+        return "Assigned";
+
+      case "pending":
+        return "Pending";
+
+      case "in_progress":
+        return "In Progress";
+
+      case "on_the_way":
+        return "On The Way";
+
+      case "arrived":
+        return "Arrived";
+
+      case "customer_confirmed":
+        return "Customer Confirmed";
+
+      case "completed":
+        return "Completed";
+
+      default:
+        return "Unknown";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final requestDetailState = ref.watch(
@@ -130,12 +158,11 @@ class _RequestDetailScreenState extends ConsumerState<RequestDetailScreen> {
                               borderRadius: BorderRadius.circular(50.r),
                             ),
                             child: Text(
-                              requestItem?.status ?? "",
+                              getStatusText(requestItem?.status ?? ""),
                               style: GoogleFonts.outfit(
                                 fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 color: const Color(0xffF2D701),
-                                letterSpacing: -0.64,
                               ),
                             ),
                           ),

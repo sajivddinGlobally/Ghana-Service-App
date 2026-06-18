@@ -41,6 +41,56 @@ class _ArriveScreenState extends ConsumerState<ArriveScreen> {
     super.dispose();
   }
 
+  String getStatusText(String? status) {
+    switch (status?.toLowerCase()) {
+      case "pending":
+        return "Pending";
+
+      case "in_progress":
+        return "In Progress";
+
+      case "on_the_way":
+        return "On The Way";
+
+      case "arrived":
+        return "Arrived";
+
+      case "customer_confirmed":
+        return "Customer Confirmed";
+
+      case "completed":
+        return "Completed";
+
+      default:
+        return "Unknown";
+    }
+  }
+
+  Color getStatusColor(String? status) {
+    switch (status?.toLowerCase()) {
+      case "pending":
+        return Colors.orange;
+
+      case "in_progress":
+        return Colors.blue;
+
+      case "on_the_way":
+        return Colors.deepPurple;
+
+      case "arrived":
+        return Colors.teal;
+
+      case "customer_confirmed":
+        return Colors.green;
+
+      case "completed":
+        return const Color(0xFF4CAF50);
+
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final onTheWayState = ref.watch(arrivedProvider);
@@ -245,7 +295,7 @@ class _ArriveScreenState extends ConsumerState<ArriveScreen> {
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18.sp,
                                     color: Colors.white,
-                                    letterSpacing: -0.72,
+                                    letterSpacing: -0.2,
                                   ),
                                 ),
                               ),
@@ -254,17 +304,19 @@ class _ArriveScreenState extends ConsumerState<ArriveScreen> {
                                 height: 33.h,
                                 decoration: BoxDecoration(
                                   color: const Color.fromRGBO(242, 215, 1, 0.3),
+
                                   borderRadius: BorderRadius.circular(40.r),
                                 ),
                                 child: Center(
                                   child: Text(
                                     // "Pending",
-                                    pending?.status ?? "",
+                                    // pending?.status ?? "",
+                                    getStatusText(pending?.status ?? ""),
                                     style: GoogleFonts.outfit(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 13.sp,
                                       color: AppColors.buttonBg,
-                                      letterSpacing: -0.56,
+                                      letterSpacing: -0.1,
                                     ),
                                   ),
                                 ),
@@ -281,7 +333,7 @@ class _ArriveScreenState extends ConsumerState<ArriveScreen> {
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
                               color: Colors.white,
-                              letterSpacing: -0.64,
+                              letterSpacing: -0.1,
                             ),
                           ),
 
@@ -292,7 +344,7 @@ class _ArriveScreenState extends ConsumerState<ArriveScreen> {
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
                               color: Colors.white,
-                              letterSpacing: -0.64,
+                              letterSpacing: -0.1,
                             ),
                           ),
 
@@ -306,7 +358,7 @@ class _ArriveScreenState extends ConsumerState<ArriveScreen> {
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
                               color: Colors.white,
-                              letterSpacing: -0.64,
+                              letterSpacing: -0.1,
                             ),
                           ),
 
@@ -335,7 +387,7 @@ class _ArriveScreenState extends ConsumerState<ArriveScreen> {
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w500,
                                     color: Color(0xff04254E),
-                                    letterSpacing: -0.64,
+                                    letterSpacing: -0.1,
                                   ),
                                 ),
                               ),

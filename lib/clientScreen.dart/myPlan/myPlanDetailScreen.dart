@@ -1,5 +1,8 @@
 import 'dart:developer';
 
+import 'package:dwelleasy_ghana/clientScreen.dart/ClientHomeScreen.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/Provider/GetMyPlanRequestProvider.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/service/planServiceListScreen.dart';
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CGetMyPlanRequestModel.dart';
@@ -203,44 +206,39 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final planData = widget.data;
-    final startDate = DateTime.fromMillisecondsSinceEpoch(
-      planData.planDetails?.planId?.date ?? 0,
-    );
+    // final startDate = DateTime.fromMillisecondsSinceEpoch(
+    //   planData.planDetails?.planId?.startDate ?? 0,
+    // );
+    final int? startTimestamp = planData.startDate;
+    final int? expiryTimestamp = planData.expiryDate;
 
-    DateTime expiryDate;
+    final String formattedStartDate = startTimestamp != null
+        ? DateFormat(
+            'dd MMM yyyy',
+          ).format(DateTime.fromMillisecondsSinceEpoch(startTimestamp))
+        : "Pending Approval";
 
-    switch (planData.planDetails?.planId?.durationType?.toLowerCase()) {
-      case 'day':
-        expiryDate = startDate.add(const Duration(days: 1));
-        break;
+    final String formattedExpiryDate = expiryTimestamp != null
+        ? DateFormat(
+            'dd MMM yyyy',
+          ).format(DateTime.fromMillisecondsSinceEpoch(expiryTimestamp))
+        : "--";
 
-      case 'week':
-        expiryDate = startDate.add(const Duration(days: 7));
-        break;
+    double progressValue = 0.0;
 
-      case 'month':
-        expiryDate = DateTime(
-          startDate.year,
-          startDate.month + 1,
-          startDate.day,
-        );
-        break;
+    if (startTimestamp != null && expiryTimestamp != null) {
+      final now = DateTime.now();
 
-      case 'year':
-        expiryDate = DateTime(
-          startDate.year + 1,
-          startDate.month,
-          startDate.day,
-        );
-        break;
+      final start = DateTime.fromMillisecondsSinceEpoch(startTimestamp);
+      final expiry = DateTime.fromMillisecondsSinceEpoch(expiryTimestamp);
 
-      default:
-        expiryDate = startDate;
+      final totalDays = expiry.difference(start).inDays;
+      final usedDays = now.difference(start).inDays;
+
+      if (totalDays > 0) {
+        progressValue = (usedDays / totalDays).clamp(0.0, 1.0);
+      }
     }
-
-    final formattedStartDate = DateFormat('dd MMM yyyy').format(startDate);
-
-    final formattedExpiryDate = DateFormat('dd MMM yyyy').format(expiryDate);
 
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
@@ -428,7 +426,7 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(30.r),
                     child: LinearProgressIndicator(
-                      value: 0.5,
+                      value: progressValue,
                       minHeight: 2.h,
                       backgroundColor: AppColors.buttonText,
                       valueColor: AlwaysStoppedAnimation<Color>(
@@ -539,6 +537,9 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
                         final isSucess = await service.renewPlan();
                         if (isSucess) {
                           Navigator.pop(context);
+                          await ref
+                              .read(myPlanRequestProvider.notifier)
+                              .refresh();
                         }
                       } catch (e, st) {
                         setState(() {
@@ -586,50 +587,45 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  showPlanDialog(
-                    title: "Upgrade Plan",
-                    message: "Are you sure you want to renew this plan?",
-                    onConfirm: () async {
-                      setState(() {
-                        isUpgrade = true;
-                      });
-                      try {
-                        final service = ref.read(authServiceProvider);
-                        final isSucess = await service.upgradePlan();
-                        if (isSucess) {
-                          Navigator.pop(context);
-                        }
-                      } catch (e, st) {
-                        setState(() {
-                          isUpgrade = false;
-                        });
-                        log(e.toString());
-                      } finally {
-                        setState(() {
-                          isUpgrade = false;
-                        });
-                      }
-                    },
+                  // showPlanDialog(
+                  //   title: "Upgrade Plan",
+                  //   message: "Are you sure you want to renew this plan?",
+                  //   onConfirm: () async {
+                  //     setState(() {
+                  //       isUpgrade = true;
+                  //     });
+                  //     try {
+                  //       final service = ref.read(authServiceProvider);
+                  //       final isSucess = await service.upgradePlan();
+                  //       if (isSucess) {
+                  //         Navigator.pop(context);
+                  //       }
+                  //     } catch (e, st) {
+                  //       setState(() {
+                  //         isUpgrade = false;
+                  //       });
+                  //       log(e.toString());
+                  //     } finally {
+                  //       setState(() {
+                  //         isUpgrade = false;
+                  //       });
+                  //     }
+                  //   },
+                  // );
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => PlanServiceList()),
                   );
                 },
-                child: isUpgrade
-                    ? SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 1.5,
-                        ),
-                      )
-                    : Text(
-                        "Upgrade Plan",
-                        style: GoogleFonts.outfit(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.buttonText,
-                          letterSpacing: -0.1,
-                        ),
-                      ),
+                child: Text(
+                  "Upgrade Plan",
+                  style: GoogleFonts.outfit(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.buttonText,
+                    letterSpacing: -0.1,
+                  ),
+                ),
               ),
             ),
           ],

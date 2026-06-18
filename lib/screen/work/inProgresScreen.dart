@@ -42,6 +42,34 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
     super.dispose();
   }
 
+  String getStatusText(String? status) {
+    switch (status?.toLowerCase()) {
+      case "assigned":
+        return "Assigned";
+
+      case "pending":
+        return "Pending";
+
+      case "in_progress":
+        return "In Progress";
+
+      case "on_the_way":
+        return "On The Way";
+
+      case "arrived":
+        return "Arrived";
+
+      case "customer_confirmed":
+        return "Customer Confirmed";
+
+      case "completed":
+        return "Completed";
+
+      default:
+        return "Unknown";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final inProgressState = ref.watch(getInProgressProvider);
@@ -270,7 +298,8 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
                                   child: Center(
                                     child: Text(
                                       // "Pending",
-                                      pending?.status ?? "",
+                                      // pending?.status ?? "",
+                                      getStatusText(pending?.status ?? ""),
                                       style: GoogleFonts.outfit(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 13.sp,

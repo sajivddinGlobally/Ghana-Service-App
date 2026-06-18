@@ -231,7 +231,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
   Widget build(BuildContext context) {
     final clientProfileState = ref.watch(clientProfileProvider);
     final getPlanServiceState = ref.watch(getPlanServiceProvider);
-    final reminderState = ref.watch(clientGetServiceRemindersProvider);
+    // final reminderState = ref.watch(clientGetServiceRemindersProvider);
     final clientReadNotificationState = ref.watch(
       clientReadNotificationProvider,
     );
@@ -241,7 +241,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
       },
       orElse: () => 0,
     );
-    final getDashbordCountState = ref.watch(getDashbordCountProvider);
+    // final getDashbordCountState = ref.watch(getDashbordCountProvider);
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: clientProfileState.when(
@@ -493,6 +493,9 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
         onRefresh: () async {
           ref.invalidate(clientProfileProvider);
           ref.invalidate(getPlanServiceProvider);
+          ref.invalidate(getPlanServiceProvider);
+          ref.invalidate(getDashbordCountProvider);
+          ref.invalidate(clientGetServiceRemindersProvider);
 
           await Future.wait([
             ref.read(clientProfileProvider.future),

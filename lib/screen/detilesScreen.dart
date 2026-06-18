@@ -123,6 +123,34 @@ class _DetilesscreenState extends ConsumerState<Detilesscreen> {
   bool isOnTheWay = false;
   bool isArrived = false;
 
+  String getStatusText(String? status) {
+    switch (status?.toLowerCase()) {
+      case "assigned":
+        return "Assigned";
+
+      case "pending":
+        return "Pending";
+
+      case "in_progress":
+        return "In Progress";
+
+      case "on_the_way":
+        return "On The Way";
+
+      case "arrived":
+        return "Arrived";
+
+      case "customer_confirmed":
+        return "Customer Confirmed";
+
+      case "completed":
+        return "Completed";
+
+      default:
+        return "Unknown";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final requestDetailState = ref.watch(
@@ -241,7 +269,8 @@ class _DetilesscreenState extends ConsumerState<Detilesscreen> {
                               child: Text(
                                 // "Assigned Job",
                                 // widget.status,
-                                requestDetails?.status ?? "",
+                                // requestDetails?.status ?? "",
+                                getStatusText(requestDetails?.status ?? ""),
                                 style: GoogleFonts.outfit(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w500,

@@ -265,6 +265,31 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
       getServiceRequestProvider(widget.status).notifier,
     );
 
+    String getStatusText(String? status) {
+      switch (status?.toLowerCase()) {
+        case "pending":
+          return "Pending";
+
+        case "in_progress":
+          return "In Progress";
+
+        case "on_the_way":
+          return "On The Way";
+
+        case "arrived":
+          return "Arrived";
+
+        case "customer_confirmed":
+          return "Customer Confirmed";
+
+        case "completed":
+          return "Completed";
+
+        default:
+          return "Unknown";
+      }
+    }
+
     /// EMPTY UI
     if (data.isEmpty) {
       return Center(
@@ -326,8 +351,8 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
           );
         }
         final item = data[index];
-        Color statusColor;
 
+        Color statusColor;
         switch (type) {
           case "pending":
             statusColor = const Color(0xffFDEBB3);
@@ -418,7 +443,8 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                   borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Text(
-                  item.status ?? "",
+                  // item.status ?? "",
+                  getStatusText(item.status),
                   style: GoogleFonts.parkinsans(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w500,

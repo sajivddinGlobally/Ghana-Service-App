@@ -42,6 +42,34 @@ class _CustomerConfirmScreenState extends ConsumerState<CustomerConfirmScreen> {
     super.dispose();
   }
 
+  String getStatusText(String? status) {
+    switch (status?.toLowerCase()) {
+      case "assigned":
+        return "Assigned";
+
+      case "pending":
+        return "Pending";
+
+      case "in_progress":
+        return "In Progress";
+
+      case "on_the_way":
+        return "On The Way";
+
+      case "arrived":
+        return "Arrived";
+
+      case "customer_confirmed":
+        return "Customer Confirmed";
+
+      case "completed":
+        return "Completed";
+
+      default:
+        return "Unknown";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final completeRequestState = ref.watch(getCustomerConfirmedProvider);
@@ -203,7 +231,7 @@ class _CustomerConfirmScreenState extends ConsumerState<CustomerConfirmScreen> {
                     final prefferedDate = DateTime.fromMicrosecondsSinceEpoch(
                       complete.preferredDate ?? 0,
                     );
-                  
+
                     final formattedDate = DateFormat(
                       "dd MMM yyyy",
                     ).format(prefferedDate);
@@ -266,7 +294,8 @@ class _CustomerConfirmScreenState extends ConsumerState<CustomerConfirmScreen> {
                                 child: Center(
                                   child: Text(
                                     // "Completed",
-                                    complete.status ?? "",
+                                    // complete.status ?? "",
+                                    getStatusText(complete.status ?? ""),
                                     style: GoogleFonts.outfit(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 13.sp,

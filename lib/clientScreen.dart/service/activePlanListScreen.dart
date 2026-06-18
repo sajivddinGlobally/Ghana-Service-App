@@ -87,6 +87,40 @@ class _ActiveplanlistscreenState extends ConsumerState<Activeplanlistscreen> {
     super.dispose();
   }
 
+  String getStatusText(String? status) {
+    switch (status?.toLowerCase()) {
+      case "success":
+        return "Active";
+
+      case "pending":
+        return "Pending";
+
+      case "processing":
+        return "Processing";
+
+      case "failed":
+        return "Failed";
+
+      case "cancelled":
+        return "Cancelled";
+
+      case "expired":
+        return "Expired";
+
+      case "refunded":
+        return "Refunded";
+
+      case "upgraded":
+        return "Upgraded";
+
+      case "renewed":
+        return "Renewed";
+
+      default:
+        return "Unknown";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final getActivePlanState = ref.watch(getActivePlanProvider);
@@ -244,7 +278,8 @@ class _ActiveplanlistscreenState extends ConsumerState<Activeplanlistscreen> {
                           color: const Color.fromARGB(51, 108, 226, 39),
                         ),
                         child: Text(
-                          item?.planDetails?.planId?.status ?? "",
+                          // item?.planDetails?.planId?.status ?? "",
+                          getStatusText(item?.status ?? ""),
                           style: GoogleFonts.outfit(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w400,

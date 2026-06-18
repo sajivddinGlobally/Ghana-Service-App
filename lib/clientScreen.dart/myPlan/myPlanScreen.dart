@@ -213,199 +213,243 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
               children: [
                 SizedBox(height: 20.h),
                 Expanded(
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    // itemCount: data.data?.list?.length ?? 0,
-                    itemCount:
-                        (data.data?.list?.length ?? 0) +
-                        (notifier.hasMoreData ? 1 : 0),
-                    itemBuilder: (context, index) {
-                      final list = data.data?.list ?? [];
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      await ref.read(myPlanRequestProvider.notifier).refresh();
+                    },
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: _scrollController,
+                      // itemCount: data.data?.list?.length ?? 0,
+                      itemCount:
+                          (data.data?.list?.length ?? 0) +
+                          (notifier.hasMoreData ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        final list = data.data?.list ?? [];
 
-                      if (index == list.length) {
-                        return Padding(
-                          padding: EdgeInsets.all(16.w),
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.buttonBg,
+                        if (index == list.length) {
+                          return Padding(
+                            padding: EdgeInsets.all(16.w),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.buttonBg,
+                              ),
                             ),
+                          );
+                        }
+
+                        final item = list[index];
+                        final int? startTimestamp = item.startDate;
+                        final int? expiryTimestamp = item.expiryDate;
+
+                        double progressValue = 0.0;
+
+                        if ((item.status ?? '').toLowerCase() == 'pending') {
+                          progressValue = 0.0;
+                        } else if ((item.status ?? '').toLowerCase() ==
+                            'expired') {
+                          progressValue = 1.0;
+                        } else if (startTimestamp != null &&
+                            expiryTimestamp != null) {
+                          final startDate = DateTime.fromMillisecondsSinceEpoch(
+                            startTimestamp,
+                          );
+                          final expiryDate =
+                              DateTime.fromMillisecondsSinceEpoch(
+                                expiryTimestamp,
+                              );
+                          final now = DateTime.now();
+
+                          final totalDays = expiryDate
+                              .difference(startDate)
+                              .inDays;
+                          final usedDays = now.difference(startDate).inDays;
+
+                          if (totalDays > 0) {
+                            progressValue = (usedDays / totalDays).clamp(
+                              0.0,
+                              1.0,
+                            );
+                          }
+                        }
+
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 16.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 16.h,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.buttonText),
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.planDetails?.serviceId?.name ?? "",
+                                style: GoogleFonts.outfit(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.buttonText,
+                                  letterSpacing: -0.1,
+                                ),
+                              ),
+
+                              SizedBox(height: 13.h),
+
+                              Row(
+                                children: [
+                                  Text(
+                                    "Services:",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    "${item?.planDetails?.planId?.name ?? ""} (${item?.planDetails!.planId?.tier ?? ""})",
+                                    textAlign: TextAlign.end,
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(height: 12.h),
+
+                              Row(
+                                children: [
+                                  Text(
+                                    "Validity:",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    item?.planDetails?.planId?.durationType ??
+                                        "",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(height: 12.h),
+
+                              Row(
+                                children: [
+                                  Text(
+                                    "Call Limit:",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    item?.planDetails?.planId?.isUnlimited ==
+                                            true
+                                        ? "Unlimited"
+                                        : "${item?.planDetails?.planId?.callLimit ?? 0}",
+
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(height: 12.h),
+
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 27.w,
+                                  vertical: 4.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(44.r),
+                                  color: getStatusColor(
+                                    item.status,
+                                  ).withOpacity(0.15),
+                                ),
+                                child: Text(
+                                  getStatusText(item.status),
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: getStatusColor(item.status),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: 12.h),
+
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(30.r),
+                                child: LinearProgressIndicator(
+                                  value: progressValue,
+                                  minHeight: 2.h,
+                                  backgroundColor: AppColors.buttonText,
+                                  valueColor:
+                                      const AlwaysStoppedAnimation<Color>(
+                                        Color(0xFF0072FF),
+                                      ),
+                                ),
+                              ),
+                              SizedBox(height: 20.h),
+
+                              SizedBox(
+                                width: double.infinity,
+                                height: 50.h,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    backgroundColor: AppColors.buttonBg,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50.r),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (context) =>
+                                            MyPlanDetailScreen(
+                                              data: data.data!.list![index],
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    "View Details",
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         );
-                      }
-
-                      final item = list[index];
-                      return Container(
-                        margin: EdgeInsets.only(bottom: 16.h),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 16.h,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.buttonText),
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.planDetails?.serviceId?.name ?? "",
-                              style: GoogleFonts.outfit(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.buttonText,
-                                letterSpacing: -0.1,
-                              ),
-                            ),
-
-                            SizedBox(height: 13.h),
-
-                            Row(
-                              children: [
-                                Text(
-                                  "Services:",
-                                  style: GoogleFonts.parkinsans(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.buttonText,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  "${item?.planDetails?.planId?.name ?? ""} (${item?.planDetails!.planId?.tier ?? ""})",
-                                  textAlign: TextAlign.end,
-                                  style: GoogleFonts.parkinsans(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.buttonText,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 12.h),
-
-                            Row(
-                              children: [
-                                Text(
-                                  "Validity:",
-                                  style: GoogleFonts.parkinsans(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.buttonText,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  item?.planDetails?.planId?.durationType ?? "",
-                                  style: GoogleFonts.parkinsans(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.buttonText,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 12.h),
-
-                            Row(
-                              children: [
-                                Text(
-                                  "Call Limit:",
-                                  style: GoogleFonts.parkinsans(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.buttonText,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  item?.planDetails?.planId?.isUnlimited == true
-                                      ? "Unlimited"
-                                      : "${item?.planDetails?.planId?.callLimit ?? 0}",
-
-                                  style: GoogleFonts.parkinsans(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.buttonText,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 12.h),
-
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 27.w,
-                                vertical: 4.h,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(44.r),
-                                color: getStatusColor(
-                                  item.status,
-                                ).withOpacity(0.15),
-                              ),
-                              child: Text(
-                                getStatusText(item.status),
-                                style: GoogleFonts.outfit(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: getStatusColor(item.status),
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: 12.h),
-
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(30.r),
-                              child: LinearProgressIndicator(
-                                value: 0.6,
-                                minHeight: 2.h,
-                                backgroundColor: AppColors.buttonText,
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                  Color(0xFF0072FF),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 20.h),
-
-                            SizedBox(
-                              width: double.infinity,
-                              height: 50.h,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  backgroundColor: AppColors.buttonBg,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50.r),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) => MyPlanDetailScreen(
-                                        data: data.data!.list![index],
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  "View Details",
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.buttonText,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                      },
+                    ),
                   ),
                 ),
               ],

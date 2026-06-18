@@ -11,8 +11,6 @@ import 'package:riverpod/riverpod.dart';
 //       return await service.clientGetMyPlanRequest();
 //     });
 
-
-
 class MyPlanRequestNotifier
     extends StateNotifier<AsyncValue<CGetMyPlanRequestModel>> {
   final AuthService authService;
@@ -94,13 +92,18 @@ class MyPlanRequestNotifier
       _isLoadingMore = false;
     }
   }
+
+  Future<void> refresh() async {
+    await getMyPlanRequests(isRefresh: true);
+  }
 }
 
+final myPlanRequestProvider =
+    StateNotifierProvider.autoDispose<
+      MyPlanRequestNotifier,
+      AsyncValue<CGetMyPlanRequestModel>
+    >((ref) {
+      final authService = ref.read(authServiceProvider);
 
-final myPlanRequestProvider = StateNotifierProvider.autoDispose<
-    MyPlanRequestNotifier,
-    AsyncValue<CGetMyPlanRequestModel>>((ref) {
-  final authService = ref.read(authServiceProvider);
-
-  return MyPlanRequestNotifier(authService);
-});
+      return MyPlanRequestNotifier(authService);
+    });

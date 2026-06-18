@@ -333,7 +333,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                             selectAc = value;
                           });
                         },
-                        hintText: "0",
+                        hintText: "Select AC Units",
                         text: "AC Units",
                       ),
                       SizedBox(height: 16.h),
