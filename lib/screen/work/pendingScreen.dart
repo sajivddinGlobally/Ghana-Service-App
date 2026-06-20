@@ -63,36 +63,36 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      height: 44.r,
-                      width: 44.r,
-                      decoration: const BoxDecoration(
-                        color: Color(0xff04254E),
-                        shape: BoxShape.circle,
-                      ),
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 5.w),
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: Color(0xffF2D701),
-                          size: 15.sp,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: InkWell(
+                //     onTap: () {
+                //       Navigator.pop(context);
+                //     },
+                //     child: Container(
+                //       height: 44.r,
+                //       width: 44.r,
+                //       decoration: const BoxDecoration(
+                //         color: Color(0xff04254E),
+                //         shape: BoxShape.circle,
+                //       ),
+                //       alignment: Alignment.center,
+                //       child: Padding(
+                //         padding: EdgeInsets.only(left: 5.w),
+                //         child: Icon(
+                //           Icons.arrow_back_ios,
+                //           color: Color(0xffF2D701),
+                //           size: 15.sp,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 /// CENTER TEXT
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    SizedBox(height: 20.h),
                     Text(
                       "Pending",
                       textAlign: TextAlign.center,
@@ -104,9 +104,7 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                         height: 1,
                       ),
                     ),
-
                     SizedBox(height: 8.h),
-
                     Text(
                       "Task Awaiting Update",
                       textAlign: TextAlign.center,
@@ -300,11 +298,9 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                           ),
 
                           SizedBox(height: 10.h),
-
-                          // 🔥 Service
                           Text(
                             // "Service: AC Repair",
-                            "Service: ${pending?.serviceId?.planDetails?.planId?.name ?? ""}",
+                            "Service: ${pending?.serviceId?.planDetails?.serviceId?.name ?? ""}",
                             style: GoogleFonts.parkinsans(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
@@ -312,102 +308,39 @@ class _PendingScreenState extends ConsumerState<PendingScreen> {
                               letterSpacing: -0.1,
                             ),
                           ),
-
                           SizedBox(height: 14.h),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () async {
-                                    setState(() {
-                                      isloading = true;
-                                    });
-                                    try {
-                                      final acceptService = ref.read(
-                                        authServiceProvider,
-                                      );
-                                      final res = await acceptService
-                                          .acceptRequest(
-                                            requestId: pending!.id.toString(),
-                                          );
-                                      if (res.code == 0 && res.error == false) {
-                                        // ref.invalidate(getPendingRequestProvider.notifier);
-                                        Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (context) => Detilesscreen(
-                                              requestId: pending.id.toString(),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    } catch (e, st) {
-                                      log(e.toString());
-                                    } finally {
-                                      setState(() {
-                                        isloading = false;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 49.h,
-                                    decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.circular(50.r),
-                                    ),
-                                    child: Center(
-                                      child: isloading
-                                          ? Center(
-                                              child: SizedBox(
-                                                width: 20,
-                                                height: 20.h,
-                                                child: Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        color: Colors.white,
-                                                        strokeWidth: 1.w,
-                                                      ),
-                                                ),
-                                              ),
-                                            )
-                                          : Text(
-                                              "Approve",
-                                              style: GoogleFonts.outfit(
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: const Color(0xff04254E),
-                                                letterSpacing: -0.2,
-                                              ),
-                                            ),
-                                    ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => Detilesscreen(
+                                    requestId: data.data!.list![index].id
+                                        .toString(),
+                                  ),
+                                ),
+                              ).then((value) {
+                                ref.invalidate(getPendingRequestProvider);
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 9.h),
+                              decoration: BoxDecoration(
+                                color: Color(0xffF2D701),
+                                borderRadius: BorderRadius.circular(50.r),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "View Details",
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xff04254E),
+                                    letterSpacing: -0.1,
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 20.w),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) =>
-                                            Quickmessagescreendetiles(
-                                              requestID: pending!.id.toString(),
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 49.h,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(50.r),
-                                    ),
-                                    child: Center(child: Text("Reject")),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),

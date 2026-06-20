@@ -810,20 +810,24 @@ class GetServiceRequestModel {
 
 class Data {
     int? total;
+    int? totalPages;
     List<ListElement>? list;
 
     Data({
         this.total,
+        this.totalPages,
         this.list,
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         total: json["total"],
+        totalPages: json["totalPages"],
         list: json["list"] == null ? [] : List<ListElement>.from(json["list"]!.map((x) => ListElement.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
         "total": total,
+        "totalPages": totalPages,
         "list": list == null ? [] : List<dynamic>.from(list!.map((x) => x.toJson())),
     };
 }

@@ -6,6 +6,7 @@ import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/data/model/acceptRequestResModel.dart';
 import 'package:dwelleasy_ghana/screen/completeJobScreen.dart';
 import 'package:dwelleasy_ghana/screen/locationScreen.dart';
+import 'package:dwelleasy_ghana/screen/quickMessageScreenDetiles.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/getInProgressProvider.dart';
 import 'package:dwelleasy_ghana/screen/work/provider/serviceRequestDetailsProvider.dart';
 import 'package:flutter/cupertino.dart';
@@ -151,6 +152,7 @@ class _DetilesscreenState extends ConsumerState<Detilesscreen> {
     }
   }
 
+  bool isloading = false;
   @override
   Widget build(BuildContext context) {
     final requestDetailState = ref.watch(
@@ -201,17 +203,28 @@ class _DetilesscreenState extends ConsumerState<Detilesscreen> {
                           ),
                           child: Image.network(
                             // widget.image,
-                            requestDetails?.image ??
-                                "https://blocks.astratic.com/img/general-img-landscape.png",
+                            requestDetails?.image ?? "",
                             width: double.infinity,
                             height: 216.h,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
-                              return Image.network(
-                                "https://blocks.astratic.com/img/general-img-landscape.png",
+                              return Container(
                                 width: double.infinity,
-                                height: 216.h,
-                                fit: BoxFit.cover,
+                                height: 220.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(16.r),
+                                    topRight: Radius.circular(16.r),
+                                  ),
+                                  color: Colors.grey,
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.image_not_supported,
+                                    size: 50,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               );
                             },
                           ),
@@ -260,7 +273,7 @@ class _DetilesscreenState extends ConsumerState<Detilesscreen> {
                             Container(
                               padding: EdgeInsets.symmetric(
                                 vertical: 8.h,
-                                horizontal: 10.w,
+                                horizontal: 14.w,
                               ),
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(255, 107, 101, 49),
@@ -332,30 +345,46 @@ class _DetilesscreenState extends ConsumerState<Detilesscreen> {
                                 letterSpacing: -0.3,
                               ),
                             ),
-                            SizedBox(height: 36.h),
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.only(
-                                left: 12.w,
-                                right: 12.w,
-                                top: 13.h,
-                                bottom: 15.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xff545B64),
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                              child: Text(
-                                // "Client reported cooling issue in the living room AC unit. Please inspect compressor and gas level before servicing.",
-                                // widget.desc,
-                                requestDetails?.description ?? "",
-                                style: GoogleFonts.parkinsans(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white,
-                                  letterSpacing: -0.3,
+                            SizedBox(height: 15.h),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Problem Description",
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                    letterSpacing: -0.1,
+                                  ),
                                 ),
-                              ),
+                                SizedBox(height: 8.h),
+                                Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12.w,
+                                    vertical: 15.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff545B64),
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Text(
+                                    requestDetails?.description
+                                                ?.trim()
+                                                .isNotEmpty ==
+                                            true
+                                        ? requestDetails!.description!
+                                        : "No problem description available",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                      letterSpacing: -0.1,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -391,6 +420,115 @@ class _DetilesscreenState extends ConsumerState<Detilesscreen> {
                           ),
                         ),
                       ),
+
+                      if (requestDetails?.status?.toLowerCase() ==
+                          "assigned") ...[
+                        SizedBox(height: 20.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  setState(() {
+                                    isloading = true;
+                                  });
+                                  try {
+                                    final acceptService = ref.read(
+                                      authServiceProvider,
+                                    );
+                                    final res = await acceptService
+                                        .acceptRequest(
+                                          requestId: requestDetails!.id
+                                              .toString(),
+                                        );
+                                    if (res.code == 0 && res.error == false) {
+                                      ref.invalidate(
+                                        serviceRequestDetailsProvider,
+                                      );
+                                      setState(() {
+                                        isloading = false;
+                                      });
+                                    }
+                                  } catch (e, st) {
+                                    log(e.toString());
+                                  } finally {
+                                    setState(() {
+                                      isloading = false;
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  height: 49.h,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(50.r),
+                                  ),
+                                  child: Center(
+                                    child: isloading
+                                        ? Center(
+                                            child: SizedBox(
+                                              width: 20,
+                                              height: 20.h,
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                      strokeWidth: 1.w,
+                                                    ),
+                                              ),
+                                            ),
+                                          )
+                                        : Text(
+                                            "Approve",
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white,
+                                              letterSpacing: -0.1,
+                                            ),
+                                          ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20.w),
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          Quickmessagescreendetiles(
+                                            requestID: requestDetails!.id
+                                                .toString(),
+                                          ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  height: 49.h,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(50.r),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Reject",
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                        letterSpacing: -0.1,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
 
                       if (requestDetails!.status == "in_progress") ...[
                         SizedBox(height: 20.h),

@@ -1,5 +1,6 @@
 import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientOurPlanProvider/createPlanServiceRequestProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientPaymentScreen.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/termAndConditionWebViewScreen.dart';
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/core/utils/pretty.dio.dart';
@@ -105,14 +106,16 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
   DateTime? selectedSignedDate;
 
   Future<void> pickSignedDate() async {
-    // DateTime initialDate = DateTime.now().subtract(
-    //   const Duration(days: 365 * 18),
-    // );
+    final now = DateTime.now();
+
+    // Current month ka last day
+    final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1950),
-      lastDate: DateTime.now(),
+      // lastDate: DateTime.now(),
+      lastDate: lastDayOfMonth,
     );
     if (pickedDate != null) {
       setState(() {
@@ -151,6 +154,43 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
 
   Datum? selectedPlanData;
 
+  List<Datum> get filteredPlans {
+    if (selectBedroom == null) {
+      return [];
+    }
+
+    String requiredTier = "";
+
+    switch (selectBedroom) {
+      case "1-2":
+        requiredTier = "Tier 1";
+        break;
+
+      case "3-4":
+        requiredTier = "Tier 2";
+        break;
+
+      case "5+":
+        requiredTier = "Tier 3";
+        break;
+    }
+
+    return widget.plantype
+        .where(
+          (plan) =>
+              (plan.tier ?? "").toLowerCase() == requiredTier.toLowerCase(),
+        )
+        .toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    selectPlan = widget.serviceName;
+    selectPaymentMethod = "Cash";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,33 +201,40 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
             SizedBox(height: 8.h),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-              child: Row(
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      height: 44.h,
-                      width: 44.w,
-                      padding: EdgeInsets.only(left: 5.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.buttonText,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: AppColors.buttonBg,
-                        size: 15.sp,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 44.h,
+                        width: 44.w,
+                        padding: EdgeInsets.only(left: 5.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.buttonText,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: AppColors.buttonBg,
+                          size: 15.sp,
+                        ),
                       ),
                     ),
                   ),
-                  SizedBox(width: 12.w),
-                  Expanded(
+
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 60.w),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           "Become a CSG Maintenance Member",
+                          textAlign: TextAlign.center,
                           style: GoogleFonts.outfit(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
@@ -197,7 +244,8 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          "Fill in your details below to get Plan",
+                          "Fill out this form to become a member of our ${widget.serviceName} plan.",
+                          textAlign: TextAlign.center,
                           style: GoogleFonts.parkinsans(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w500,
@@ -208,7 +256,6 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                       ],
                     ),
                   ),
-                  SizedBox(width: 44.w),
                 ],
               ),
             ),
@@ -220,21 +267,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 20.h),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Fill in your details below to get Plan.",
-                          style: GoogleFonts.parkinsans(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.buttonText,
-                            letterSpacing: -0.1,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      SizedBox(height: 30.h),
+                      SizedBox(height: 10.h),
                       Text(
                         "Section A: Personal Information",
                         style: GoogleFonts.outfit(
@@ -263,7 +296,6 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                         text: "Phone Number",
                         hinttext: "Enter Your Phone Number",
                         keybordtype: TextInputType.phone,
-                        length: 10,
                         controller: phoneNumberController,
                       ),
                       SizedBox(height: 12.h),
@@ -271,7 +303,6 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                         text: "Alternative Phone Number",
                         hinttext: "Enter Your Alternative Phone Number",
                         keybordtype: TextInputType.phone,
-                        length: 10,
                         controller: alterNativeController,
                       ),
                       SizedBox(height: 12.h),
@@ -279,7 +310,6 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                         text: "National ID",
                         hinttext: "Enter Your National ID",
                         keybordtype: TextInputType.text,
-                        length: 12,
                         controller: nationalIDController,
                       ),
                       SizedBox(height: 12.h),
@@ -307,35 +337,59 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                         onChanged: (value) {
                           setState(() {
                             selectBedroom = value;
+
+                            selectPlanType = null;
+                            selectPlanTypeID = null;
+                            selectedPlanData = null;
                           });
                         },
                         hintText: "Select Bedrooms",
                         text: "Bedrooms",
                       ),
-                      SizedBox(height: 16.h),
-                      propertyDetiles(
-                        listname: bathroomList,
-                        selectname: selectBathroom,
-                        onChanged: (value) {
-                          setState(() {
-                            selectBathroom = value;
-                          });
-                        },
-                        hintText: "Select Bathrooms",
-                        text: "Bathrooms",
-                      ),
-                      SizedBox(height: 16.h),
-                      propertyDetiles(
-                        listname: acList,
-                        selectname: selectAc,
-                        onChanged: (value) {
-                          setState(() {
-                            selectAc = value;
-                          });
-                        },
-                        hintText: "Select AC Units",
-                        text: "AC Units",
-                      ),
+                      if (widget.serviceName == "Bundled Plans (Best Value)" ||
+                          widget.serviceName ==
+                              "Bundled Service (Best Value)" ||
+                          widget.serviceName == "Full Bundle" ||
+                          widget.serviceName == "Full Bundle Service" ||
+                          widget.serviceName == "Plumbing Service" ||
+                          widget.serviceName == "Plumbing Plan" ||
+                          widget.serviceName == "Electrical Service" ||
+                          widget.serviceName == "Electrical Plan") ...[
+                        SizedBox(height: 16.h),
+                        propertyDetiles(
+                          listname: bathroomList,
+                          selectname: selectBathroom,
+                          onChanged: (value) {
+                            setState(() {
+                              selectBathroom = value;
+                            });
+                          },
+                          hintText: "Select Bathrooms",
+                          text: "Bathrooms",
+                        ),
+                      ],
+
+                      if (widget.serviceName == "AC Service" ||
+                          widget.serviceName == "Ac" ||
+                          widget.serviceName == "Ac Plan" ||
+                          widget.serviceName == "Bundled Plans (Best Value)" ||
+                          widget.serviceName ==
+                              "Bundled Service (Best Value)" ||
+                          widget.serviceName == "Full Bundle" ||
+                          widget.serviceName == "Full Bundle Service") ...[
+                        SizedBox(height: 16.h),
+                        propertyDetiles(
+                          listname: acList,
+                          selectname: selectAc,
+                          onChanged: (value) {
+                            setState(() {
+                              selectAc = value;
+                            });
+                          },
+                          hintText: "Select AC Units",
+                          text: "AC Units",
+                        ),
+                      ],
                       SizedBox(height: 16.h),
                       propertyDetiles(
                         listname: propertyTypeList,
@@ -426,7 +480,10 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                                 hint: Padding(
                                   padding: EdgeInsets.only(left: 8.w),
                                   child: Text(
-                                    "selectPlanType",
+                                    // "selectPlanType",
+                                    selectBedroom == null
+                                        ? "Select Bedrooms First"
+                                        : "Select Plan Type",
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 13.sp,
                                       fontWeight: FontWeight.w400,
@@ -439,24 +496,39 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                                   fontWeight: FontWeight.w400,
                                   color: AppColors.buttonText,
                                 ),
-                                items: widget.plantype.map((item) {
+                                // items: widget.plantype.map((item) {
+                                //   return DropdownMenuItem<String>(
+                                //     value: item.id ?? "",
+                                //     child: Padding(
+                                //       padding: EdgeInsets.only(left: 8.w),
+                                //       child: Text(
+                                //         "${item.tier}  ${item.name} (${item.currency} ${item.priceMonthly}/${item.durationType})",
+                                //       ),
+                                //     ),
+                                //   );
+                                // }).toList(),
+                                items: filteredPlans.map((item) {
                                   return DropdownMenuItem<String>(
                                     value: item.id ?? "",
                                     child: Padding(
                                       padding: EdgeInsets.only(left: 8.w),
                                       child: Text(
-                                        "${item.name} (${item.currency} ${item.priceMonthly}/month)",
+                                        "${item.tier}  ${item.name} (${item.currency} ${item.priceMonthly}/${item.durationType})",
                                       ),
                                     ),
                                   );
                                 }).toList(),
+
                                 onChanged: (value) {
                                   setState(() {
                                     selectPlanType = value;
                                     selectPlanTypeID = value;
                                     /////////
-                                    selectedPlanData = widget.plantype
-                                        .firstWhere((item) => item.id == value);
+                                    // selectedPlanData = widget.plantype
+                                    //     .firstWhere((item) => item.id == value);
+                                    selectedPlanData = filteredPlans.firstWhere(
+                                      (item) => item.id == value,
+                                    );
                                   });
                                 },
                               ),
@@ -501,7 +573,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                       SizedBox(height: 16.h),
                       personalInformation(
                         text: "Mobile Money Number",
-                        hinttext: "",
+                        hinttext: "Select Mobile Money Number",
                         keybordtype: TextInputType.number,
                         controller: mobileMoneyNumberController,
                       ),
@@ -561,14 +633,74 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                         },
                       ),
 
-                      customCheckBox(
-                        title: "I agree to Terms & Conditions",
-                        value: agreeTermsAndConditions,
-                        onChanged: (value) {
-                          setState(() {
-                            agreeTermsAndConditions = value!;
-                          });
-                        },
+                      // customCheckBox(
+                      //   title: "I agree to Terms & Conditions",
+                      //   value: agreeTermsAndConditions,
+                      //   onChanged: (value) {
+                      //     setState(() {
+                      //       agreeTermsAndConditions = value!;
+                      //     });
+                      //   },
+                      // ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) =>
+                                        TermsConditionWebView(),
+                                  ),
+                                );
+                              },
+                              child: RichText(
+                                text: TextSpan(
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: const Color(0xffA3A3A3),
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: "I agree to ",
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: const Color(0xffA3A3A3),
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "Terms & Conditions",
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: const Color(0xffA3A3A3),
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: const Color(
+                                          0xffA3A3A3,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Checkbox(
+                            value: agreeTermsAndConditions,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                agreeTermsAndConditions = value!;
+                              });
+                            },
+                          ),
+                          SizedBox(width: 100.w),
+                        ],
                       ),
 
                       customCheckBox(
@@ -671,18 +803,6 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                               return;
                             }
 
-                            if (alterNativeController.text.trim().isEmpty) {
-                              showErrorSnackBar(
-                                "Please enter alternative phone number",
-                              );
-                              return;
-                            }
-
-                            if (nationalIDController.text.trim().isEmpty) {
-                              showErrorSnackBar("Please enter national ID");
-                              return;
-                            }
-
                             if (propertyAddressController.text.trim().isEmpty) {
                               showErrorSnackBar(
                                 "Please enter full property address",
@@ -695,14 +815,43 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                               return;
                             }
 
-                            if (selectBathroom == null) {
-                              showErrorSnackBar("Please select bathrooms");
-                              return;
+                            final bathroomRequiredPlans = [
+                              "bundled plans (best value)",
+                              "bundled service (best value)",
+                              "full bundle",
+                              "full bundle service",
+                              "plumbing service",
+                              "plumbing plan",
+                              "electrical service",
+                              "electrical plan",
+                            ];
+
+                            if (bathroomRequiredPlans.contains(
+                              widget.serviceName.toLowerCase().trim(),
+                            )) {
+                              if (selectBathroom == null ||
+                                  selectBathroom!.isEmpty) {
+                                showErrorSnackBar("Please select bathrooms");
+                                return;
+                              }
                             }
 
-                            if (selectAc == null) {
-                              showErrorSnackBar("Please select AC units");
-                              return;
+                            final acRequiredPlans = [
+                              "ac service",
+                              "ac",
+                              "ac plan",
+                              "bundled plans (best value)",
+                              "bundled service (best value)",
+                              "full bundle",
+                              "full bundle service",
+                            ];
+                            if (acRequiredPlans.contains(
+                              widget.serviceName.toLowerCase().trim(),
+                            )) {
+                              if (selectAc == null || selectAc!.isEmpty) {
+                                showErrorSnackBar("Please select AC units");
+                                return;
+                              }
                             }
 
                             if (selectPropertyType == null) {
@@ -727,15 +876,6 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
 
                             if (selectPaymentMethod == null) {
                               showErrorSnackBar("Please select payment method");
-                              return;
-                            }
-
-                            if (mobileMoneyNumberController.text
-                                .trim()
-                                .isEmpty) {
-                              showErrorSnackBar(
-                                "Please enter mobile money number",
-                              );
                               return;
                             }
 
@@ -805,8 +945,8 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                                       .text
                                       .trim(),
                                   bedrooms: selectBedroom!,
-                                  bathrooms: selectBathroom!,
-                                  acUnits: selectAc!,
+                                  bathrooms: selectBathroom ?? "",
+                                  acUnits: selectAc ?? "",
                                   propertyType: selectPropertyType!,
                                   propertyAge: selectPropertyAge!,
                                   serviceId: widget.serviceId,

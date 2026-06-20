@@ -5,11 +5,11 @@ import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getServiceRequestModel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// final getServiceRequestProvider = FutureProvider.family
-//     .autoDispose<GetServiceRequestModel, String>((ref, status) async {
-//       final service = ref.read(authServiceProvider);
-//       return await service.clientGetServiceRequest(status);
-//     });
+// // final getServiceRequestProvider = FutureProvider.family
+// //     .autoDispose<GetServiceRequestModel, String>((ref, status) async {
+// //       final service = ref.read(authServiceProvider);
+// //       return await service.clientGetServiceRequest(status);
+// //     });
 
 class ClientGetServiceRequestNotifier
     extends StateNotifier<AsyncValue<GetServiceRequestModel>> {
@@ -17,27 +17,27 @@ class ClientGetServiceRequestNotifier
   final String status;
 
   int _currentPage = 1;
+  int _totalPages = 1;
   bool _isLoadingMore = false;
-  bool _hasMoreData = true;
 
   final List<ListElement> _fullList = [];
 
   ClientGetServiceRequestNotifier(this.authService, this.status)
-    : super(const AsyncLoading()) {
-    clientGetTicket();
+    : super(const AsyncValue.loading()) {
+    getNotifications();
   }
 
   bool get isLoadingMore => _isLoadingMore;
-  bool get hasMoreData => _hasMoreData;
+  bool get hasMoreData => _currentPage < _totalPages;
 
-  Future<void> clientGetTicket({bool isRefresh = false}) async {
+  Future<void> getNotifications({bool isRefresh = false}) async {
     try {
       if (isRefresh) {
         _currentPage = 1;
-        _hasMoreData = true;
+        _totalPages = 1;
         _fullList.clear();
 
-        state = const AsyncLoading();
+        state = const AsyncValue.loading();
       }
 
       final response = await authService.clientGetServiceRequest(
@@ -45,55 +45,54 @@ class ClientGetServiceRequestNotifier
         status: status,
       );
 
-      final newList = response.data?.list ?? [];
+      if (response.code == 0 && response.error == false) {
+        _totalPages = response.data?.totalPages ?? 1;
+        final newList = response.data?.list ?? [];
 
-      _fullList.addAll(newList);
+        _fullList.addAll(newList);
 
-      response.data?.list = List.from(_fullList);
+        response.data?.list = _fullList;
 
-      _hasMoreData = newList.isNotEmpty && newList.length >= 10;
-
-      state = AsyncData(response);
+        state = AsyncValue.data(response);
+      } else {
+        throw Exception(response.message);
+      }
     } catch (e, st) {
-      state = AsyncError(e, st);
+      state = AsyncValue.error(e, st);
     }
   }
 
   Future<void> loadNextPage() async {
-    if (_isLoadingMore || !_hasMoreData) return;
+    if (_isLoadingMore || !hasMoreData) return;
 
     try {
       _isLoadingMore = true;
-
       _currentPage++;
+
+      state = AsyncValue.data(state.value!);
 
       final response = await authService.clientGetServiceRequest(
         page: _currentPage,
         status: status,
       );
 
-      final newList = response.data?.list ?? [];
+      if (response.code == 0 && response.error == false) {
+        final newList = response.data?.list ?? [];
+        _fullList.addAll(newList);
 
-      if (newList.isEmpty) {
-        _hasMoreData = false;
-        return;
+        final updatedModel = state.value!;
+        updatedModel.data?.list = _fullList;
+
+        state = AsyncValue.data(updatedModel);
       }
-
-      _fullList.addAll(newList);
-
-      final updatedData = state.value!;
-
-      updatedData.data?.list = List.from(_fullList);
-
-      state = AsyncData(updatedData);
-
-      if (newList.length < 10) {
-        _hasMoreData = false;
-      }
-    } catch (e) {
-      log("Pagination Error => $e");
+    } catch (e, st) {
+      log("Load more error: $e");
     } finally {
       _isLoadingMore = false;
+
+      if (state.hasValue) {
+        state = AsyncValue.data(state.value!);
+      }
     }
   }
 }

@@ -270,6 +270,9 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
         case "pending":
           return "Pending";
 
+        case "assigned":
+          return "Assigned";
+
         case "in_progress":
           return "In Progress";
 
@@ -339,16 +342,22 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
       controller: _scrollController,
       padding: EdgeInsets.only(top: 24.h, bottom: 20.h),
       // itemCount: data.length,
-      itemCount: data.length + (notifier.hasMoreData ? 1 : 0),
+      itemCount:
+          data.length +
+          ((notifier.hasMoreData || notifier.isLoadingMore) ? 1 : 0),
       separatorBuilder: (_, __) => SizedBox(height: 18.h),
       itemBuilder: (context, index) {
         if (index == data.length) {
-          return Padding(
-            padding: EdgeInsets.all(20.w),
-            child: Center(
-              child: CircularProgressIndicator(color: AppColors.buttonBg),
-            ),
-          );
+          if (notifier.isLoadingMore) {
+            return Padding(
+              padding: EdgeInsets.all(20.w),
+              child: Center(
+                child: CircularProgressIndicator(color: AppColors.buttonBg),
+              ),
+            );
+          }
+
+          return const SizedBox.shrink();
         }
         final item = data[index];
 
@@ -508,7 +517,7 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                       CupertinoPageRoute(
                         builder: (_) => Engineerdetiles(requestId: item.id),
                       ),
-                    );
+                    ); 
                   } else {
                     Navigator.push(
                       context,

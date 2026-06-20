@@ -26,10 +26,8 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
   }
 
   void _onScroll() {
-    // जब यूज़र लिस्ट के बिल्कुल नीचे पहुँचने वाला हो (200px पहले)
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
       ref.read(myPlanRequestProvider.notifier).loadNextPage();
     }
   }

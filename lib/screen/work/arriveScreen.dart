@@ -372,7 +372,9 @@ class _ArriveScreenState extends ConsumerState<ArriveScreen> {
                                     requestId: data.data!.list![index].id ?? "",
                                   ),
                                 ),
-                              );
+                              ).then((value) {
+                                ref.invalidate(arrivedProvider);
+                              });
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 9.h),

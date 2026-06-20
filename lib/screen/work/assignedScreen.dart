@@ -39,8 +39,6 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final assignRequestState = ref.watch(getAssignRequestProvider);
@@ -57,36 +55,37 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      height: 44.r,
-                      width: 44.r,
-                      decoration: const BoxDecoration(
-                        color: Color(0xff04254E),
-                        shape: BoxShape.circle,
-                      ),
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 5.w),
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: Color(0xffF2D701),
-                          size: 15.sp,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: InkWell(
+                //     onTap: () {
+                //       Navigator.pop(context);
+                //     },
+                //     child: Container(
+                //       height: 44.r,
+                //       width: 44.r,
+                //       decoration: const BoxDecoration(
+                //         color: Color(0xff04254E),
+                //         shape: BoxShape.circle,
+                //       ),
+                //       alignment: Alignment.center,
+                //       child: Padding(
+                //         padding: EdgeInsets.only(left: 5.w),
+                //         child: Icon(
+                //           Icons.arrow_back_ios,
+                //           color: Color(0xffF2D701),
+                //           size: 15.sp,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
 
                 /// CENTER TEXT
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    SizedBox(height: 20.h),
                     Text(
                       "Assigned",
                       textAlign: TextAlign.center,
@@ -98,9 +97,7 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
                         height: 1,
                       ),
                     ),
-
                     SizedBox(height: 8.h),
-
                     Text(
                       "Work Assignment Confirmed",
                       textAlign: TextAlign.center,
@@ -276,7 +273,7 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
                           SizedBox(height: 10.h),
                           Text(
                             // "Service: AC Repair",
-                            "Service: ${assign.serviceId?.planDetails?.planId?.name ?? ""}",
+                            "Service: ${assign.serviceId?.planDetails?.serviceId?.name ?? ""}",
                             style: GoogleFonts.parkinsans(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
@@ -288,10 +285,19 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
                           SizedBox(height: 14.h),
                           InkWell(
                             onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   CupertinoPageRoute(
+                              //     builder: (context) => RequestDetailScreen(
+                              //       requestId: data.data!.list![index].id
+                              //           .toString(),
+                              //     ),
+                              //   ),
+                              // );
                               Navigator.push(
                                 context,
                                 CupertinoPageRoute(
-                                  builder: (context) => RequestDetailScreen(
+                                  builder: (context) => Detilesscreen(
                                     requestId: data.data!.list![index].id
                                         .toString(),
                                   ),

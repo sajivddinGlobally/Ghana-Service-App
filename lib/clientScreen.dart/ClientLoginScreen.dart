@@ -74,7 +74,7 @@ class _ClientloginscreenState extends ConsumerState<Clientloginscreen> {
                 SizedBox(height: 59.h),
                 _login(
                   lable: "Email  / Phone",
-                  hint: "Enter Email",
+                  hint: "Enter Email Or Phone",
                   controller: emailController,
                   type: TextInputType.emailAddress,
                 ),

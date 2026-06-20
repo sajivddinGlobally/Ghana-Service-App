@@ -40,23 +40,42 @@ class MyBottomNav extends ConsumerStatefulWidget {
 
 class _MyBottomNavState extends ConsumerState<MyBottomNav> {
   int currentIndex = 0;
+  // List<Widget> get screens => [
+  //   Homescreen(
+  //     onScheduleTap: () {
+  //       setState(() {
+  //         currentIndex = 2;
+  //       });
+  //     },
+  //     onJobTap: () {
+  //       setState(() {
+  //         currentIndex = 1; // Job Screen
+  //       });
+  //     },
+  //   ),
+  //   Jobscreen(),
+  //   Yourschedulescreen(isShowBack: false),
+  //   Profilescreen(),
+  // ];
+
   List<Widget> get screens => [
     Homescreen(
-      onScheduleTap: () {
+      assignTap: () {
+        setState(() {
+          currentIndex = 1;
+        });
+      },
+      pendingTap: () {
         setState(() {
           currentIndex = 2;
         });
       },
-      onJobTap: () {
-        setState(() {
-          currentIndex = 1; // Job Screen
-        });
-      },
     ),
-    Jobscreen(),
-    Yourschedulescreen(isShowBack: false),
+    Assignedscreen(),
+    PendingScreen(),
     Profilescreen(),
   ];
+
   DateTime? lastBackPressed;
 
   @override
@@ -159,7 +178,7 @@ class _MyBottomNavState extends ConsumerState<MyBottomNav> {
                   size: 22.sp,
                 ),
               ),
-              label: "JOB",
+              label: "ASSIGNED",
             ),
             BottomNavigationBarItem(
               icon: Container(
@@ -172,7 +191,7 @@ class _MyBottomNavState extends ConsumerState<MyBottomNav> {
                 ),
                 child: Icon(Icons.inbox, color: Color(0xff04254E), size: 22.sp),
               ),
-              label: "REQUEST",
+              label: "PENDING",
             ),
             BottomNavigationBarItem(
               icon: Container(
@@ -199,12 +218,13 @@ class _MyBottomNavState extends ConsumerState<MyBottomNav> {
 }
 
 class Homescreen extends ConsumerStatefulWidget {
-  final VoidCallback onScheduleTap;
-  final VoidCallback onJobTap;
+  final VoidCallback assignTap;
+  final VoidCallback pendingTap;
   const Homescreen({
     super.key,
-    required this.onScheduleTap,
-    required this.onJobTap,
+
+    required this.assignTap,
+    required this.pendingTap,
   });
 
   @override
@@ -532,239 +552,219 @@ class _HomescreenState extends ConsumerState<Homescreen> {
           ref.invalidate(getAssignCountProvider);
           ref.invalidate(getProfileProvider);
         },
-
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              // SizedBox(height: 15.h),
-              // Padding(
-              //   padding: EdgeInsets.only(left: 16.w, right: 16.w),
-              //   child: Row(
+              SizedBox(height: 24.h),
+              Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.w, right: 16.w),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.r),
+                      child: Image.asset(
+                        "assets/WhatsApp Image 2026-05-07 at 12.12.29 PM.jpeg",
+                        width: double.infinity,
+                        height: 180.h,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 30.w,
+                    // top: 16.h,
+                    top: 0,
+                    bottom: 0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Welcome, Employee",
+                          style: GoogleFonts.outfit(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.1,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          // "Here is your job\n summary for today",
+                          "Here is your job\n summary for today",
+                          style: GoogleFonts.outfit(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              // SizedBox(
+              //   height: 160.h,
+              //   child: ListView(
+              //     scrollDirection: Axis.horizontal,
               //     children: [
-              //       Expanded(
-              //         child: TextField(
-              //           style: GoogleFonts.parkinsans(
-              //             fontSize: 16.sp,
-              //             fontWeight: FontWeight.w400,
-              //             color: Colors.white,
-              //           ),
-              //           cursorColor: Colors.white,
-              //           decoration: InputDecoration(
-              //             filled: true,
-              //             fillColor: const Color(0xff34383D),
-              //             hint: Text(
-              //               "Search Services...",
-              //               style: GoogleFonts.parkinsans(
-              //                 fontWeight: FontWeight.w400,
-              //                 color: Color.fromRGBO(255, 255, 255, 0.5),
-              //                 fontSize: 16.sp,
-              //                 letterSpacing: -0.64,
+              //       InkWell(
+              //         onTap: () {
+              //           // Navigator.push(
+              //           //   context,
+              //           //   CupertinoPageRoute(
+              //           //     builder: (context) => Assignedscreen(),
+              //           //   ),
+              //           // );
+              //           widget.onJobTap();
+              //         },
+              //         child: Container(
+              //           margin: EdgeInsets.only(left: 12.w, right: 10.w),
+              //           child: Stack(
+              //             children: [
+              //               ClipRRect(
+              //                 borderRadius: BorderRadius.circular(20.r),
+              //                 child: Image.asset(
+              //                   "assets/WhatsApp Image 2026-05-07 at 12.12.29 PM.jpeg",
+              //                   width: 365.w,
+              //                   height: 159.h,
+              //                   fit: BoxFit.cover,
+              //                 ),
               //               ),
-              //             ),
-              //             hintStyle: GoogleFonts.parkinsans(
-              //               fontSize: 16.sp,
-              //               fontWeight: FontWeight.w400,
-              //               color: Colors.grey,
-              //             ),
-              //             prefixIcon: const Icon(
-              //               Icons.search,
-              //               color: Colors.white,
-              //             ),
-              //             contentPadding: EdgeInsets.symmetric(vertical: 18.h),
-              //             border: OutlineInputBorder(
-              //               borderRadius: BorderRadius.circular(14.r),
-              //               borderSide: BorderSide.none,
-              //             ),
-              //             enabledBorder: OutlineInputBorder(
-              //               borderRadius: BorderRadius.circular(14.r),
-              //               borderSide: BorderSide.none,
-              //             ),
-              //             focusedBorder: OutlineInputBorder(
-              //               borderRadius: BorderRadius.circular(14.r),
-              //               borderSide: BorderSide.none,
-              //             ),
+              //               Positioned(
+              //                 left: 15.w,
+              //                 top: 16.h,
+              //                 child: Column(
+              //                   crossAxisAlignment: CrossAxisAlignment.start,
+              //                   children: [
+              //                     Text(
+              //                       "Welcome, Employee",
+              //                       style: GoogleFonts.outfit(
+              //                         fontSize: 20.sp,
+              //                         fontWeight: FontWeight.w600,
+              //                         color: AppColors.buttonText,
+              //                         letterSpacing: -0.1,
+              //                       ),
+              //                     ),
+              //                     SizedBox(height: 4.h),
+              //                     Text(
+              //                       "Here is your job\n summary for today",
+              //                       style: GoogleFonts.outfit(
+              //                         fontSize: 14.sp,
+              //                         fontWeight: FontWeight.w500,
+              //                         color: AppColors.buttonText,
+              //                         letterSpacing: -0.2,
+              //                       ),
+              //                     ),
+              //                     SizedBox(height: 12.h),
+              //                     // Container(
+              //                     //   padding: EdgeInsets.symmetric(
+              //                     //     vertical: 10.h,
+              //                     //     horizontal: 40.w,
+              //                     //   ),
+              //                     //   decoration: BoxDecoration(
+              //                     //     color: AppColors.buttonText,
+              //                     //     borderRadius: BorderRadius.circular(50.r),
+              //                     //   ),
+              //                     //   child: Text(
+              //                     //     "View Job",
+              //                     //     style: GoogleFonts.outfit(
+              //                     //       fontSize: 14.sp,
+              //                     //       fontWeight: FontWeight.w500,
+              //                     //       color: AppColors.buttonBg,
+              //                     //       letterSpacing: -0.2,
+              //                     //     ),
+              //                     //   ),
+              //                     // ),
+              //                   ],
+              //                 ),
+              //               ),
+              //             ],
               //           ),
               //         ),
               //       ),
-              //       // SizedBox(width: 16.w),
-              //       // Container(
-              //       //   padding: EdgeInsets.all(14),
-              //       //   decoration: BoxDecoration(
-              //       //     color: Color(0xffF2D701),
-              //       //     borderRadius: BorderRadius.circular(4.r),
-              //       //   ),
-              //       //   child: Center(
-              //       //     child: Icon(
-              //       //       Icons.menu,
-              //       //       color: Color(0xff04254E),
-              //       //       size: 22.sp,
+              //       // InkWell(
+              //       //   onTap: () {
+              //       //     // Navigator.push(
+              //       //     //   context,
+              //       //     //   CupertinoPageRoute(
+              //       //     //     builder: (context) =>
+              //       //     //         Yourschedulescreen(isShowBack: true),
+              //       //     //   ),
+              //       //     // );
+              //       //     widget.onScheduleTap();
+              //       //   },
+              //       //   child: Container(
+              //       //     margin: EdgeInsets.only(left: 12.w, right: 10.w),
+              //       //     child: Stack(
+              //       //       children: [
+              //       //         ClipRRect(
+              //       //           borderRadius: BorderRadius.circular(20.r),
+              //       //           child: Image.asset(
+              //       //             "assets/emaployee_image.jpeg",
+              //       //             width: 365.w,
+              //       //             height: 159.h,
+              //       //             fit: BoxFit.cover,
+              //       //           ),
+              //       //         ),
+              //       //         Positioned(
+              //       //           left: 15.w,
+              //       //           top: 16.h,
+              //       //           child: Column(
+              //       //             crossAxisAlignment: CrossAxisAlignment.start,
+              //       //             children: [
+              //       //               Text(
+              //       //                 "Today's Shift",
+              //       //                 style: GoogleFonts.outfit(
+              //       //                   fontSize: 20.sp,
+              //       //                   fontWeight: FontWeight.w600,
+              //       //                   color: AppColors.buttonBg,
+              //       //                   letterSpacing: -0.1,
+              //       //                 ),
+              //       //               ),
+              //       //               SizedBox(height: 4.h),
+              //       //               Text(
+              //       //                 "Time:9:00 AM -1:00 PM",
+              //       //                 style: GoogleFonts.outfit(
+              //       //                   fontSize: 14.sp,
+              //       //                   fontWeight: FontWeight.w500,
+              //       //                   color: AppColors.buttonBg,
+              //       //                   letterSpacing: -0.2,
+              //       //                 ),
+              //       //               ),
+              //       //               SizedBox(height: 12.h),
+              //       //               Container(
+              //       //                 padding: EdgeInsets.symmetric(
+              //       //                   vertical: 10.h,
+              //       //                   horizontal: 40.w,
+              //       //                 ),
+              //       //                 decoration: BoxDecoration(
+              //       //                   color: AppColors.buttonBg,
+              //       //                   borderRadius: BorderRadius.circular(50.r),
+              //       //                 ),
+              //       //                 child: Text(
+              //       //                   "View Schedule",
+              //       //                   style: GoogleFonts.outfit(
+              //       //                     fontSize: 14.sp,
+              //       //                     fontWeight: FontWeight.w500,
+              //       //                     color: AppColors.buttonText,
+              //       //                     letterSpacing: -0.2,
+              //       //                   ),
+              //       //                 ),
+              //       //               ),
+              //       //             ],
+              //       //           ),
+              //       //         ),
+              //       //       ],
               //       //     ),
               //       //   ),
               //       // ),
               //     ],
               //   ),
               // ),
-              SizedBox(height: 24.h),
-              SizedBox(
-                height: 160.h,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   CupertinoPageRoute(
-                        //     builder: (context) => Assignedscreen(),
-                        //   ),
-                        // );
-                        widget.onJobTap();
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(left: 12.w, right: 10.w),
-                        child: Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(20.r),
-                              child: Image.asset(
-                                "assets/WhatsApp Image 2026-05-07 at 12.12.29 PM.jpeg",
-                                width: 365.w,
-                                height: 159.h,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned(
-                              left: 15.w,
-                              top: 16.h,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Welcome, Employee",
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.buttonText,
-                                      letterSpacing: -0.1,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text(
-                                    "Here is your job\n summary for today",
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.buttonText,
-                                      letterSpacing: -0.2,
-                                    ),
-                                  ),
-                                  SizedBox(height: 12.h),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 10.h,
-                                      horizontal: 40.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.buttonText,
-                                      borderRadius: BorderRadius.circular(50.r),
-                                    ),
-                                    child: Text(
-                                      "View Job",
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.buttonBg,
-                                        letterSpacing: -0.2,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   CupertinoPageRoute(
-                        //     builder: (context) =>
-                        //         Yourschedulescreen(isShowBack: true),
-                        //   ),
-                        // );
-                        widget.onScheduleTap();
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(left: 12.w, right: 10.w),
-                        child: Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(20.r),
-                              child: Image.asset(
-                                "assets/emaployee_image.jpeg",
-                                width: 365.w,
-                                height: 159.h,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned(
-                              left: 15.w,
-                              top: 16.h,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Today's Shift",
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.buttonBg,
-                                      letterSpacing: -0.1,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text(
-                                    "Time:9:00 AM -1:00 PM",
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.buttonBg,
-                                      letterSpacing: -0.2,
-                                    ),
-                                  ),
-                                  SizedBox(height: 12.h),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 10.h,
-                                      horizontal: 40.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.buttonBg,
-                                      borderRadius: BorderRadius.circular(50.r),
-                                    ),
-                                    child: Text(
-                                      "View Schedule",
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.buttonText,
-                                        letterSpacing: -0.2,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               SizedBox(height: 33.h),
               assignCountState.when(
                 data: (countData) {
@@ -788,13 +788,13 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                                 assign.toString(),
                                 "Assigned",
                                 () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) => Assignedscreen(),
-                                    ),
-                                  );
-                                  // widget.onJobTap();
+                                  // Navigator.push(
+                                  //   context,
+                                  //   CupertinoPageRoute(
+                                  //     builder: (context) => Assignedscreen(),
+                                  //   ),
+                                  // );
+                                  widget.assignTap();
                                 },
                               ),
                             ),
@@ -804,12 +804,13 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                                 pending.toString(),
                                 "Pending",
                                 () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) => PendingScreen(),
-                                    ),
-                                  );
+                                  // Navigator.push(
+                                  //   context,
+                                  //   CupertinoPageRoute(
+                                  //     builder: (context) => PendingScreen(),
+                                  //   ),
+                                  // );
+                                  widget.pendingTap();
                                 },
                               ),
                             ),

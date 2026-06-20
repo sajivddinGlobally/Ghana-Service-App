@@ -139,7 +139,7 @@ class _CEditProfileScreenState extends ConsumerState<CEditProfileScreen> {
                     InkWell(
                       onTap: showImagePicker,
                       child: Container(
-                        padding: EdgeInsets.all(4.w),
+                        padding: EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -155,49 +155,53 @@ class _CEditProfileScreenState extends ConsumerState<CEditProfileScreen> {
                             shape: BoxShape.circle,
                           ),
                           child: profileImage != null
-                              ? Image.file(
-                                  profileImage!,
-                                  fit: BoxFit.cover,
-                                  width: 113.w,
-                                  height: 113.h,
+                              ? ClipOval(
+                                  child: Image.file(
+                                    profileImage!,
+                                    fit: BoxFit.cover,
+                                    width: 113.w,
+                                    height: 113.h,
+                                  ),
                                 )
                               : existingImage!.isNotEmpty
-                              ? Image.network(
-                                  existingImage!,
-                                  fit: BoxFit.cover,
-                                  width: 113.w,
-                                  height: 113.h,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      color: AppColors.backgroungBg,
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.person,
-                                          color: const Color(0xff323232),
-                                          size: 54.sp,
+                              ? ClipOval(
+                                  child: Image.network(
+                                    existingImage!,
+                                    fit: BoxFit.cover,
+                                    width: 113.w,
+                                    height: 113.h,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        color: AppColors.backgroungBg,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.person,
+                                            color: const Color(0xff323232),
+                                            size: 54.sp,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Container(
-                                          height: 113.h,
-                                          width: 113.w,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.grey,
-                                          ),
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                              color: AppColors.buttonBg,
-                                              strokeWidth: 1.5.w,
+                                      );
+                                    },
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return Container(
+                                            height: 113.h,
+                                            width: 113.w,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.grey,
                                             ),
-                                          ),
-                                        );
-                                      },
+                                            child: Center(
+                                              child: CircularProgressIndicator(
+                                                color: AppColors.buttonBg,
+                                                strokeWidth: 1.5.w,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                  ),
                                 )
                               : Container(
                                   color: AppColors.backgroungBg,

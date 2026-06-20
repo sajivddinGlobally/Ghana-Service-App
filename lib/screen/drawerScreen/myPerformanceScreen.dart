@@ -158,56 +158,56 @@ class _MyperformancescreenState extends ConsumerState<Myperformancescreen> {
                   ),
                 ),
                 SizedBox(height: 16.h),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(
-                    vertical: 18.h,
-                    horizontal: 19.w,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color(0xff34383D),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "On-Time Rate",
-                        style: GoogleFonts.outfit(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffFFFFFF),
-                          letterSpacing: -0.2,
-                        ),
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        "${data.data?.averageRating ?? 0} ⏱",
-                        style: GoogleFonts.outfit(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffFFFFFF),
-                          letterSpacing: -0.2,
-                        ),
-                      ),
-                      SizedBox(height: 10.h),
-                      Container(
-                        height: 4.h,
-                        width: double.infinity,
-                        child: ClipRRect(
-                          borderRadius: BorderRadiusGeometry.circular(40.r),
-                          child: LinearProgressIndicator(
-                            value: 0.8,
-                            backgroundColor: Color(0xffA6A5A5),
-                            valueColor: AlwaysStoppedAnimation(
-                              AppColors.buttonBg,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   width: double.infinity,
+                //   padding: EdgeInsets.symmetric(
+                //     vertical: 18.h,
+                //     horizontal: 19.w,
+                //   ),
+                //   decoration: BoxDecoration(
+                //     color: Color(0xff34383D),
+                //     borderRadius: BorderRadius.circular(10.r),
+                //   ),
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text(
+                //         "On-Time Rate",
+                //         style: GoogleFonts.outfit(
+                //           fontSize: 13.sp,
+                //           fontWeight: FontWeight.w500,
+                //           color: Color(0xffFFFFFF),
+                //           letterSpacing: -0.2,
+                //         ),
+                //       ),
+                //       SizedBox(height: 10.h),
+                //       Text(
+                //         "${data.data?.averageRating ?? 0} ⏱",
+                //         style: GoogleFonts.outfit(
+                //           fontSize: 14.sp,
+                //           fontWeight: FontWeight.w500,
+                //           color: Color(0xffFFFFFF),
+                //           letterSpacing: -0.2,
+                //         ),
+                //       ),
+                //       SizedBox(height: 10.h),
+                //       Container(
+                //         height: 4.h,
+                //         width: double.infinity,
+                //         child: ClipRRect(
+                //           borderRadius: BorderRadiusGeometry.circular(40.r),
+                //           child: LinearProgressIndicator(
+                //             value: 0.8,
+                //             backgroundColor: Color(0xffA6A5A5),
+                //             valueColor: AlwaysStoppedAnimation(
+                //               AppColors.buttonBg,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 SizedBox(height: 16.h),
                 jobDoneState.when(
                   data: (data) {
@@ -245,26 +245,26 @@ class _MyperformancescreenState extends ConsumerState<Myperformancescreen> {
                                   letterSpacing: -0.2,
                                 ),
                               ),
-                              Spacer(),
-                              Container(
-                                width: 120.w,
-                                height: 22.h,
-                                decoration: BoxDecoration(
-                                  color: AppColors.buttonBg,
-                                  borderRadius: BorderRadius.circular(50.r),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "Lifetime",
-                                    style: GoogleFonts.parkinsans(
-                                      fontSize: 11.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff000000),
-                                      letterSpacing: -0.2,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              // Spacer(),
+                              // Container(
+                              //   width: 120.w,
+                              //   height: 22.h,
+                              //   decoration: BoxDecoration(
+                              //     color: AppColors.buttonBg,
+                              //     borderRadius: BorderRadius.circular(50.r),
+                              //   ),
+                              //   child: Center(
+                              //     child: Text(
+                              //       "Lifetime",
+                              //       style: GoogleFonts.parkinsans(
+                              //         fontSize: 11.sp,
+                              //         fontWeight: FontWeight.w400,
+                              //         color: Color(0xff000000),
+                              //         letterSpacing: -0.2,
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ],

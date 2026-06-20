@@ -19,7 +19,7 @@ class PlanServiceList extends ConsumerStatefulWidget {
 class _PlanServiceListState extends ConsumerState<PlanServiceList> {
   List<Map<String, dynamic>> planList = [
     {
-      "image": "assets/ClientImage/plan1.png",
+      "image": "assets/ClientImage/plumbing.png",
       "title": "Plumbing Plan",
       "titleColor": AppColors.buttonText,
       "subtitle1": "What's included:",
@@ -29,7 +29,7 @@ class _PlanServiceListState extends ConsumerState<PlanServiceList> {
     },
 
     {
-      "image": "assets/ClientImage/plan2.png",
+      "image": "assets/ClientImage/ac.png",
       "title": "AC Only Plan",
       "titleColor": AppColors.buttonText,
       "subtitle1": "What's included:",
@@ -38,7 +38,7 @@ class _PlanServiceListState extends ConsumerState<PlanServiceList> {
       "subtitleColor": AppColors.buttonText,
     },
     {
-      "image": "assets/ClientImage/plan3.png",
+      "image": "assets/ClientImage/electrical.png",
       "title": "Electrical Plan",
       "titleColor": AppColors.buttonText,
       "subtitle1": "What's included:",
@@ -47,7 +47,7 @@ class _PlanServiceListState extends ConsumerState<PlanServiceList> {
       "subtitleColor": AppColors.buttonText,
     },
     {
-      "image": "assets/ClientImage/plan4.png",
+      "image": "assets/ClientImage/bundle.png",
       "title": "Bundled Plans (Best Value)",
       "titleColor": Colors.white,
       "subtitle1": "Save 10–15%",
@@ -55,7 +55,7 @@ class _PlanServiceListState extends ConsumerState<PlanServiceList> {
       "subtitleColor": Colors.white,
     },
     {
-      "image": "assets/ClientImage/plan4.png",
+      "image": "assets/ClientImage/fullbundle.png",
       "title": "Full Bundle",
       "titleColor": Colors.white,
       "subtitle1": "Save 10–15%",
@@ -63,6 +63,7 @@ class _PlanServiceListState extends ConsumerState<PlanServiceList> {
       "subtitleColor": Colors.white,
     },
   ];
+
   @override
   Widget build(BuildContext context) {
     final getPlanServiceState = ref.watch(getPlanServiceProvider);

@@ -197,7 +197,7 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
                         ),
                         child: Center(
                           child: Padding(
-                            padding: EdgeInsets.only(left: 5.w, right: 5.w),
+                            padding: EdgeInsets.all(5),
                             child: ClipOval(
                               child: profileImage != null
                                   ? Image.file(

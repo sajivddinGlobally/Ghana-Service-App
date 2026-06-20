@@ -95,16 +95,16 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                             height: 113.h,
                             width: 113.w,
                             decoration: BoxDecoration(
+                              color: Colors.white,
                               shape: BoxShape.circle,
-                              color: Colors.grey,
                               border: Border.all(
-                                color: Color(0xff04254E),
+                                color: const Color(0xff04254E),
                                 width: 3.w,
                               ),
                             ),
                             child: Center(
                               child: Padding(
-                                padding: EdgeInsets.only(left: 5.w, right: 5.w),
+                                padding: EdgeInsets.all(5),
                                 child: ClipOval(
                                   child: Image.network(
                                     data.data?.image ?? "",

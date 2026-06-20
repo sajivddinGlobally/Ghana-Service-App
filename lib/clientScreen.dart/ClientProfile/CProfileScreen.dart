@@ -82,7 +82,7 @@ class _CProfileScreenState extends ConsumerState<CProfileScreen> {
                     SizedBox(height: 30.h),
                     Center(
                       child: Container(
-                        padding: EdgeInsets.all(4.w),
+                        padding: EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -97,38 +97,41 @@ class _CProfileScreenState extends ConsumerState<CProfileScreen> {
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                           ),
-                          child: Image.network(
-                            data.data?.image ?? "",
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: AppColors.backgroungBg,
-                                child: Center(
-                                  child: Icon(
-                                    Icons.person,
-                                    color: AppColors.buttonText,
-                                    size: 45.sp,
+                          child: ClipOval(
+                            child: Image.network(
+                              data.data?.image ?? "",
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: AppColors.backgroungBg,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.person,
+                                      color: AppColors.buttonText,
+                                      size: 45.sp,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Container(
-                                height: 113.h,
-                                width: 113.w,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey,
-                                ),
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppColors.buttonBg,
-                                    strokeWidth: 1.5.w,
-                                  ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Container(
+                                      height: 113.h,
+                                      width: 113.w,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.grey,
+                                      ),
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.buttonBg,
+                                          strokeWidth: 1.5.w,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                            ),
                           ),
                         ),
                       ),

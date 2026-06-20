@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class Activeplanlistscreen extends ConsumerStatefulWidget {
   const Activeplanlistscreen({super.key});
@@ -165,7 +166,21 @@ class _ActiveplanlistscreenState extends ConsumerState<Activeplanlistscreen> {
                 }
 
                 final item = list[index];
-                final imageData = planList[index % planList.length];
+
+                final int? startTimestamp = data.data!.list?[index].startDate;
+                final int? expiryTimestamp = data.data!.list?[index].expiryDate;
+
+                final String formattedStartDate = startTimestamp != null
+                    ? DateFormat('dd MMM yyyy').format(
+                        DateTime.fromMillisecondsSinceEpoch(startTimestamp),
+                      )
+                    : "Pending Approval";
+
+                final String formattedExpiryDate = expiryTimestamp != null
+                    ? DateFormat('dd MMM yyyy').format(
+                        DateTime.fromMillisecondsSinceEpoch(expiryTimestamp),
+                      )
+                    : "--";
 
                 return Container(
                   margin: EdgeInsets.only(bottom: 16.h),
@@ -230,6 +245,31 @@ class _ActiveplanlistscreenState extends ConsumerState<Activeplanlistscreen> {
                           const Spacer(),
                           Text(
                             item?.planDetails?.planId?.durationType ?? "",
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.buttonText,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 12.h),
+                      Row(
+                        children: [
+                          Text(
+                            "Expiry Date:",
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.buttonText,
+                              letterSpacing: -0.2,
+                            ),
+                          ),
+                          Spacer(),
+                          Text(
+                            // "31 Dec 2026",
+                            formattedExpiryDate,
                             style: GoogleFonts.parkinsans(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w400,

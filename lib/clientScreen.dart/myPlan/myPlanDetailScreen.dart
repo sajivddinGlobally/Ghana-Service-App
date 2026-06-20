@@ -240,6 +240,25 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
       }
     }
 
+    // final bool isPlanExpired =
+    //     expiryTimestamp != null &&
+    //     DateTime.now().isAfter(
+    //       DateTime.fromMillisecondsSinceEpoch(expiryTimestamp),
+    //     );
+
+    final expiryDate = DateTime.fromMillisecondsSinceEpoch(
+      expiryTimestamp ?? 0,
+    );
+
+    final today = DateTime.now();
+
+    final isPlanExpired =
+        today.year > expiryDate.year ||
+        (today.year == expiryDate.year && today.month > expiryDate.month) ||
+        (today.year == expiryDate.year &&
+            today.month == expiryDate.month &&
+            today.day > expiryDate.day);
+
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: AppBar(
@@ -481,6 +500,7 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
                 ],
               ),
             ),
+
             // Text(
             //   "✔ AC servicing every 6 months",
             //   style: GoogleFonts.parkinsans(
@@ -510,124 +530,102 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
             //     letterSpacing: -0.56,
             //   ),
             // ),
-            SizedBox(height: 20.h),
-
-            SizedBox(height: 20.h),
-            SizedBox(
-              width: double.infinity,
-              height: 54.h,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: AppColors.buttonBg,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(60.r),
+            if (isPlanExpired) ...[
+              SizedBox(height: 20.h),
+              SizedBox(
+                width: double.infinity,
+                height: 54.h,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: AppColors.buttonBg,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(60.r),
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  showPlanDialog(
-                    title: "Renew Plan",
-                    message: "Are you sure you want to renew this plan?",
-                    onConfirm: () async {
-                      setState(() {
-                        isRenew = true;
-                      });
-                      try {
-                        final service = ref.read(authServiceProvider);
-                        final isSucess = await service.renewPlan();
-                        if (isSucess) {
-                          Navigator.pop(context);
-                          await ref
-                              .read(myPlanRequestProvider.notifier)
-                              .refresh();
+                  onPressed: () {
+                    showPlanDialog(
+                      title: "Renew Plan",
+                      message: "Are you sure you want to renew this plan?",
+                      onConfirm: () async {
+                        setState(() {
+                          isRenew = true;
+                        });
+                        try {
+                          final service = ref.read(authServiceProvider);
+                          final isSucess = await service.renewPlan();
+                          if (isSucess) {
+                            Navigator.pop(context);
+                            await ref
+                                .read(myPlanRequestProvider.notifier)
+                                .refresh();
+                          }
+                        } catch (e, st) {
+                          setState(() {
+                            isRenew = false;
+                          });
+                          log(e.toString());
+                        } finally {
+                          setState(() {
+                            isRenew = false;
+                          });
                         }
-                      } catch (e, st) {
-                        setState(() {
-                          isRenew = false;
-                        });
-                        log(e.toString());
-                      } finally {
-                        setState(() {
-                          isRenew = false;
-                        });
-                      }
-                    },
-                  );
-                },
-                child: isRenew
-                    ? SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 1.5,
+                      },
+                    );
+                  },
+                  child: isRenew
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 1.5,
+                          ),
+                        )
+                      : Text(
+                          "Renew Plan",
+                          style: GoogleFonts.outfit(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.1,
+                          ),
                         ),
-                      )
-                    : Text(
-                        "Renew Plan",
-                        style: GoogleFonts.outfit(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.buttonText,
-                          letterSpacing: -0.1,
-                        ),
+                ),
+              ),
+              SizedBox(height: 20.h),
+              SizedBox(
+                width: double.infinity,
+                height: 54.h,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: Color(0xFF6CE227),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(60.r),
+                    ),
+                  ),
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => PlanServiceList(),
                       ),
-              ),
-            ),
-            SizedBox(height: 20.h),
-            SizedBox(
-              width: double.infinity,
-              height: 54.h,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: Color(0xFF6CE227),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(60.r),
-                  ),
-                ),
-                onPressed: () async {
-                  // showPlanDialog(
-                  //   title: "Upgrade Plan",
-                  //   message: "Are you sure you want to renew this plan?",
-                  //   onConfirm: () async {
-                  //     setState(() {
-                  //       isUpgrade = true;
-                  //     });
-                  //     try {
-                  //       final service = ref.read(authServiceProvider);
-                  //       final isSucess = await service.upgradePlan();
-                  //       if (isSucess) {
-                  //         Navigator.pop(context);
-                  //       }
-                  //     } catch (e, st) {
-                  //       setState(() {
-                  //         isUpgrade = false;
-                  //       });
-                  //       log(e.toString());
-                  //     } finally {
-                  //       setState(() {
-                  //         isUpgrade = false;
-                  //       });
-                  //     }
-                  //   },
-                  // );
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(builder: (context) => PlanServiceList()),
-                  );
-                },
-                child: Text(
-                  "Upgrade Plan",
-                  style: GoogleFonts.outfit(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.buttonText,
-                    letterSpacing: -0.1,
+                    );
+                  },
+                  child: Text(
+                    "Upgrade Plan",
+                    style: GoogleFonts.outfit(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.buttonText,
+                      letterSpacing: -0.1,
+                    ),
                   ),
                 ),
               ),
-            ),
+              SizedBox(height: 20.h),
+            ],
           ],
         ),
       ),

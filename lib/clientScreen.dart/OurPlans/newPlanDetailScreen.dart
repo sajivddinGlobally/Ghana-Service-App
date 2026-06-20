@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientOurSignUpScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientQuickQuoteScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/getPlanServiceProvider/getPlanServiceProvider.dart';
@@ -406,6 +405,7 @@ class _NewPlanDetailScreenState extends ConsumerState<NewPlanDetailScreen> {
                     ),
                   ),
                 ),
+
                 SizedBox(height: 20.h),
                 ListView.builder(
                   shrinkWrap: true,
@@ -440,16 +440,7 @@ class _NewPlanDetailScreenState extends ConsumerState<NewPlanDetailScreen> {
                             letterSpacing: -0.1,
                           ),
                         ),
-                        // SizedBox(height: 2.h),
-                        // Text(
-                        //   "Plumbing & Drains",
-                        //   style: GoogleFonts.outfit(
-                        //     fontSize: 13.sp,
-                        //     fontWeight: FontWeight.w500,
-                        //     color: AppColors.buttonText,
-                        //     letterSpacing: -0.2,
-                        //   ),
-                        // ),
+
                         SizedBox(height: 6.h),
                         Text(
                           "What's Planned: Burst pipes, leaks, blocked drains, faulty taps,\n"
@@ -466,82 +457,88 @@ class _NewPlanDetailScreenState extends ConsumerState<NewPlanDetailScreen> {
                         SizedBox(height: 16.h),
 
                         /// TABLE
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.r),
-                            child: Table(
-                              border: TableBorder(
-                                horizontalInside: BorderSide(
-                                  color: AppColors.buttonText,
-                                  width: 1,
-                                ),
-                                verticalInside: BorderSide(
-                                  color: AppColors.buttonText,
-                                  width: 1,
-                                ),
-                              ),
-
-                              /// DYNAMIC COLUMN WIDTH
-                              columnWidths: {
-                                0: const FlexColumnWidth(1.2),
-
-                                for (int i = 0; i < planNames.length; i++)
-                                  i + 1: const FlexColumnWidth(1.6),
-                              },
-
-                              children: [
-                                /// HEADER
-                                TableRow(
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xffF2D500),
+                        if (serviceName == "Full Bundle") ...[
+                          // buildFullBundleTable(servicePlans),
+                          newBuildFullBundleTable(servicePlans),
+                        ] else ...[
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.r),
+                              child: Table(
+                                border: TableBorder(
+                                  horizontalInside: BorderSide(
+                                    color: AppColors.buttonText,
+                                    width: 1,
                                   ),
-                                  children: [
-                                    tableCell("Tier", isHeader: true),
-
-                                    ...planNames.map(
-                                      (name) => tableCell(name, isHeader: true),
-                                    ),
-                                  ],
+                                  verticalInside: BorderSide(
+                                    color: AppColors.buttonText,
+                                    width: 1,
+                                  ),
                                 ),
 
-                                /// DYNAMIC ROWS
-                                ...tiers.map((tier) {
-                                  return TableRow(
+                                /// DYNAMIC COLUMN WIDTH
+                                columnWidths: {
+                                  0: const FlexColumnWidth(1.2),
+
+                                  for (int i = 0; i < planNames.length; i++)
+                                    i + 1: const FlexColumnWidth(1.6),
+                                },
+
+                                children: [
+                                  /// HEADER
+                                  TableRow(
                                     decoration: const BoxDecoration(
-                                      color: Color(0xffE6E6E6),
+                                      color: Color(0xffF2D500),
                                     ),
                                     children: [
-                                      /// TIER
-                                      tableCell(tier),
+                                      tableCell("Tier", isHeader: true),
 
-                                      /// PLAN DATA
-                                      ...planNames.map((planName) {
-                                        final plan = servicePlans.firstWhere(
-                                          (e) =>
-                                              e.tier == tier &&
-                                              e.name
-                                                      ?.toString()
-                                                      .toLowerCase() ==
-                                                  planName.toLowerCase(),
-                                          orElse: () => null,
-                                        );
-
-                                        return tableCell(
-                                          plan != null
-                                              ? "${plan.currency} ${plan.priceMonthly}/${plan.durationType}"
-                                              : "-",
-                                        );
-                                      }).toList(),
+                                      ...planNames.map(
+                                        (name) =>
+                                            tableCell(name, isHeader: true),
+                                      ),
                                     ],
-                                  );
-                                }).toList(),
-                              ],
+                                  ),
+
+                                  /// DYNAMIC ROWS
+                                  ...tiers.map((tier) {
+                                    return TableRow(
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xffE6E6E6),
+                                      ),
+                                      children: [
+                                        /// TIER
+                                        tableCell(tier),
+
+                                        /// PLAN DATA
+                                        ...planNames.map((planName) {
+                                          final plan = servicePlans.firstWhere(
+                                            (e) =>
+                                                e.tier == tier &&
+                                                e.name
+                                                        ?.toString()
+                                                        .toLowerCase() ==
+                                                    planName.toLowerCase(),
+                                            orElse: () => null,
+                                          );
+
+                                          return tableCell(
+                                            plan != null
+                                                ? "${plan.currency} ${plan.priceMonthly}/${plan.durationType}"
+                                                : "-",
+                                          );
+                                        }).toList(),
+                                      ],
+                                    );
+                                  }).toList(),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                         SizedBox(height: 20.h),
 
                         /// BUTTON
@@ -564,6 +561,7 @@ class _NewPlanDetailScreenState extends ConsumerState<NewPlanDetailScreen> {
                               //         Clientquickquotescreen(),
                               //   ),
                               // );
+                              log("Select serviceName $serviceName");
                               Navigator.push(
                                 context,
                                 CupertinoPageRoute(
@@ -704,4 +702,261 @@ class _NewPlanDetailScreenState extends ConsumerState<NewPlanDetailScreen> {
       ),
     );
   }
+
+  Widget newBuildFullBundleTable(List<dynamic> plans) {
+    final tiers = plans.map((e) => e.tier).toSet().toList();
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color(0xff2C3E50), width: 1),
+      ),
+      child: Column(
+        children: [
+          /// HEADER
+          Row(
+            children: [
+              headerCell("AC Units"),
+              headerCell("Basic Plan"),
+              headerCell("Premium Plan"),
+            ],
+          ),
+
+          ...tiers.map((tier) {
+            final tierPlans = plans.where((e) => e.tier == tier).toList();
+
+            final acRanges = tierPlans.map((e) => e.acRange).toSet().toList();
+
+            return Column(
+              children: [
+                /// TIER HEADER
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 14.h,
+                  ),
+                  decoration: const BoxDecoration(
+                    color: Color(0xffE7E7E7),
+                    border: Border(
+                      top: BorderSide(color: Color(0xff2C3E50)),
+                      bottom: BorderSide(color: Color(0xff2C3E50)),
+                    ),
+                  ),
+                  child: Text(
+                    "$tier (${getTierBedroom(tier)})",
+                    style: GoogleFonts.outfit(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xff04254E),
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                ),
+
+                /// ROWS
+                ...acRanges.map((acRange) {
+                  final basic = tierPlans.cast<dynamic?>().firstWhere(
+                    (e) => e?.acRange == acRange && e?.name == "Basic",
+                    orElse: () => null,
+                  );
+
+                  final premium = tierPlans.cast<dynamic?>().firstWhere(
+                    (e) => e?.acRange == acRange && e?.name == "Premium",
+                    orElse: () => null,
+                  );
+
+                  return Row(
+                    children: [
+                      dataCell(acRange ?? "-"),
+                      dataCell(
+                        basic != null
+                            ? "${basic.currency} ${basic.priceMonthly}/month"
+                            : "-",
+                      ),
+                      dataCell(
+                        premium != null
+                            ? "${premium.currency} ${premium.priceMonthly}/month"
+                            : "-",
+                      ),
+                    ],
+                  );
+                }),
+              ],
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget headerCell(String text) {
+    return Expanded(
+      child: Container(
+        height: 50.h,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Color(0xffF2D500),
+          border: Border(
+            right: BorderSide(color: Color(0xff2C3E50), width: 1.w),
+            bottom: BorderSide(color: Color(0xff2C3E50), width: 1.w),
+          ),
+        ),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.outfit(
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xff04254E),
+            letterSpacing: -0.2,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget dataCell(String text) {
+    return Expanded(
+      child: Container(
+        height: 50.h,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Color(0xffE7E7E7),
+          border: Border(
+            right: BorderSide(color: Color(0xff2C3E50), width: 1.w),
+            bottom: BorderSide(color: Color(0xff2C3E50), width: 1.w),
+          ),
+        ),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.outfit(
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xff04254E),
+            letterSpacing: -0.2,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String getTierBedroom(String tier) {
+    switch (tier) {
+      case "Tier 1":
+        return "1–2 bedrooms";
+      case "Tier 2":
+        return "3–4 bedrooms";
+      case "Tier 3":
+        return "5+ bedrooms";
+      default:
+        return "";
+    }
+  }
+
+  // Widget buildFullBundleTable(List<dynamic> plans) {
+  //   final tiers = plans.map((e) => e.tier).toSet().toList();
+
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       border: Border.all(color: Colors.grey.shade300),
+  //       borderRadius: BorderRadius.circular(10),
+  //     ),
+  //     child: Column(
+  //       children: [
+  //         /// Header
+  //         Row(
+  //           children: [
+  //             headerCell("AC Units"),
+  //             headerCell("Basic Plan"),
+  //             headerCell("Premium Plan"),
+  //           ],
+  //         ),
+
+  //         ...tiers.map((tier) {
+  //           final tierPlans = plans.where((e) => e.tier == tier).toList();
+
+  //           final acRanges = tierPlans.map((e) => e.acRange).toSet().toList();
+
+  //           return Column(
+  //             children: [
+  //               Container(
+  //                 width: double.infinity,
+  //                 padding: const EdgeInsets.all(12),
+  //                 color: Colors.grey.shade200,
+  //                 child: Text(
+  //                   "$tier (${getTierBedroom(tier)})",
+  //                   style: const TextStyle(fontWeight: FontWeight.bold),
+  //                 ),
+  //               ),
+
+  //               ...acRanges.map((acRange) {
+  //                 final basic = tierPlans.cast<dynamic?>().firstWhere(
+  //                   (e) => e?.acRange == acRange && e?.name == "Basic",
+  //                   orElse: () => null,
+  //                 );
+
+  //                 final premium = tierPlans.cast<dynamic?>().firstWhere(
+  //                   (e) => e?.acRange == acRange && e?.name == "Premium",
+  //                   orElse: () => null,
+  //                 );
+
+  //                 return Row(
+  //                   children: [
+  //                     dataCell(acRange ?? "-"),
+  //                     dataCell(
+  //                       basic != null
+  //                           ? "${basic.currency} ${basic.priceMonthly}/month"
+  //                           : "-",
+  //                     ),
+  //                     dataCell(
+  //                       premium != null
+  //                           ? "${premium.currency} ${premium.priceMonthly}/month"
+  //                           : "-",
+  //                     ),
+  //                   ],
+  //                 );
+  //               }),
+  //             ],
+  //           );
+  //         }),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // String getTierBedroom(String tier) {
+  //   switch (tier) {
+  //     case "Tier 1":
+  //       return "1–2 bedrooms";
+  //     case "Tier 2":
+  //       return "3–4 bedrooms";
+  //     case "Tier 3":
+  //       return "5+ bedrooms";
+  //     default:
+  //       return "";
+  //   }
+  // }
+
+  // Widget headerCell(String text) {
+  //   return Expanded(
+  //     child: Container(
+  //       padding: const EdgeInsets.all(12),
+  //       color: Colors.white,
+  //       child: Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
+  //     ),
+  //   );
+  // }
+
+  // Widget dataCell(String text) {
+  //   return Expanded(
+  //     child: Container(
+  //       padding: const EdgeInsets.all(12),
+  //       decoration: BoxDecoration(
+  //         border: Border.all(color: Colors.grey.shade300),
+  //       ),
+  //       child: Text(text),
+  //     ),
+  //   );
+  // }
 }

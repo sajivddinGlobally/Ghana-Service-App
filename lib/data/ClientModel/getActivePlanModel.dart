@@ -75,6 +75,8 @@ class ListElement {
     String? paymentMethod;
     String? status;
     String? adminRemark;
+    String? parentPlanRequestId;
+    String? requestType;
     bool? isDisable;
     bool? isDeleted;
     int? date;
@@ -84,6 +86,8 @@ class ListElement {
     int? updatedAt;
     int? v;
     String? approvedBy;
+    int? expiryDate;
+    int? startDate;
 
     ListElement({
         this.personalInformation,
@@ -96,6 +100,8 @@ class ListElement {
         this.paymentMethod,
         this.status,
         this.adminRemark,
+        this.parentPlanRequestId,
+        this.requestType,
         this.isDisable,
         this.isDeleted,
         this.date,
@@ -105,6 +111,8 @@ class ListElement {
         this.updatedAt,
         this.v,
         this.approvedBy,
+        this.expiryDate,
+        this.startDate,
     });
 
     factory ListElement.fromJson(Map<String, dynamic> json) => ListElement(
@@ -118,6 +126,8 @@ class ListElement {
         paymentMethod: json["paymentMethod"],
         status: json["status"],
         adminRemark: json["adminRemark"],
+        parentPlanRequestId: json["parentPlanRequestId"],
+        requestType: json["requestType"],
         isDisable: json["isDisable"],
         isDeleted: json["isDeleted"],
         date: json["date"],
@@ -127,6 +137,8 @@ class ListElement {
         updatedAt: json["updatedAt"],
         v: json["__v"],
         approvedBy: json["approvedBy"],
+        expiryDate: json["expiryDate"],
+        startDate: json["startDate"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -140,6 +152,8 @@ class ListElement {
         "paymentMethod": paymentMethod,
         "status": status,
         "adminRemark": adminRemark,
+        "parentPlanRequestId": parentPlanRequestId,
+        "requestType": requestType,
         "isDisable": isDisable,
         "isDeleted": isDeleted,
         "date": date,
@@ -149,6 +163,8 @@ class ListElement {
         "updatedAt": updatedAt,
         "__v": v,
         "approvedBy": approvedBy,
+        "expiryDate": expiryDate,
+        "startDate": startDate,
     };
 }
 
@@ -159,7 +175,6 @@ class Declaration {
     bool? noPreExistingFaults;
     String? electronicSignature;
     DateTime? date;
-    String? signature;
 
     Declaration({
         this.informationAccurate,
@@ -168,7 +183,6 @@ class Declaration {
         this.noPreExistingFaults,
         this.electronicSignature,
         this.date,
-        this.signature,
     });
 
     factory Declaration.fromJson(Map<String, dynamic> json) => Declaration(
@@ -178,7 +192,6 @@ class Declaration {
         noPreExistingFaults: json["noPreExistingFaults"],
         electronicSignature: json["electronicSignature"],
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
-        signature: json["signature"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -188,7 +201,6 @@ class Declaration {
         "noPreExistingFaults": noPreExistingFaults,
         "electronicSignature": electronicSignature,
         "date": date?.toIso8601String(),
-        "signature": signature,
     };
 }
 

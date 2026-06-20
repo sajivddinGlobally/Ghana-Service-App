@@ -30,7 +30,7 @@ class Clientpaymentscreen extends ConsumerStatefulWidget {
 }
 
 class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
-  String? selectedPayment;
+  String? selectedPayment = "cash";
 
   // List<String> paymentList = [
   //   // "Mobile Money (MTN)",
@@ -83,7 +83,8 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  "Payment Successful",
+                  // "Payment Successful",
+                  "Thank you",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.outfit(
                     fontSize: 29.sp,
@@ -93,18 +94,18 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  "Your payment has been completed successfully.",
+                  // "Your payment has been completed successfully.",
+                  "Please make the payment of ${widget.selectedPlan.currency} ${widget.selectedPlan.priceMonthly} in our office.",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.parkinsans(
-                    fontSize: 13.sp,
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.buttonText,
-                    letterSpacing: -0.2,
+                    letterSpacing: -0.1,
                   ),
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  // "GHS 149",
                   "${widget.selectedPlan.currency} ${widget.selectedPlan.priceMonthly}",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.outfit(

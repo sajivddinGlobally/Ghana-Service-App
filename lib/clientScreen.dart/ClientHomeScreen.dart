@@ -182,7 +182,7 @@ class Clienthomescreen extends ConsumerStatefulWidget {
 class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
   List<Map<String, dynamic>> planList = [
     {
-      "image": "assets/ClientImage/plan1.png",
+      "image": "assets/ClientImage/plumbing.png",
       "title": "Plumbing Plan",
       "titleColor": AppColors.buttonText,
       "subtitle1": "What's included:",
@@ -192,7 +192,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
     },
 
     {
-      "image": "assets/ClientImage/plan2.png",
+      "image": "assets/ClientImage/ac.png",
       "title": "AC Only Plan",
       "titleColor": AppColors.buttonText,
       "subtitle1": "What's included:",
@@ -201,7 +201,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
       "subtitleColor": AppColors.buttonText,
     },
     {
-      "image": "assets/ClientImage/plan3.png",
+      "image": "assets/ClientImage/electrical.png",
       "title": "Electrical Plan",
       "titleColor": AppColors.buttonText,
       "subtitle1": "What's included:",
@@ -210,7 +210,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
       "subtitleColor": AppColors.buttonText,
     },
     {
-      "image": "assets/ClientImage/plan4.png",
+      "image": "assets/ClientImage/bundle.png",
       "title": "Bundled Plans (Best Value)",
       "titleColor": Colors.white,
       "subtitle1": "Save 10–15%",
@@ -218,7 +218,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
       "subtitleColor": Colors.white,
     },
     {
-      "image": "assets/ClientImage/plan4.png",
+      "image": "assets/ClientImage/fullbundle.png",
       "title": "Full Bundle",
       "titleColor": Colors.white,
       "subtitle1": "Save 10–15%",
@@ -231,7 +231,6 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
   Widget build(BuildContext context) {
     final clientProfileState = ref.watch(clientProfileProvider);
     final getPlanServiceState = ref.watch(getPlanServiceProvider);
-    // final reminderState = ref.watch(clientGetServiceRemindersProvider);
     final clientReadNotificationState = ref.watch(
       clientReadNotificationProvider,
     );
@@ -241,7 +240,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
       },
       orElse: () => 0,
     );
-    // final getDashbordCountState = ref.watch(getDashbordCountProvider);
+
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: clientProfileState.when(
@@ -536,6 +535,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
                                     CupertinoPageRoute(
                                       builder: (context) => NewPlanDetailScreen(
                                         id: data.data![index].id.toString(),
+                                       
                                       ),
                                     ),
                                   );
@@ -549,7 +549,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
                                         // planList[index]['image'],
                                         imageData['image'],
                                         width: double.infinity,
-                                        height: 159.h,
+                                        height: 160.h,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -580,7 +580,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
                                             Text(
                                               data.data![index].description ??
                                                   "",
-                                              maxLines: 3,
+                                              maxLines: 4,
                                               overflow: TextOverflow.ellipsis,
                                               style: GoogleFonts.parkinsans(
                                                 fontSize: 14.sp,
@@ -864,12 +864,12 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                 );
               },
               child: Text(
-                "+ Create Service Request",
+                "+  Create Service Request",
                 style: GoogleFonts.outfit(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                   color: Color(0xFF04254E),
-                  letterSpacing: -0.56,
+                  letterSpacing: -0.2,
                 ),
               ),
             ),
@@ -1064,7 +1064,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
             SizedBox(height: 20.h),
             Text(
               // "Recent Requests",
-              "Service Available",
+              "Other Services Available",
               style: GoogleFonts.outfit(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,

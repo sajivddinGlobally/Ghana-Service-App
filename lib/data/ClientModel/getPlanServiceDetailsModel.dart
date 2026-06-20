@@ -40,6 +40,7 @@ class Datum {
     String? id;
     ServiceId? serviceId;
     String? name;
+    String? acRange;
     String? tier;
     String? description;
     int? priceMonthly;
@@ -64,6 +65,7 @@ class Datum {
         this.serviceId,
         this.name,
         this.tier,
+        this.acRange,
         this.description,
         this.priceMonthly,
         this.currency,
@@ -88,6 +90,7 @@ class Datum {
         serviceId: json["serviceId"] == null ? null : ServiceId.fromJson(json["serviceId"]),
         name: json["name"],
         tier: json["tier"],
+        acRange: json["acRange"],
         description: json["description"],
         priceMonthly: json["priceMonthly"],
         currency: json["currency"],
@@ -112,6 +115,7 @@ class Datum {
         "serviceId": serviceId?.toJson(),
         "name": name,
         "tier": tier,
+        "acRange": acRange,
         "description": description,
         "priceMonthly": priceMonthly,
         "currency": currency,
@@ -151,3 +155,4 @@ class ServiceId {
         "name": name,
     };
 }
+

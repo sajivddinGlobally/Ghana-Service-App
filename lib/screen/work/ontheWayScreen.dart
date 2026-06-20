@@ -233,11 +233,17 @@ class _OnTheWayScreenState extends ConsumerState<OnTheWayScreen> {
                     final pending = list[index];
                     // final pending = data.data?.list?[index];
                     final prefferedDate = DateTime.fromMillisecondsSinceEpoch(
-                      pending?.date ?? 0,
+                      pending?.preferredDate ?? 0,
                     );
                     final formateDate = DateFormat(
                       'dd MM yyyy',
                     ).format(prefferedDate);
+
+                    final preferredTime = DateFormat("hh:mm a").format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                        pending?.preferredTime ?? 0,
+                      ),
+                    );
 
                     return Container(
                       margin: EdgeInsets.only(
@@ -302,7 +308,7 @@ class _OnTheWayScreenState extends ConsumerState<OnTheWayScreen> {
 
                           // 🔥 Time
                           Text(
-                            "Time: 9:00 AM - 1:00 PM",
+                            "Time: $preferredTime",
                             style: GoogleFonts.parkinsans(
                               fontWeight: FontWeight.w500,
                               fontSize: 16.sp,
@@ -346,7 +352,9 @@ class _OnTheWayScreenState extends ConsumerState<OnTheWayScreen> {
                                     requestId: data.data!.list![index].id ?? "",
                                   ),
                                 ),
-                              );
+                              ).then((value) {
+                                ref.invalidate(getOnTheWayProvider);
+                              });
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 9.h),
