@@ -23,6 +23,7 @@ class MyPlanDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
+ 
   bool isUpgrade = false;
   bool isRenew = false;
   void showPlanDialog({
@@ -399,7 +400,7 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
                   Row(
                     children: [
                       Text(
-                        "Call Limit:",
+                        "Used Requests:",
                         style: GoogleFonts.parkinsans(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
@@ -478,6 +479,19 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
                   ),
                   SizedBox(height: 15.h),
 
+                  // DropdownButtonFormField<String>(
+                  //   value: feature1,
+                  //   hint: Text("Select Feature 1"),
+                  //   items: features
+                  //       .map((f) => DropdownMenuItem(value: f, child: Text(f)))
+                  //       .toList(),
+                  //   onChanged: (value) {
+                  //     setState(() {
+                  //       feature1 = value;
+                  //     });
+                  //   },
+                  // ),
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: (widget.data.planDetails?.planId?.features ?? [])
@@ -497,6 +511,63 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
                         )
                         .toList(),
                   ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: (widget.data.planDetails?.planId?.acFeatures ?? [])
+                        .map(
+                          (feature) => Padding(
+                            padding: EdgeInsets.only(bottom: 8.h),
+                            child: Text(
+                              "✔ $feature",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: (widget.data.planDetails?.planId?.electricalFeatures ?? [])
+                        .map(
+                          (feature) => Padding(
+                            padding: EdgeInsets.only(bottom: 8.h),
+                            child: Text(
+                              "✔ $feature",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: (widget.data.planDetails?.planId?.plumbingFeatures ?? [])
+                        .map(
+                          (feature) => Padding(
+                            padding: EdgeInsets.only(bottom: 8.h),
+                            child: Text(
+                              "✔ $feature",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.buttonText,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  )
                 ],
               ),
             ),

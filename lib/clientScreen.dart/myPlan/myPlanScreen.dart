@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class MyPlanScreen extends ConsumerStatefulWidget {
   final bool isShowBack;
@@ -285,7 +286,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                item.planDetails?.serviceId?.name ?? "",
+                                "${item.planDetails?.serviceId?.name ?? ""} (${item?.planDetails!.planId?.tier ?? ""})",
                                 style: GoogleFonts.outfit(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w500,
@@ -308,7 +309,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    "${item?.planDetails?.planId?.name ?? ""} (${item?.planDetails!.planId?.tier ?? ""})",
+                                    "${item?.planDetails?.planId?.name ?? ""} ",
                                     textAlign: TextAlign.end,
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 14.sp,
@@ -324,7 +325,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                               Row(
                                 children: [
                                   Text(
-                                    "Validity:",
+                                    "Start Date:",
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w500,
@@ -333,8 +334,13 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    item?.planDetails?.planId?.durationType ??
-                                        "",
+                                    item.startDate != null
+                                        ? DateFormat('dd MMM yyyy').format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                              item.startDate!,
+                                            ),
+                                          )
+                                        : "",
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w400,
@@ -345,11 +351,10 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                               ),
 
                               SizedBox(height: 12.h),
-
                               Row(
                                 children: [
                                   Text(
-                                    "Call Limit:",
+                                    "Expiry Date:",
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w500,
@@ -358,10 +363,39 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    item?.planDetails?.planId?.isUnlimited ==
+                                    item.expiryDate != null
+                                        ? DateFormat('dd MMM yyyy').format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                              item.expiryDate!,
+                                            ),
+                                          )
+                                        : "",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 12.h),
+
+                              Row(
+                                children: [
+                                  Text(
+                                    "Used Requests:",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    item.planDetails?.planId?.isUnlimited ==
                                             true
                                         ? "Unlimited"
-                                        : "${item?.planDetails?.planId?.callLimit ?? 0}",
+                                        : "${item.planDetails?.planId?.callLimit ?? 0}",
 
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 14.sp,

@@ -14,6 +14,7 @@ import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/clientPaymentHist
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createService.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/myRequest.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/getPlanServiceProvider/getPlanServiceProvider.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/Provider/GetMyPlanRequestProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/myPlanScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/ClientProfile/CProfileScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/service/activePlanListScreen.dart';
@@ -535,7 +536,6 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
                                     CupertinoPageRoute(
                                       builder: (context) => NewPlanDetailScreen(
                                         id: data.data![index].id.toString(),
-                                       
                                       ),
                                     ),
                                   );
@@ -670,6 +670,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(myPlanRequestProvider);
     final getDashbordCountState = ref.watch(getDashbordCountProvider);
     final reminderState = ref.watch(clientGetServiceRemindersProvider);
     return getDashbordCountState.when(
@@ -686,75 +687,128 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                   ),
                 );
               },
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadiusGeometry.circular(12.r),
-                    child: Image.asset(
-                      "assets/WhatsApp Image 2026-05-07 at 12.12.29 PM.jpeg",
-                      width: double.infinity,
-                      height: 159.h,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    left: 15.w,
-                    top: 15.h,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Basic Plan",
-                          style: GoogleFonts.outfit(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.buttonText,
-                            letterSpacing: -0.2,
-                          ),
+              child: state.when(
+                data: (data) {
+                  final item =
+                      (data.data?.list != null && data.data!.list!.isNotEmpty)
+                      ? data.data!.list![0]
+                      : null;
+                  return Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadiusGeometry.circular(12.r),
+                        child: Image.asset(
+                          "assets/WhatsApp Image 2026-05-07 at 12.12.29 PM.jpeg",
+                          width: double.infinity,
+                          height: 159.h,
+                          fit: BoxFit.cover,
                         ),
-                        SizedBox(height: 6.h),
-                        Text(
-                          "Unlimited Service Requests",
-                          style: GoogleFonts.parkinsans(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.buttonText,
-                            letterSpacing: -0.3,
-                          ),
-                        ),
-                        Text(
-                          "Next Renewal: 15 June 2025",
-                          style: GoogleFonts.parkinsans(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.buttonText,
-                            letterSpacing: -0.4,
-                          ),
-                        ),
-                        SizedBox(height: 15.h),
-                        Container(
-                          width: 140.w,
-                          height: 35.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50.r),
-                            color: AppColors.buttonText,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Access Plan",
+                      ),
+                      Positioned(
+                        left: 15.w,
+                        top: 15.h,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${item?.planDetails?.serviceId?.name ?? ""} (${item?.planDetails!.planId?.tier ?? ""})",
                               style: GoogleFonts.outfit(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.buttonBg,
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.buttonText,
                                 letterSpacing: -0.2,
                               ),
                             ),
-                          ),
+                            SizedBox(height: 6.h),
+                            Row(
+                              children: [
+                                Text(
+                                  item?.planDetails?.planId?.isUnlimited == true
+                                      ? "Unlimited"
+                                      : "${item?.planDetails?.planId?.callLimit ?? 0}",
+                                  style: GoogleFonts.parkinsans(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.buttonText,
+                                    letterSpacing: -0.3,
+                                  ),
+                                ),
+                                Text(
+                                  " Service Requests",
+                                  style: GoogleFonts.parkinsans(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.buttonText,
+                                    letterSpacing: -0.3,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "Next Renewal: ",
+                                  style: GoogleFonts.parkinsans(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.buttonText,
+                                    letterSpacing: -0.4,
+                                  ),
+                                ),
+                                Text(
+                                  item?.expiryDate != null
+                                      ? DateFormat('dd MMM yyyy').format(
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                            item!.expiryDate!,
+                                          ),
+                                        )
+                                      : "",
+                                  style: GoogleFonts.parkinsans(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.buttonText,
+                                    letterSpacing: -0.4,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 15.h),
+                            Container(
+                              width: 140.w,
+                              height: 35.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50.r),
+                                color: AppColors.buttonText,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Access Plan",
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.buttonBg,
+                                    letterSpacing: -0.2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  );
+                },
+                error: (error, stackTrace) {
+                  log(stackTrace.toString());
+                  return Center(child: Text(error.toString()));
+                },
+                loading: () => SizedBox(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Center(
+                    child: CircularProgressIndicator(color: AppColors.buttonBg),
                   ),
-                ],
+                ),
               ),
             ),
             SizedBox(height: 30.h),
@@ -1061,121 +1115,121 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                 child: CircularProgressIndicator(color: AppColors.buttonBg),
               ),
             ),
-            SizedBox(height: 20.h),
-            Text(
-              // "Recent Requests",
-              "Other Services Available",
-              style: GoogleFonts.outfit(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF04254E),
-                letterSpacing: -0.2,
-              ),
-            ),
-            SizedBox(height: 16.h),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: recentRequestList.length,
-              padding: EdgeInsets.zero,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 20.w,
-                childAspectRatio: 0.70,
-              ),
-              itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16.r),
-                        topRight: Radius.circular(16.r),
-                      ),
-                      child: Image.asset(
-                        // "assets/Rectangle 4.png",
-                        recentRequestList[index]['image'],
-                        width: 189.w,
-                        height: 138.h,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(10.w),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          left: BorderSide(color: const Color(0xffF2D701)),
-                          right: BorderSide(color: const Color(0xffF2D701)),
-                          bottom: BorderSide(color: const Color(0xffF2D701)),
-                          top: BorderSide.none,
-                        ),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(16.r),
-                          bottomRight: Radius.circular(16.r),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            // "AC Repair Service",
-                            recentRequestList[index]['title'],
-                            style: GoogleFonts.outfit(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.buttonText,
-                              letterSpacing: -0.3,
-                            ),
-                          ),
-                          SizedBox(height: 10.h),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.star,
-                                color: Color(0xffF2D701),
-                                size: 15.sp,
-                              ),
-                              SizedBox(width: 4.w),
-                              Text(
-                                // "4.9",
-                                recentRequestList[index]['rating'],
-                                style: GoogleFonts.inter(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.buttonText,
-                                  letterSpacing: -0.5,
-                                ),
-                              ),
-                              SizedBox(width: 6.w),
-                              Text(
-                                recentRequestList[index]['review'],
-                                style: GoogleFonts.inter(
-                                  color: Color(0xff808080),
-                                  fontSize: 14.sp,
-                                  letterSpacing: -0.5,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
-                          Text(
-                            // "Engineer: Dakarai",
-                            recentRequestList[index]['name'],
-                            style: GoogleFonts.parkinsans(
-                              color: AppColors.buttonText,
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: -0.3,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
+            // SizedBox(height: 20.h),
+            // Text(
+            //   // "Recent Requests",
+            //   "Other Services Available",
+            //   style: GoogleFonts.outfit(
+            //     fontSize: 16.sp,
+            //     fontWeight: FontWeight.w500,
+            //     color: Color(0xFF04254E),
+            //     letterSpacing: -0.2,
+            //   ),
+            // ),
+            // SizedBox(height: 16.h),
+            // GridView.builder(
+            //   shrinkWrap: true,
+            //   physics: const NeverScrollableScrollPhysics(),
+            //   itemCount: recentRequestList.length,
+            //   padding: EdgeInsets.zero,
+            //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //     crossAxisCount: 2,
+            //     crossAxisSpacing: 20.w,
+            //     childAspectRatio: 0.70,
+            //   ),
+            //   itemBuilder: (context, index) {
+            //     return Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         ClipRRect(
+            //           borderRadius: BorderRadius.only(
+            //             topLeft: Radius.circular(16.r),
+            //             topRight: Radius.circular(16.r),
+            //           ),
+            //           child: Image.asset(
+            //             // "assets/Rectangle 4.png",
+            //             recentRequestList[index]['image'],
+            //             width: 189.w,
+            //             height: 138.h,
+            //             fit: BoxFit.cover,
+            //           ),
+            //         ),
+            //         Container(
+            //           width: double.infinity,
+            //           padding: EdgeInsets.all(10.w),
+            //           decoration: BoxDecoration(
+            //             border: Border(
+            //               left: BorderSide(color: const Color(0xffF2D701)),
+            //               right: BorderSide(color: const Color(0xffF2D701)),
+            //               bottom: BorderSide(color: const Color(0xffF2D701)),
+            //               top: BorderSide.none,
+            //             ),
+            //             borderRadius: BorderRadius.only(
+            //               bottomLeft: Radius.circular(16.r),
+            //               bottomRight: Radius.circular(16.r),
+            //             ),
+            //           ),
+            //           child: Column(
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: [
+            //               Text(
+            //                 // "AC Repair Service",
+            //                 recentRequestList[index]['title'],
+            //                 style: GoogleFonts.outfit(
+            //                   fontSize: 16.sp,
+            //                   fontWeight: FontWeight.w500,
+            //                   color: AppColors.buttonText,
+            //                   letterSpacing: -0.3,
+            //                 ),
+            //               ),
+            //               SizedBox(height: 10.h),
+            //               Row(
+            //                 children: [
+            //                   Icon(
+            //                     Icons.star,
+            //                     color: Color(0xffF2D701),
+            //                     size: 15.sp,
+            //                   ),
+            //                   SizedBox(width: 4.w),
+            //                   Text(
+            //                     // "4.9",
+            //                     recentRequestList[index]['rating'],
+            //                     style: GoogleFonts.inter(
+            //                       fontSize: 18.sp,
+            //                       fontWeight: FontWeight.w500,
+            //                       color: AppColors.buttonText,
+            //                       letterSpacing: -0.5,
+            //                     ),
+            //                   ),
+            //                   SizedBox(width: 6.w),
+            //                   Text(
+            //                     recentRequestList[index]['review'],
+            //                     style: GoogleFonts.inter(
+            //                       color: Color(0xff808080),
+            //                       fontSize: 14.sp,
+            //                       letterSpacing: -0.5,
+            //                     ),
+            //                   ),
+            //                 ],
+            //               ),
+            //               SizedBox(height: 10.h),
+            //               Text(
+            //                 // "Engineer: Dakarai",
+            //                 recentRequestList[index]['name'],
+            //                 style: GoogleFonts.parkinsans(
+            //                   color: AppColors.buttonText,
+            //                   fontSize: 13.sp,
+            //                   fontWeight: FontWeight.w500,
+            //                   letterSpacing: -0.3,
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //       ],
+            //     );
+            //   },
+            // ),
           ],
         );
       },
