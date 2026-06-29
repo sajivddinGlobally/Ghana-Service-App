@@ -23,7 +23,6 @@ class MyPlanDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
- 
   bool isUpgrade = false;
   bool isRenew = false;
   void showPlanDialog({
@@ -477,97 +476,192 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
                       letterSpacing: -0.2,
                     ),
                   ),
-                  SizedBox(height: 15.h),
-
-                  // DropdownButtonFormField<String>(
-                  //   value: feature1,
-                  //   hint: Text("Select Feature 1"),
-                  //   items: features
-                  //       .map((f) => DropdownMenuItem(value: f, child: Text(f)))
-                  //       .toList(),
-                  //   onChanged: (value) {
-                  //     setState(() {
-                  //       feature1 = value;
-                  //     });
-                  //   },
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children:
+                  //       (widget.data.planDetails?.planId?. ?? [])
+                  //           .map(
+                  //             (feature) => Padding(
+                  //               padding: EdgeInsets.only(bottom: 8.h),
+                  //               child: Text(
+                  //                 "✔ $feature",
+                  //                 style: GoogleFonts.parkinsans(
+                  //                   fontSize: 14.sp,
+                  //                   fontWeight: FontWeight.w400,
+                  //                   color: AppColors.buttonText,
+                  //                   letterSpacing: -0.2,
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           )
+                  //           .toList(),
                   // ),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: (widget.data.planDetails?.planId?.features ?? [])
-                        .map(
-                          (feature) => Padding(
-                            padding: EdgeInsets.only(bottom: 8.h),
-                            child: Text(
-                              "✔ $feature",
-                              style: GoogleFonts.parkinsans(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.buttonText,
-                                letterSpacing: -0.2,
-                              ),
+                  SizedBox(height: 10.h),
+                  if ((widget.data.planDetails?.planId?.plumbingFeatures ?? [])
+                      .isNotEmpty)
+                    Container(
+                      margin: EdgeInsets.all(5),
+                      padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.buttonText),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Theme(
+                        data: Theme.of(
+                          context,
+                        ).copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          tilePadding: EdgeInsets.zero,
+                          childrenPadding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                          ),
+                          iconColor: AppColors.buttonText,
+                          collapsedIconColor: AppColors.buttonText,
+                          title: Text(
+                            "Plumbing Features",
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.buttonText,
                             ),
                           ),
-                        )
-                        .toList(),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: (widget.data.planDetails?.planId?.acFeatures ?? [])
-                        .map(
-                          (feature) => Padding(
-                            padding: EdgeInsets.only(bottom: 8.h),
-                            child: Text(
-                              "✔ $feature",
-                              style: GoogleFonts.parkinsans(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.buttonText,
-                                letterSpacing: -0.2,
-                              ),
+                          children:
+                              (widget
+                                          .data
+                                          .planDetails
+                                          ?.planId
+                                          ?.plumbingFeatures ??
+                                      [])
+                                  .map(
+                                    (feature) => Padding(
+                                      padding: EdgeInsets.only(bottom: 8.h),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "✔ $feature",
+                                          style: GoogleFonts.parkinsans(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.buttonText,
+                                            letterSpacing: -0.2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                        ),
+                      ),
+                    ),
+                  if ((widget.data.planDetails?.planId?.acFeatures ?? [])
+                      .isNotEmpty)
+                    Container(
+                      margin: EdgeInsets.all(5),
+                      padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.buttonText),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Theme(
+                        data: Theme.of(
+                          context,
+                        ).copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          tilePadding: EdgeInsets.zero,
+                          childrenPadding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                          ),
+                          iconColor: AppColors.buttonText,
+                          collapsedIconColor: AppColors.buttonText,
+                          title: Text(
+                            "Ac Features",
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.buttonText,
                             ),
                           ),
-                        )
-                        .toList(),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: (widget.data.planDetails?.planId?.electricalFeatures ?? [])
-                        .map(
-                          (feature) => Padding(
-                            padding: EdgeInsets.only(bottom: 8.h),
-                            child: Text(
-                              "✔ $feature",
-                              style: GoogleFonts.parkinsans(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.buttonText,
-                                letterSpacing: -0.2,
-                              ),
+                          children:
+                              (widget.data.planDetails?.planId?.acFeatures ??
+                                      [])
+                                  .map(
+                                    (feature) => Padding(
+                                      padding: EdgeInsets.only(bottom: 8.h),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "✔ $feature",
+                                          style: GoogleFonts.parkinsans(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.buttonText,
+                                            letterSpacing: -0.2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                        ),
+                      ),
+                    ),
+                  if ((widget.data.planDetails?.planId?.electricalFeatures ??
+                          [])
+                      .isNotEmpty)
+                    Container(
+                      margin: EdgeInsets.all(5),
+                      padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.buttonText),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Theme(
+                        data: Theme.of(
+                          context,
+                        ).copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          tilePadding: EdgeInsets.zero,
+                          childrenPadding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                          ),
+                          iconColor: AppColors.buttonText,
+                          collapsedIconColor: AppColors.buttonText,
+                          title: Text(
+                            "Electrical Features",
+                            style: GoogleFonts.parkinsans(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.buttonText,
                             ),
                           ),
-                        )
-                        .toList(),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: (widget.data.planDetails?.planId?.plumbingFeatures ?? [])
-                        .map(
-                          (feature) => Padding(
-                            padding: EdgeInsets.only(bottom: 8.h),
-                            child: Text(
-                              "✔ $feature",
-                              style: GoogleFonts.parkinsans(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.buttonText,
-                                letterSpacing: -0.2,
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  )
+                          children:
+                              (widget
+                                          .data
+                                          .planDetails
+                                          ?.planId
+                                          ?.electricalFeatures ??
+                                      [])
+                                  .map(
+                                    (feature) => Padding(
+                                      padding: EdgeInsets.only(bottom: 8.h),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "✔ $feature",
+                                          style: GoogleFonts.parkinsans(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.buttonText,
+                                            letterSpacing: -0.2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

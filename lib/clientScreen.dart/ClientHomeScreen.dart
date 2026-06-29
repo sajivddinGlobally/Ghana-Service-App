@@ -11,6 +11,7 @@ import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotif
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotificationProvider/clientNotificationProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotificationSettingScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/clientPaymentHistory/paymentHistoryScreen.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/getMyPlanRequestSerivceProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createService.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/myRequest.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/getPlanServiceProvider/getPlanServiceProvider.dart';
@@ -644,6 +645,16 @@ class ActivePlans extends ConsumerStatefulWidget {
 }
 
 class _ActivePlansState extends ConsumerState<ActivePlans> {
+  String getNextDueDate(int? expiryDate) {
+    if (expiryDate == null) return "";
+
+    final expiry = DateTime.fromMillisecondsSinceEpoch(expiryDate);
+
+    final dueDate = DateTime(expiry.year, expiry.month + 1, expiry.day);
+
+    return DateFormat('dd MMM yyyy').format(dueDate);
+  }
+
   List<Map<String, dynamic>> recentRequestList = [
     {
       "image": "assets/ClientImage/acman.png",
@@ -672,7 +683,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
   Widget build(BuildContext context) {
     final state = ref.watch(myPlanRequestProvider);
     final getDashbordCountState = ref.watch(getDashbordCountProvider);
-    final reminderState = ref.watch(clientGetServiceRemindersProvider);
+    final planSate = ref.watch(myPlanRequestProvider);
     return getDashbordCountState.when(
       data: (data) {
         return Column(
@@ -928,20 +939,12 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
               ),
             ),
             SizedBox(height: 20.h),
-            reminderState.when(
+            planSate.when(
               data: (data) {
-                if (data.data == null || data.data!.isEmpty) {
-                  return const SizedBox.shrink(); // Kuch bhi show nahi hoga
-                }
-                String formatDate(int? timestamp) {
-                  if (timestamp == null) return "";
-
-                  return DateFormat(
-                    'dd MMMM yyyy',
-                  ).format(DateTime.fromMillisecondsSinceEpoch(timestamp));
-                }
-
-                final reminder = data.data!.first;
+                final item =
+                    (data.data?.list != null && data.data!.list!.isNotEmpty)
+                    ? data.data!.list![0]
+                    : null;
                 return Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(
@@ -960,7 +963,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                         children: [
                           Text(
                             // "Home AC Units",
-                            reminder.serviceName ?? "N/A",
+                            "Renew Reminder",
                             style: GoogleFonts.outfit(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w500,
@@ -979,7 +982,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                             ),
                             child: Text(
                               // "Due Soon",
-                              reminder.status ?? "",
+                              "Renew before",
                               style: GoogleFonts.parkinsans(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
@@ -1010,7 +1013,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Last Service Date",
+                                    "Valid till",
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w500,
@@ -1020,8 +1023,14 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                                   ),
                                   SizedBox(height: 6.h),
                                   Text(
-                                    // "12 January 2026",
-                                    formatDate(reminder.lastServiceDate),
+                                    item?.expiryDate != null
+                                        ? DateFormat('dd MMM yyyy').format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                              item!.expiryDate!,
+                                            ),
+                                          )
+                                        : "",
+
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w500,
@@ -1061,8 +1070,7 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                                   ),
                                   SizedBox(height: 6.h),
                                   Text(
-                                    // "12 July 2026",
-                                    formatDate(reminder.nextDueDate),
+                                    getNextDueDate(item?.expiryDate),
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w500,
@@ -1075,33 +1083,6 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
                             ),
                           ),
                         ],
-                      ),
-                      SizedBox(height: 14.h),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 45.h),
-                          backgroundColor: AppColors.buttonBg,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(54.r),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => Servicereminderscreen(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          "View All",
-                          style: GoogleFonts.outfit(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF04254E),
-                            letterSpacing: -0.2,
-                          ),
-                        ),
                       ),
                     ],
                   ),

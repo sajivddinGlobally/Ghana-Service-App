@@ -88,7 +88,7 @@ class _ServicereminderscreenState extends ConsumerState<Servicereminderscreen> {
                     ],
                   ),
                   Text(
-                    "Track your AC servicing schedule and\navoid maintenance delays",
+                    "Track your servicing schedule and\navoid maintenance delays",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.parkinsans(
                       fontSize: 14.sp,
