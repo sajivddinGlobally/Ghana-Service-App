@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dwelleasy_ghana/clientScreen.dart/ClientProfile/ClientProfileProvider/CProfileProvider.dart';
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
+import 'package:dwelleasy_ghana/core/utils/pretty.dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -272,8 +273,14 @@ class _CEditProfileScreenState extends ConsumerState<CEditProfileScreen> {
                 text: "Phone Number",
                 hinttext: "Enter Phone Number",
                 keybordtype: TextInputType.number,
-                length: 10,
+                // length: 10,
                 controller: phoneController,
+                readOnly: true,
+                onTap: () {
+                  showErrorSnackBar(
+                    "You can't change your registered phone number.",
+                  );
+                },
               ),
               SizedBox(height: 14.h),
               edit(
@@ -281,6 +288,10 @@ class _CEditProfileScreenState extends ConsumerState<CEditProfileScreen> {
                 hinttext: "Enter Email",
                 keybordtype: TextInputType.emailAddress,
                 controller: emailController,
+                readOnly: true,
+                onTap: () {
+                  showErrorSnackBar("You can't change your registered email.");
+                },
               ),
               SizedBox(height: 14.h),
               edit(
@@ -288,6 +299,7 @@ class _CEditProfileScreenState extends ConsumerState<CEditProfileScreen> {
                 hinttext: "Enter Address",
                 keybordtype: TextInputType.streetAddress,
                 controller: addressController,
+                maxLine: 2,
               ),
               SizedBox(height: 50.h),
               SizedBox(
@@ -364,6 +376,9 @@ Widget edit({
   required keybordtype,
   int? length,
   required TextEditingController controller,
+  int? maxLine,
+  bool readOnly = false,
+  VoidCallback? onTap,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,6 +394,9 @@ Widget edit({
       ),
       SizedBox(height: 8.h),
       TextField(
+        readOnly: readOnly,
+        onTap: onTap,
+        maxLines: maxLine,
         controller: controller,
         keyboardType: keybordtype,
         maxLength: length,

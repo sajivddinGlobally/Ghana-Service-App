@@ -142,7 +142,7 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                               child: ClipOval(
                                 child: Image.network(
                                   // "assets/ClientImage/Ellipse 1202 (1).png",
-                                  employee?.image ?? "",
+                                  employee?.employeeId?.image ?? "",
                                   width: 113.w,
                                   height: 113.h,
                                   fit: BoxFit.cover,
@@ -455,7 +455,14 @@ class _EmployeeDetailsState extends ConsumerState<EmployeeDetails> {
                                   name: employee?.employeeId?.fullName ?? "",
                                   status: employee?.status ?? "",
                                   requestId: employee!.id.toString(),
-                                  emploImage: employee?.image ?? "",
+                                  emploImage: employee?.employeeId?.image ?? "",
+                                  employeeService:
+                                      employee
+                                          .serviceId
+                                          ?.planDetails
+                                          ?.serviceId
+                                          ?.name ??
+                                      "",
                                 ),
                               ),
                             );

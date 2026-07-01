@@ -1,5 +1,4 @@
 import 'dart:developer' show log;
-
 import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientOurPlanProvider/CGetOurPlanProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotificationProvider/clientNotificationProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/engineerDetailScreen.dart';
@@ -32,10 +31,8 @@ class _ClientnotificationState extends ConsumerState<Clientnotification> {
   }
 
   void _onScroll() {
-    // जब यूज़र लिस्ट के बिल्कुल नीचे पहुँचने वाला हो (200px पहले)
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      // Notifier के loadNextPage फ़ंक्शन को कॉल करें
       ref.read(clientNotificationProvider.notifier).loadNextPage();
     }
   }

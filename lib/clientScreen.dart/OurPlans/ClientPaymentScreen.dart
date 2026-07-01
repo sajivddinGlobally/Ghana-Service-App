@@ -153,6 +153,165 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
     );
   }
 
+  void showConfirmPaymentDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.7),
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: 40.h,
+              bottom: 35.h,
+              left: 30.w,
+              right: 30.w,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 70.h,
+                  width: 70.w,
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(242, 215, 1, 0.20),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.help_outline_rounded,
+                      color: AppColors.buttonBg,
+                      size: 38.sp,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 18.h),
+
+                Text(
+                  "Confirm",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.outfit(
+                    fontSize: 28.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.buttonText,
+                  ),
+                ),
+
+                SizedBox(height: 12.h),
+
+                Text(
+                  "Are you sure you want to continue with this payment?",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.parkinsans(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.buttonText,
+                  ),
+                ),
+
+                SizedBox(height: 28.h),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 48.h,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: AppColors.buttonBg,
+                              width: 1.5,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100.r),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "No",
+                            style: GoogleFonts.inter(
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.buttonBg,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(width: 12.w),
+
+                    Expanded(
+                      child: SizedBox(
+                        height: 48.h,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.buttonBg,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100.r),
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (selectedPayment == null) {
+                              showErrorSnackBar("Please Select Payment Method");
+                              return;
+                            }
+                            setState(() {
+                              isLoading = true;
+                            });
+
+                            try {
+                              ref
+                                  .read(createPlanFormProvider.notifier)
+                                  .createPlanRequestStep2(
+                                    paymentMethod: selectedPayment!,
+                                  );
+
+                              final success = await ref
+                                  .read(createPlanFormProvider.notifier)
+                                  .submit(ref);
+
+                              if (success && mounted) {
+                                showPaymentDialog();
+                              }
+                            } catch (e) {
+                              log("ERROR => $e");
+                            } finally {
+                              if (mounted) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
+                            }
+                          },
+                          child: Text(
+                            "Yes",
+                            style: GoogleFonts.inter(
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.buttonText,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   bool isLoading = false;
 
   @override
@@ -413,9 +572,18 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                   disabledBackgroundColor: AppColors.buttonBg.withOpacity(0.5),
                   backgroundColor: AppColors.buttonBg,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.circular(100.r),
+                    borderRadius: BorderRadius.circular(100.r),
                   ),
                 ),
+                // onPressed: isLoading
+                //     ? null
+                //     : () {
+                //         if (selectedPayment == null) {
+                //           showErrorSnackBar("Please Select Payment Method");
+                //           return;
+                //         }
+                //         showConfirmPaymentDialog();
+                //       },
                 onPressed: isLoading
                     ? null
                     : () async {

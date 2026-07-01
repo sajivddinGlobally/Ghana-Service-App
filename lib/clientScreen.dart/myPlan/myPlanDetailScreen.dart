@@ -259,6 +259,10 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
             today.month == expiryDate.month &&
             today.day > expiryDate.day);
 
+    final bool isExpiredStatus = planData.status?.toLowerCase() == "expired";
+
+    final bool showPlanActions = isExpiredStatus && isPlanExpired;
+
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
       appBar: AppBar(
@@ -298,500 +302,534 @@ class _MyPlanDetailScreenState extends ConsumerState<MyPlanDetailScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.only(left: 16.w, right: 16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 30.h),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.buttonText),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    // "Full Home Bundle (Premium)",
-                    "${planData.planDetails?.serviceId?.name ?? "N/A"} (${planData.planDetails?.planId?.tier ?? ""})",
-                    style: GoogleFonts.outfit(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.1,
-                    ),
-                  ),
-                  SizedBox(height: 13.h),
-                  Row(
-                    children: [
-                      Text(
-                        "Services:",
-                        style: GoogleFonts.parkinsans(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.buttonText,
-                          letterSpacing: -0.2,
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        // "Plumbing + Electrical + AC",
-                        planData.planDetails?.planId?.name ?? "N/A",
-                        style: GoogleFonts.parkinsans(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.buttonText,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  Row(
-                    children: [
-                      Text(
-                        "Start Date:",
-                        style: GoogleFonts.parkinsans(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.buttonText,
-                          letterSpacing: -0.2,
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        // "01 Jan 2026",
-                        formattedStartDate,
-                        style: GoogleFonts.parkinsans(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.buttonText,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  Row(
-                    children: [
-                      Text(
-                        "Expiry Date:",
-                        style: GoogleFonts.parkinsans(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.buttonText,
-                          letterSpacing: -0.2,
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        // "31 Dec 2026",
-                        formattedExpiryDate,
-                        style: GoogleFonts.parkinsans(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.buttonText,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  Row(
-                    children: [
-                      Text(
-                        "Used Requests:",
-                        style: GoogleFonts.parkinsans(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.buttonText,
-                          letterSpacing: -0.2,
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        // "6 / Unlimited",
-                        planData.planDetails?.planId?.isUnlimited == true
-                            ? "Unlimited"
-                            : "${planData.planDetails?.planId?.callLimit ?? 0}",
-                        style: GoogleFonts.parkinsans(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.buttonText,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 27.w,
-                      vertical: 4.h,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(44.r),
-                      color: getStatusColor(planData.status).withOpacity(0.15),
-                    ),
-                    child: Text(
-                      getStatusText(planData.status),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(left: 16.w, right: 16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 30.h),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.buttonText),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      // "Full Home Bundle (Premium)",
+                      "${planData.planDetails?.serviceId?.name ?? "N/A"} (${planData.planDetails?.planId?.tier ?? ""})",
                       style: GoogleFonts.outfit(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: getStatusColor(planData.status),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.buttonText,
+                        letterSpacing: -0.1,
                       ),
                     ),
-                  ),
-                  SizedBox(height: 12.h),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(30.r),
-                    child: LinearProgressIndicator(
-                      value: progressValue,
-                      minHeight: 2.h,
-                      backgroundColor: AppColors.buttonText,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Color(0xFF0072FF),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.h),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.buttonText),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "What's Included",
-                    style: GoogleFonts.parkinsans(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.2,
-                    ),
-                  ),
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children:
-                  //       (widget.data.planDetails?.planId?. ?? [])
-                  //           .map(
-                  //             (feature) => Padding(
-                  //               padding: EdgeInsets.only(bottom: 8.h),
-                  //               child: Text(
-                  //                 "✔ $feature",
-                  //                 style: GoogleFonts.parkinsans(
-                  //                   fontSize: 14.sp,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   color: AppColors.buttonText,
-                  //                   letterSpacing: -0.2,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           )
-                  //           .toList(),
-                  // ),
-                  SizedBox(height: 10.h),
-                  if ((widget.data.planDetails?.planId?.plumbingFeatures ?? [])
-                      .isNotEmpty)
-                    Container(
-                      margin: EdgeInsets.all(5),
-                      padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.buttonText),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Theme(
-                        data: Theme.of(
-                          context,
-                        ).copyWith(dividerColor: Colors.transparent),
-                        child: ExpansionTile(
-                          tilePadding: EdgeInsets.zero,
-                          childrenPadding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                          ),
-                          iconColor: AppColors.buttonText,
-                          collapsedIconColor: AppColors.buttonText,
-                          title: Text(
-                            "Plumbing Features",
-                            style: GoogleFonts.parkinsans(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.buttonText,
-                            ),
-                          ),
-                          children:
-                              (widget
-                                          .data
-                                          .planDetails
-                                          ?.planId
-                                          ?.plumbingFeatures ??
-                                      [])
-                                  .map(
-                                    (feature) => Padding(
-                                      padding: EdgeInsets.only(bottom: 8.h),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "✔ $feature",
-                                          style: GoogleFonts.parkinsans(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.buttonText,
-                                            letterSpacing: -0.2,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                        ),
-                      ),
-                    ),
-                  if ((widget.data.planDetails?.planId?.acFeatures ?? [])
-                      .isNotEmpty)
-                    Container(
-                      margin: EdgeInsets.all(5),
-                      padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.buttonText),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Theme(
-                        data: Theme.of(
-                          context,
-                        ).copyWith(dividerColor: Colors.transparent),
-                        child: ExpansionTile(
-                          tilePadding: EdgeInsets.zero,
-                          childrenPadding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                          ),
-                          iconColor: AppColors.buttonText,
-                          collapsedIconColor: AppColors.buttonText,
-                          title: Text(
-                            "Ac Features",
-                            style: GoogleFonts.parkinsans(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.buttonText,
-                            ),
-                          ),
-                          children:
-                              (widget.data.planDetails?.planId?.acFeatures ??
-                                      [])
-                                  .map(
-                                    (feature) => Padding(
-                                      padding: EdgeInsets.only(bottom: 8.h),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "✔ $feature",
-                                          style: GoogleFonts.parkinsans(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.buttonText,
-                                            letterSpacing: -0.2,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                        ),
-                      ),
-                    ),
-                  if ((widget.data.planDetails?.planId?.electricalFeatures ??
-                          [])
-                      .isNotEmpty)
-                    Container(
-                      margin: EdgeInsets.all(5),
-                      padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.buttonText),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Theme(
-                        data: Theme.of(
-                          context,
-                        ).copyWith(dividerColor: Colors.transparent),
-                        child: ExpansionTile(
-                          tilePadding: EdgeInsets.zero,
-                          childrenPadding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                          ),
-                          iconColor: AppColors.buttonText,
-                          collapsedIconColor: AppColors.buttonText,
-                          title: Text(
-                            "Electrical Features",
-                            style: GoogleFonts.parkinsans(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.buttonText,
-                            ),
-                          ),
-                          children:
-                              (widget
-                                          .data
-                                          .planDetails
-                                          ?.planId
-                                          ?.electricalFeatures ??
-                                      [])
-                                  .map(
-                                    (feature) => Padding(
-                                      padding: EdgeInsets.only(bottom: 8.h),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "✔ $feature",
-                                          style: GoogleFonts.parkinsans(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.buttonText,
-                                            letterSpacing: -0.2,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-
-            // Text(
-            //   "✔ AC servicing every 6 months",
-            //   style: GoogleFonts.parkinsans(
-            //     fontSize: 14.sp,
-            //     fontWeight: FontWeight.w400,
-            //     color: AppColors.buttonText,
-            //     letterSpacing: -0.56,
-            //   ),
-            // ),
-            // SizedBox(height: 4.h),
-            // Text(
-            //   "✔ Priority support",
-            //   style: GoogleFonts.parkinsans(
-            //     fontSize: 14.sp,
-            //     fontWeight: FontWeight.w400,
-            //     color: AppColors.buttonText,
-            //     letterSpacing: -0.56,
-            //   ),
-            // ),
-            // SizedBox(height: 4.h),
-            // Text(
-            //   "✔ Free inspection visits",
-            //   style: GoogleFonts.parkinsans(
-            //     fontSize: 14.sp,
-            //     fontWeight: FontWeight.w400,
-            //     color: AppColors.buttonText,
-            //     letterSpacing: -0.56,
-            //   ),
-            // ),
-            if (isPlanExpired) ...[
-              SizedBox(height: 20.h),
-              SizedBox(
-                width: double.infinity,
-                height: 54.h,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    backgroundColor: AppColors.buttonBg,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(60.r),
-                    ),
-                  ),
-                  onPressed: () {
-                    showPlanDialog(
-                      title: "Renew Plan",
-                      message: "Are you sure you want to renew this plan?",
-                      onConfirm: () async {
-                        setState(() {
-                          isRenew = true;
-                        });
-                        try {
-                          final service = ref.read(authServiceProvider);
-                          final isSucess = await service.renewPlan();
-                          if (isSucess) {
-                            Navigator.pop(context);
-                            await ref
-                                .read(myPlanRequestProvider.notifier)
-                                .refresh();
-                          }
-                        } catch (e, st) {
-                          setState(() {
-                            isRenew = false;
-                          });
-                          log(e.toString());
-                        } finally {
-                          setState(() {
-                            isRenew = false;
-                          });
-                        }
-                      },
-                    );
-                  },
-                  child: isRenew
-                      ? SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 1.5,
-                          ),
-                        )
-                      : Text(
-                          "Renew Plan",
-                          style: GoogleFonts.outfit(
-                            fontSize: 16.sp,
+                    SizedBox(height: 13.h),
+                    Row(
+                      children: [
+                        Text(
+                          "Plan Type:",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
                             color: AppColors.buttonText,
-                            letterSpacing: -0.1,
+                            letterSpacing: -0.2,
                           ),
                         ),
-                ),
-              ),
-              SizedBox(height: 20.h),
-              SizedBox(
-                width: double.infinity,
-                height: 54.h,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    backgroundColor: Color(0xFF6CE227),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(60.r),
+                        Spacer(),
+                        Text(
+                          // "Plumbing + Electrical + AC",
+                          planData.planDetails?.planId?.name ?? "N/A",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.buttonText,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  onPressed: () async {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => PlanServiceList(),
+                    SizedBox(height: 13.h),
+                    Row(
+                      children: [
+                        Text(
+                          "Price:",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          // "Plumbing + Electrical + AC",
+                          "${planData.planDetails?.planId?.currency ?? "N/A"} ${planData.planDetails?.planId?.priceMonthly.toString() ?? "N/A"}",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.buttonText,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+                    Row(
+                      children: [
+                        Text(
+                          "Start Date:",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          // "01 Jan 2026",
+                          formattedStartDate,
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.buttonText,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+                    Row(
+                      children: [
+                        Text(
+                          "Expiry Date:",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          // "31 Dec 2026",
+                          formattedExpiryDate,
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.buttonText,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+                    Row(
+                      children: [
+                        Text(
+                          "Used Requests:",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.buttonText,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          // "6 / Unlimited",
+                          planData.planDetails?.planId?.isUnlimited == true
+                              ? "Unlimited"
+                              : "${planData.planDetails?.planId?.callLimit ?? 0}",
+                          style: GoogleFonts.parkinsans(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.buttonText,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 27.w,
+                        vertical: 4.h,
                       ),
-                    );
-                  },
-                  child: Text(
-                    "Upgrade Plan",
-                    style: GoogleFonts.outfit(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.buttonText,
-                      letterSpacing: -0.1,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(44.r),
+                        color: getStatusColor(
+                          planData.status,
+                        ).withOpacity(0.15),
+                      ),
+                      child: Text(
+                        getStatusText(planData.status),
+                        style: GoogleFonts.outfit(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          color: getStatusColor(planData.status),
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 12.h),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(30.r),
+                      child: LinearProgressIndicator(
+                        value: progressValue,
+                        minHeight: 2.h,
+                        backgroundColor: AppColors.buttonText,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xFF0072FF),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 20.h),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.buttonText),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Features Included",
+                      style: GoogleFonts.parkinsans(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.buttonText,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                    if ((widget.data.planDetails?.planId?.features ?? [])
+                        .isNotEmpty)
+                      Container(
+                        margin: EdgeInsets.only(top: 10.h),
+                        padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.buttonText),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: Theme(
+                          data: Theme.of(
+                            context,
+                          ).copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTile(
+                            tilePadding: EdgeInsets.zero,
+                            childrenPadding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 0,
+                            ),
+                            iconColor: AppColors.buttonText,
+                            collapsedIconColor: AppColors.buttonText,
+                            title: Text(
+                              // "Plumbing Features",
+                              "${planData.planDetails?.serviceId?.name ?? "N/A"} Features",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.buttonText,
+                              ),
+                            ),
+
+                            children:
+                                (widget.data.planDetails?.planId?.features ??
+                                        [])
+                                    .map(
+                                      (feature) => Padding(
+                                        padding: EdgeInsets.only(bottom: 8.h),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "✔ $feature",
+                                            style: GoogleFonts.parkinsans(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.buttonText,
+                                              letterSpacing: -0.2,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                          ),
+                        ),
+                      ),
+
+                    if ((widget.data.planDetails?.planId?.plumbingFeatures ??
+                            [])
+                        .isNotEmpty)
+                      Container(
+                        margin: EdgeInsets.only(top: 15.h),
+                        padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.buttonText),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: Theme(
+                          data: Theme.of(
+                            context,
+                          ).copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTile(
+                            tilePadding: EdgeInsets.zero,
+                            childrenPadding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                            ),
+                            iconColor: AppColors.buttonText,
+                            collapsedIconColor: AppColors.buttonText,
+                            title: Text(
+                              "Plumbing Features",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.buttonText,
+                              ),
+                            ),
+                            children:
+                                (widget
+                                            .data
+                                            .planDetails
+                                            ?.planId
+                                            ?.plumbingFeatures ??
+                                        [])
+                                    .map(
+                                      (feature) => Padding(
+                                        padding: EdgeInsets.only(bottom: 8.h),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "✔ $feature",
+                                            style: GoogleFonts.parkinsans(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.buttonText,
+                                              letterSpacing: -0.2,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                          ),
+                        ),
+                      ),
+                    if ((widget.data.planDetails?.planId?.acFeatures ?? [])
+                        .isNotEmpty)
+                      Container(
+                        margin: EdgeInsets.only(top: 15.h),
+                        padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.buttonText),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: Theme(
+                          data: Theme.of(
+                            context,
+                          ).copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTile(
+                            tilePadding: EdgeInsets.zero,
+                            childrenPadding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                            ),
+                            iconColor: AppColors.buttonText,
+                            collapsedIconColor: AppColors.buttonText,
+                            title: Text(
+                              "Ac Features",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.buttonText,
+                              ),
+                            ),
+                            children:
+                                (widget.data.planDetails?.planId?.acFeatures ??
+                                        [])
+                                    .map(
+                                      (feature) => Padding(
+                                        padding: EdgeInsets.only(bottom: 8.h),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "✔ $feature",
+                                            style: GoogleFonts.parkinsans(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.buttonText,
+                                              letterSpacing: -0.2,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                          ),
+                        ),
+                      ),
+                    if ((widget.data.planDetails?.planId?.electricalFeatures ??
+                            [])
+                        .isNotEmpty)
+                      Container(
+                        margin: EdgeInsets.only(top: 15.h),
+                        padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.buttonText),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: Theme(
+                          data: Theme.of(
+                            context,
+                          ).copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTile(
+                            tilePadding: EdgeInsets.zero,
+                            childrenPadding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                            ),
+                            iconColor: AppColors.buttonText,
+                            collapsedIconColor: AppColors.buttonText,
+                            title: Text(
+                              "Electrical Features",
+                              style: GoogleFonts.parkinsans(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.buttonText,
+                              ),
+                            ),
+                            children:
+                                (widget
+                                            .data
+                                            .planDetails
+                                            ?.planId
+                                            ?.electricalFeatures ??
+                                        [])
+                                    .map(
+                                      (feature) => Padding(
+                                        padding: EdgeInsets.only(bottom: 10.h),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "✔ $feature",
+                                            style: GoogleFonts.parkinsans(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.buttonText,
+                                              letterSpacing: -0.2,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              if (showPlanActions) ...[
+                SizedBox(height: 20.h),
+                SizedBox(
+                  width: double.infinity,
+                  height: 54.h,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: AppColors.buttonBg,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(60.r),
+                      ),
+                    ),
+                    onPressed: () {
+                      showPlanDialog(
+                        title: "Renew Plan",
+                        message: "Are you sure you want to renew this plan?",
+                        onConfirm: () async {
+                          setState(() {
+                            isRenew = true;
+                          });
+                          try {
+                            final service = ref.read(authServiceProvider);
+                            final isSucess = await service.renewPlan();
+                            if (isSucess.code == 0 && isSucess.error == false) {
+                              Navigator.pop(context);
+                              await ref
+                                  .read(myPlanRequestProvider.notifier)
+                                  .refresh();
+                            }
+                          } catch (e, st) {
+                            setState(() {
+                              isRenew = false;
+                            });
+                            log(e.toString());
+                          } finally {
+                            setState(() {
+                              isRenew = false;
+                            });
+                          }
+                        },
+                      );
+                    },
+                    child: isRenew
+                        ? SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 1.5,
+                            ),
+                          )
+                        : Text(
+                            "Renew Plan",
+                            style: GoogleFonts.outfit(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.buttonText,
+                              letterSpacing: -0.1,
+                            ),
+                          ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                SizedBox(
+                  width: double.infinity,
+                  height: 54.h,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: Color(0xFF6CE227),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(60.r),
+                      ),
+                    ),
+                    onPressed: () async {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => PlanServiceList(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Upgrade Plan",
+                      style: GoogleFonts.outfit(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.buttonText,
+                        letterSpacing: -0.1,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

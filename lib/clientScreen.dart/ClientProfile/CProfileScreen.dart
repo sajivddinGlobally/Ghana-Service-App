@@ -216,7 +216,7 @@ class _CProfileScreenState extends ConsumerState<CProfileScreen> {
                               ),
                               Spacer(),
                               Text(
-                                "+91-${data.data?.phone ?? ""}",
+                                "${data.data?.phone ?? ""}",
                                 style: GoogleFonts.parkinsans(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w600,
@@ -289,109 +289,97 @@ class _CProfileScreenState extends ConsumerState<CProfileScreen> {
                       ),
                     ),
                     SizedBox(height: 17.h),
-                    Container(
-                      padding: EdgeInsets.only(
-                        left: 14.w,
-                        right: 14.w,
-                        top: 14.h,
-                        bottom: 14.h,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.buttonText),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Subscription",
-                            style: GoogleFonts.outfit(
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.buttonText,
-                              fontSize: 16.sp,
-                              letterSpacing: -0.1,
-                            ),
+                    planSubcription.when(
+                      data: (planData) {
+                        final planList = planData.data?.list ?? [];
+
+                        if (planList.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+
+                        final plan = planList.first;
+
+                        return Container(
+                          padding: EdgeInsets.only(
+                            left: 14.w,
+                            right: 14.w,
+                            top: 14.h,
+                            bottom: 14.h,
                           ),
-                          SizedBox(height: 13.h),
-                          Row(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.buttonText),
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Plan:",
-                                style: GoogleFonts.parkinsans(
+                                "Subscription",
+                                style: GoogleFonts.outfit(
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 13.sp,
                                   color: AppColors.buttonText,
-                                  letterSpacing: -0.2,
+                                  fontSize: 16.sp,
+                                  letterSpacing: -0.1,
                                 ),
                               ),
-                              Spacer(),
-                              planSubcription.when(
-                                data: (data) {
-                                  final planList = data.data?.list ?? [];
-
-                                  final planSubs =
-                                      (data.data?.list?.isNotEmpty ?? false)
-                                      ? data
-                                                .data!
-                                                .list!
-                                                .first
-                                                .planDetails
-                                                ?.planId
-                                                ?.name ??
-                                            "N/A"
-                                      : "No Plan";
-                                  return Text(
-                                    planSubs,
+                              SizedBox(height: 13.h),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Plan:",
+                                    style: GoogleFonts.parkinsans(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 13.sp,
+                                      color: AppColors.buttonText,
+                                      letterSpacing: -0.2,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    plan.planDetails?.planId?.name ?? "N/A",
                                     style: GoogleFonts.parkinsans(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 15.sp,
                                       color: AppColors.buttonText,
                                       letterSpacing: -0.1,
                                     ),
-                                  );
-                                },
-                                error: (error, stackTrace) =>
-                                    Center(child: Text("Something went wrong")),
-                                loading: () => SizedBox(
-                                  width: 20.w,
-                                  height: 20.h,
-                                  child: CircularProgressIndicator(
-                                    color: AppColors.buttonText,
-                                    strokeWidth: 1.5,
                                   ),
-                                ),
+                                ],
+                              ),
+
+                              SizedBox(height: 13.h),
+
+                              Row(
+                                children: [
+                                  Text(
+                                    "Status:",
+                                    style: GoogleFonts.parkinsans(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 13.sp,
+                                      color: AppColors.buttonText,
+                                      letterSpacing: -0.2,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    data.data?.isActive == true
+                                        ? "Active"
+                                        : "Inactive",
+                                    style: GoogleFonts.parkinsans(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15.sp,
+                                      color: AppColors.buttonText,
+                                      letterSpacing: -0.1,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          SizedBox(height: 13.h),
-                          Row(
-                            children: [
-                              Text(
-                                "Status:",
-                                style: GoogleFonts.parkinsans(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 13.sp,
-                                  color: AppColors.buttonText,
-                                  letterSpacing: -0.2,
-                                ),
-                              ),
-                              Spacer(),
-                              Text(
-                                // "Active",
-                                data.data?.isActive == false
-                                    ? "InActive"
-                                    : "Active",
-                                style: GoogleFonts.parkinsans(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15.sp,
-                                  color: AppColors.buttonText,
-                                  letterSpacing: -0.1,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                        );
+                      },
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, __) => const SizedBox.shrink(),
                     ),
                     SizedBox(height: 31.h),
                     SizedBox(

@@ -46,13 +46,31 @@ class _ClientregisterscreenState extends ConsumerState<Clientregisterscreen> {
                       color: AppColors.buttonBg,
                       shape: BoxShape.circle,
                     ),
+                    // child: Center(
+                    //   child: Text(
+                    //     "c",
+                    //     textAlign: TextAlign.center,
+                    //     style: GoogleFonts.outfit(
+                    //       fontSize: 25.sp,
+                    //       fontWeight: FontWeight.w600,
+                    //       color: Color(0xff000000),
+                    //       height: 1,
+                    //     ),
+                    //   ),
+                    // ),
                     child: Center(
-                      child: Text(
-                        "c",
-                        style: GoogleFonts.urbanist(
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xff000000),
+                      child: Transform.translate(
+                        offset: const Offset(
+                          0,
+                          -1.5,
+                        ), // -1 ya -2 bhi try kar sakte ho
+                        child: Text(
+                          "c",
+                          style: GoogleFonts.urbanist(
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xff000000),
+                          ),
                         ),
                       ),
                     ),
@@ -113,16 +131,16 @@ class _ClientregisterscreenState extends ConsumerState<Clientregisterscreen> {
                     label: "Phone Number",
                     hintText: "Enter Your Phone Number",
                     controller: phoneController,
-                    maxLength: 10,
+                    // maxLength: 10,
                     type: TextInputType.phone,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "Please enter phone number";
                       }
 
-                      if (value.length < 10) {
-                        return "Enter valid phone number";
-                      }
+                      // if (value.length < 10) {
+                      //   return "Enter valid phone number";
+                      // }
 
                       return null;
                     },

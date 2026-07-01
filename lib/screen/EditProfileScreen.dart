@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
+import 'package:dwelleasy_ghana/core/utils/pretty.dio.dart';
 import 'package:dwelleasy_ghana/data/provider/getProfileProvider.dart';
 import 'package:dwelleasy_ghana/data/provider/getServiceProvider.dart';
 import 'package:flutter/cupertino.dart';
@@ -270,8 +271,14 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
                     hintText: "Enter Phone Number",
                     text: "Phone Number",
                     keyBord: TextInputType.number,
-                    length: 10,
+                    // length: 10,
                     controller: phoneController,
+                    readOnly: true,
+                    onTap: () {
+                      showErrorSnackBar(
+                        "You can't change your registered phone number.",
+                      );
+                    },
                   ),
                   SizedBox(height: 14.h),
                   _register(
@@ -279,6 +286,12 @@ class _EditprofilescreenState extends ConsumerState<Editprofilescreen> {
                     text: "Email",
                     keyBord: TextInputType.emailAddress,
                     controller: emailController,
+                    readOnly: true,
+                    onTap: () {
+                      showErrorSnackBar(
+                        "You can't change your registered email.",
+                      );
+                    },
                   ),
                   SizedBox(height: 14.h),
                   _register(
@@ -592,6 +605,8 @@ Widget _register({
   required TextInputType keyBord,
   int? length,
   required TextEditingController controller,
+  bool readOnly = false,
+  VoidCallback? onTap,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -609,6 +624,8 @@ Widget _register({
       Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
         child: TextField(
+          readOnly: readOnly,
+          onTap: onTap,
           keyboardType: keyBord,
           style: GoogleFonts.parkinsans(color: Colors.white, fontSize: 14.sp),
           maxLength: length,

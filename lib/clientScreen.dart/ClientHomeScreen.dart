@@ -233,12 +233,20 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
   Widget build(BuildContext context) {
     final clientProfileState = ref.watch(clientProfileProvider);
     final getPlanServiceState = ref.watch(getPlanServiceProvider);
-    final clientReadNotificationState = ref.watch(
-      clientReadNotificationProvider,
-    );
-    final unReadCount = clientReadNotificationState.maybeWhen(
+    // final clientReadNotificationState = ref.watch(
+    //   clientReadNotificationProvider,
+    // );
+    // final unReadCount = clientReadNotificationState.maybeWhen(
+    //   data: (data) {
+    //     return data.data?.modifiedCount ?? 0;
+    //   },
+    //   orElse: () => 0,
+    // );
+    final clientNotificationState = ref.watch(clientNotificationProvider);
+    final unReadCount = clientNotificationState.maybeWhen(
       data: (data) {
-        return data.data?.modifiedCount ?? 0;
+        return data.data?.list?.where((item) => item.isRead == false).length ??
+            0;
       },
       orElse: () => 0,
     );
@@ -349,7 +357,8 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
                         builder: (context) => Clientnotification(),
                       ),
                     ).then((_) {
-                      ref.invalidate(clientReadNotificationProvider);
+                      // ref.invalidate(clientReadNotificationProvider);
+                      ref.invalidate(clientNotificationProvider);
                     });
                   },
                   child: Stack(
@@ -497,6 +506,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
           ref.invalidate(getPlanServiceProvider);
           ref.invalidate(getDashbordCountProvider);
           ref.invalidate(clientGetServiceRemindersProvider);
+          ref.invalidate(clientNotificationProvider);
 
           await Future.wait([
             ref.read(clientProfileProvider.future),
@@ -581,7 +591,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
                                             Text(
                                               data.data![index].description ??
                                                   "",
-                                              maxLines: 4,
+                                              maxLines: 3,
                                               overflow: TextOverflow.ellipsis,
                                               style: GoogleFonts.parkinsans(
                                                 fontSize: 14.sp,

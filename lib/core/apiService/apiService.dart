@@ -1,11 +1,24 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:dwelleasy_ghana/core/network/api.stateNetwork.dart';
 import 'package:dwelleasy_ghana/core/utils/showMessage.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CForgotPassBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CForgotPassResModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/CGetMyPlanDetailsModel.dart'
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
 import 'package:dwelleasy_ghana/data/ClientModel/CGetMyPlanRequestModel.dart'
-    show CGetMyPlanRequestModel;
+    hide
+        PersonalInformation,
+        PropertyDetails,
+        PlanDetails,
+        PaymentAndBilling,
+        Declaration;
 import 'package:dwelleasy_ghana/data/ClientModel/CGetPlanModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CLoginBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CProfileModel.dart';
@@ -19,14 +32,15 @@ import 'package:dwelleasy_ghana/data/ClientModel/clientGetTicketModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/clientNotificationModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createPlanReqiestBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestBodyModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/createServiceRequestResModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/customerConfirmArrivalBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getActivePlanModel.dart'
     hide
+        PersonalInformation,
+        PropertyDetails,
         PlanDetails,
         PaymentAndBilling,
-        Declaration,
-        PersonalInformation,
-        PropertyDetails;
+        Declaration;
 import 'package:dwelleasy_ghana/data/ClientModel/getDashbordCountModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getMyPlanRequestServiceModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceDetailsModel.dart';
@@ -39,6 +53,7 @@ import 'package:dwelleasy_ghana/data/ClientModel/getServiceRequestModel.dart'
         PlanDetails,
         PaymentAndBilling,
         Declaration;
+import 'package:dwelleasy_ghana/data/ClientModel/renewPlanModel.dart' hide PersonalInformation, PropertyDetails, PlanDetails, PaymentAndBilling, Declaration;
 import 'package:dwelleasy_ghana/data/model/acceptRequestBodyModel.dart';
 import 'package:dwelleasy_ghana/data/model/acceptRequestResModel.dart'
     hide
@@ -55,8 +70,8 @@ import 'package:dwelleasy_ghana/data/model/forgotPasswordResModel.dart';
 import 'package:dwelleasy_ghana/data/model/getArriveModel.dart'
     hide
         PersonalInformation,
-        PlanDetails,
         PropertyDetails,
+        PlanDetails,
         PaymentAndBilling,
         Declaration;
 import 'package:dwelleasy_ghana/data/model/getAssignCountModel.dart';
@@ -72,8 +87,8 @@ import 'package:dwelleasy_ghana/data/model/getCompleteRequestModel.dart'
         PersonalInformation,
         PropertyDetails,
         PlanDetails,
-        Declaration,
-        PaymentAndBilling;
+        PaymentAndBilling,
+        Declaration;
 import 'package:dwelleasy_ghana/data/model/getMyLeaveModel.dart';
 import 'package:dwelleasy_ghana/data/model/getNotificationModel.dart';
 import 'package:dwelleasy_ghana/data/model/getOnTheWayModel.dart'
@@ -130,8 +145,8 @@ import 'package:dwelleasy_ghana/data/model/todayAssignRequestModel.dart'
         Declaration;
 import 'package:dwelleasy_ghana/data/model/todayPendngRequestModel.dart'
     hide
-        PropertyDetails,
         PersonalInformation,
+        PropertyDetails,
         PlanDetails,
         PaymentAndBilling,
         Declaration;
@@ -757,18 +772,18 @@ class AuthService {
     }
   }
 
-  Future<bool> renewPlan() async {
+  Future<RenewPlanModel> renewPlan() async {
     try {
       final response = await api.renewPlan();
-      if (response.code == 0 && response.error == false) {
-        log(response.message ?? "Login Success");
-        return true;
-      }
-      return false;
+      // if (response.code == 0 && response.error == false) {
+      //   log(response.message ?? "Login Success");
+      //   return response;
+      // }
+      return response;
     } catch (e, st) {
       log("ERROR => $e");
       log("STACK TRACE => $st");
-      return false;
+      rethrow;
     }
   }
 
@@ -1083,29 +1098,50 @@ class AuthService {
     }
   }
 
-  Future<bool> clientCreateSerivceRequest({
+  // Future<CreateServiceRequestResModel> clientCreateSerivceRequest({
+  //   required String serviceId,
+  //   required String desc,
+  //   required int preffrerData,
+  //   required int preferredTime,
+  // }) async {
+  //   try {
+  //     final body = CreateServiceRequestBodyModel(
+  //       serviceId: serviceId,
+  //       description: desc,
+  //       preferredDate: preffrerData,
+  //       preferredTime: preferredTime,
+  //     );
+  //     final response = await api.clientCreateSerivceRequest(body);
+  //     log(response.message ?? "Login Success");
+  //     return response;
+  //   } catch (e, st) {
+  //     // log("ERROR => $e");
+  //     // log("STACK TRACE => $st");
+  //     rethrow;
+  //   }
+  // }
+  Future<CreateServiceRequestResModel> clientCreateSerivceRequest({
     required String serviceId,
     required String desc,
     required int preffrerData,
     required int preferredTime,
   }) async {
+    final body = CreateServiceRequestBodyModel(
+      serviceId: serviceId,
+      description: desc,
+      preferredDate: preffrerData,
+      preferredTime: preferredTime,
+    );
     try {
-      final body = CreateServiceRequestBodyModel(
-        serviceId: serviceId,
-        description: desc,
-        preferredDate: preffrerData,
-        preferredTime: preferredTime,
-      );
-      final response = await api.clientCreateSerivceRequest(body);
-      if (response.code == 0 && response.error == false) {
-        log(response.message ?? "Login Success");
-        return true;
+      return await api.clientCreateSerivceRequest(body);
+    } on DioException catch (e) {
+      print("Status Code : ${e.response?.statusCode}");
+      print("Response : ${e.response?.data}");
+
+      if (e.response?.data != null) {
+        return CreateServiceRequestResModel.fromJson(e.response!.data);
       }
-      return false;
-    } catch (e, st) {
-      log("ERROR => $e");
-      log("STACK TRACE => $st");
-      return false;
+      rethrow;
     }
   }
 
@@ -1374,6 +1410,18 @@ class AuthService {
       log("ERROR => $e");
       log("STACK TRACE => $st");
       return false;
+    }
+  }
+
+  Future<CGetMyPlanDetailsModel> clientGetMyPlanDetails() async {
+    try {
+      final response = await api.myPlanDetails();
+      if (response.code == 0 && response.error == false) {
+        return response;
+      }
+      return throw Exception(response.message);
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

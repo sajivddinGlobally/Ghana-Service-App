@@ -2,8 +2,12 @@ import 'dart:developer';
 
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/getMyPlanRequestSerivceProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/myRequest.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/Provider/GetMyPlanRequestProvider.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/myPlanScreen.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/service/planServiceListScreen.dart';
 import 'package:dwelleasy_ghana/core/apiService/apiServiceProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
+import 'package:dwelleasy_ghana/core/utils/pretty.dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,10 +36,12 @@ class _CreateServiceState extends ConsumerState<CreateService> {
   DateTime? selectedDate;
 
   Future<void> pickDate() async {
+    final DateTime today = DateTime.now();
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
+      // firstDate: DateTime(2000),
+      firstDate: DateTime(today.year, today.month, today.day),
       lastDate: DateTime(2100),
     );
 
@@ -66,6 +72,8 @@ class _CreateServiceState extends ConsumerState<CreateService> {
       });
     }
   }
+
+  bool isRenew = false;
 
   @override
   Widget build(BuildContext context) {
@@ -404,8 +412,121 @@ class _CreateServiceState extends ConsumerState<CreateService> {
                                       DateTime.now().millisecondsSinceEpoch,
                                   preferredTime: preferredTime,
                                 );
-                            if (isSucess) {
+                            if (isSucess.code == 0 && isSucess.error == false) {
                               showRequestDialog();
+                            } else {
+                              showRequestLimitDialog(
+                                message:
+                                    isSucess.message ??
+                                    "You have reached the maximum limit of 2 service requests for the Basic plan.",
+                                context: context,
+                                // onRenew: () async {
+                                //   try {
+                                //     final service = ref.read(
+                                //       authServiceProvider,
+                                //     );
+
+                                //     final success = await service.renewPlan();
+
+                                //     if (success && context.mounted) {
+                                //       Navigator.pushAndRemoveUntil(
+                                //         context,
+                                //         CupertinoPageRoute(
+                                //           builder: (_) =>
+                                //               MyPlanScreen(isShowBack: false),
+                                //         ),
+                                //         (route) => route.isFirst,
+                                //       );
+
+                                //       await ref
+                                //           .read(myPlanRequestProvider.notifier)
+                                //           .refresh();
+                                //     }
+                                //   } catch (e, st) {
+                                //     log(e.toString());
+                                //   }
+                                // },
+                                onRenew: () async {
+                                  try {
+                                    final service = ref.read(
+                                      authServiceProvider,
+                                    );
+
+                                    final response = await service.renewPlan();
+
+                                    if (!context.mounted) return;
+
+                                    /// Success
+                                    if (response.code == 0 &&
+                                        response.error == false) {
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop();
+
+                                      await ref
+                                          .read(myPlanRequestProvider.notifier)
+                                          .refresh();
+
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (_) =>
+                                              MyPlanScreen(isShowBack: false),
+                                        ),
+                                        (route) => route.isFirst,
+                                      );
+                                    }
+                                    /// Already Pending
+                                    else if (response.message ==
+                                        "Renew request already pending.") {
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop();
+
+                                      showErrorSnackBar(
+                                        "Renew request already pending.",
+                                      );
+
+                                      await ref
+                                          .read(myPlanRequestProvider.notifier)
+                                          .refresh();
+
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (_) =>
+                                              MyPlanScreen(isShowBack: false),
+                                        ),
+                                        (route) => route.isFirst,
+                                      );
+                                    } else {
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop();
+
+                                      showErrorSnackBar("Something went wrong");
+                                    }
+                                  } catch (e) {
+                                    Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).pop();
+                                    log(e.toString());
+                                    // showErrorSnackBar(e.toString());
+                                  }
+                                },
+                                onUpgrade: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (_) => PlanServiceList(),
+                                    ),
+                                  );
+                                },
+                              );
                             }
                           } catch (e, st) {
                             log(e.toString());
@@ -555,4 +676,207 @@ class _CreateServiceState extends ConsumerState<CreateService> {
       },
     );
   }
+}
+
+void showRequestLimitDialog({
+  required String message,
+  // required VoidCallback onRenew,
+  required Future<void> Function() onRenew,
+  required VoidCallback onUpgrade,
+  required BuildContext context,
+}) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.black.withOpacity(0.7),
+    builder: (context) {
+      bool loading = false;
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 24.h,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 420.w, minWidth: 320.w),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 35.h),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    /// Warning Icon
+                    Container(
+                      height: 78.h,
+                      width: 78.w,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFFFF3CD),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.orange,
+                          size: 38.sp,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    Text(
+                      "Request Limit Reached",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.outfit(
+                        fontSize: 26.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.buttonText,
+                      ),
+                    ),
+
+                    SizedBox(height: 16.h),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 6.w),
+                      child: Text(
+                        message,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.parkinsans(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.buttonText.withOpacity(.75),
+                          height: 1.6,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 30.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 52.h,
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(
+                                  color: AppColors.buttonBg,
+                                  width: 1.5,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.r),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "Cancel",
+                                style: GoogleFonts.inter(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.buttonText,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(width: 12.w),
+
+                        Expanded(
+                          child: SizedBox(
+                            height: 52.h,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.buttonBg,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.r),
+                                ),
+                              ),
+                              onPressed: loading
+                                  ? null
+                                  : () async {
+                                      setState(() {
+                                        loading = true;
+                                      });
+
+                                      await onRenew();
+
+                                      if (context.mounted) {
+                                        setState(() {
+                                          loading = false;
+                                        });
+                                      }
+                                    },
+                              child: loading
+                                  ? SizedBox(
+                                      width: 20.w,
+                                      height: 20.h,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: AppColors.buttonText,
+                                      ),
+                                    )
+                                  : Text(
+                                      "Renew Plan",
+                                      style: GoogleFonts.inter(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.buttonText,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 20.h),
+
+                    /// Upgrade Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52.h,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.buttonBg,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.r),
+                          ),
+                        ),
+                        icon: Icon(
+                          Icons.workspace_premium_rounded,
+                          color: AppColors.buttonText,
+                          size: 22.sp,
+                        ),
+                        label: Text(
+                          "Upgrade Plan",
+                          style: GoogleFonts.inter(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.buttonText,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          onUpgrade();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
 }

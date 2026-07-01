@@ -226,12 +226,9 @@ class _CompletescreenState extends ConsumerState<Completescreen> {
                     }
                     final complete = data.data!.list![index];
 
-                    final prefferedDate = DateTime.fromMicrosecondsSinceEpoch(
-                      complete.preferredDate ?? 0,
+                    final formattedDate = DateFormat('dd MMM yyyy').format(
+                      DateTime.fromMillisecondsSinceEpoch(complete?.date ?? 0),
                     );
-                    final formattedDate = DateFormat(
-                      "dd MMM yyyy",
-                    ).format(prefferedDate);
 
                     final preferredTime = DateFormat("hh:mm a").format(
                       DateTime.fromMillisecondsSinceEpoch(

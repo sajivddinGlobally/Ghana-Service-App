@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CForgotPassBodyModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CForgotPassResModel.dart';
+import 'package:dwelleasy_ghana/data/ClientModel/CGetMyPlanDetailsModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CGetMyPlanRequestModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CGetPlanModel.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/CLoginBodyModel.dart';
@@ -161,7 +162,7 @@ abstract class ApiStateNetwork {
     @Query("limit") int limit,
   );
 
-    @GET("/api/v1/employee/get-customer-confirmed-requests")
+  @GET("/api/v1/employee/get-customer-confirmed-requests")
   Future<GetCustomerConfirmeModel> customerConfirmed(
     @Query("page") int page,
     @Query("limit") int limit,
@@ -359,9 +360,12 @@ abstract class ApiStateNetwork {
     @Body() CustomerConfirmArrivalBodyModel body,
   );
 
-    @POST("/api/v1/user/renew-plan")
+  @POST("/api/v1/user/renew-plan")
   Future<RenewPlanModel> renewPlan();
 
-      @POST("/api/v1/user/upgrade-plan")
+  @POST("/api/v1/user/upgrade-plan")
   Future<UpgradePlanModel> upgradePlan();
+
+  @GET("/api/v1/user/get-my-plan-details")
+  Future<CGetMyPlanDetailsModel> myPlanDetails();
 }

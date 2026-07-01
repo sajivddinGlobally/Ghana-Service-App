@@ -206,7 +206,7 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                             ),
                           ),
                           SizedBox(height: 13.h),
-                          _profile("Phone", "+91-${data.data?.phone ?? ""}"),
+                          _profile("Phone", "${data.data?.phone ?? ""}"),
                           SizedBox(height: 12.h),
                           _profile("Email", data.data?.email ?? ""),
                           SizedBox(height: 12.h),

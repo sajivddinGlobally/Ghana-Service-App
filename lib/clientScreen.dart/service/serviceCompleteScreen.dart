@@ -13,6 +13,7 @@ class ServiceCompleteScreen extends StatefulWidget {
   final String status;
   final String requestId;
   final String emploImage;
+  final String employeeService;
   const ServiceCompleteScreen({
     super.key,
     required this.assignServices,
@@ -20,6 +21,7 @@ class ServiceCompleteScreen extends StatefulWidget {
     required this.status,
     required this.requestId,
     required this.emploImage,
+    required this.employeeService,
   });
 
   @override
@@ -216,7 +218,7 @@ class _ServiceCompleteScreenState extends State<ServiceCompleteScreen> {
                   builder: (context) => Ratingscreen(
                     emploName: widget.name,
                     employeeImage: widget.emploImage,
-                    serivces: widget.assignServices,
+                    serivces: widget.employeeService,
                     serviceRequestId: widget.requestId,
                   ),
                 ),

@@ -89,7 +89,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                           color: Color(0xFF8D8D8D),
-                          letterSpacing: -0.1
+                          letterSpacing: -0.1,
                         ),
                       ),
                     ),
@@ -128,16 +128,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       label: "Phone Number",
                       hintText: "Enter Your Phone Number",
                       controller: phoneController,
-                      maxLength: 10,
+                      // maxLength: 10,
                       type: TextInputType.phone,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return "Please enter phone number";
                         }
 
-                        if (value.length < 10) {
-                          return "Enter valid phone number";
-                        }
+                        // if (value.length < 10) {
+                        //   return "Enter valid phone number";
+                        // }
 
                         return null;
                       },
@@ -164,8 +164,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: Color(0xFFFFFFFF),
-                              letterSpacing: -0.2
-
+                              letterSpacing: -0.2,
                             ),
                           ),
                           SizedBox(height: 10.h),
@@ -293,7 +292,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.buttonText,
-                                letterSpacing: -0.2
+                                letterSpacing: -0.2,
                               ),
                             ),
                     ),

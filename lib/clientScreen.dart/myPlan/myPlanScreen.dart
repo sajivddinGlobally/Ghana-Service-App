@@ -300,7 +300,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                               Row(
                                 children: [
                                   Text(
-                                    "Services:",
+                                    "Plan Type:",
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w500,
@@ -309,7 +309,30 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    "${item?.planDetails?.planId?.name ?? ""} ",
+                                    "${item.planDetails?.planId?.name ?? ""} ",
+                                    textAlign: TextAlign.end,
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 13.h),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Price:",
+                                    style: GoogleFonts.parkinsans(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.buttonText,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    "${item.planDetails?.planId?.currency ?? "N/A"} ${item.planDetails?.planId?.priceMonthly ?? ""} ",
                                     textAlign: TextAlign.end,
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 14.sp,
@@ -340,7 +363,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                                               item.startDate!,
                                             ),
                                           )
-                                        : "",
+                                        : "--",
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w400,
@@ -369,7 +392,7 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                                               item.expiryDate!,
                                             ),
                                           )
-                                        : "",
+                                        : "--",
                                     style: GoogleFonts.parkinsans(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w400,
