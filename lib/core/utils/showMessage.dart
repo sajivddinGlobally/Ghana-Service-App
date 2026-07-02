@@ -17,20 +17,36 @@ void showSuccessSnackBar(String message) {
       margin: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 20.h),
       content: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        // decoration: BoxDecoration(
+        //   borderRadius: BorderRadius.circular(18.r),
+        //   gradient: const LinearGradient(
+        //     colors: [
+        //       Color(0xff43A047), // Green
+        //       Color(0xff1B5E20), // Dark Green
+        //     ],
+        //   ),
+        // ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18.r),
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xff43A047), // Green
-              Color(0xff1B5E20), // Dark Green
-            ],
+          color: const Color(0xFF181D23), // Dark theme background
+          border: Border.all(
+            color: const Color(0xFFF2D701), // Yellow accent
+            width: 1.2,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFF2D701).withOpacity(0.15),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Row(
           children: [
             Icon(
               Icons.check_circle_outline_rounded,
-              color: Colors.white,
+              // color: Colors.white,
+              color: const Color(0xFFF2D701),
               size: 24.sp,
             ),
             SizedBox(width: 12.w),
