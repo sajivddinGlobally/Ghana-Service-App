@@ -233,7 +233,6 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
   Widget build(BuildContext context) {
     final clientProfileState = ref.watch(clientProfileProvider);
     final getPlanServiceState = ref.watch(getPlanServiceProvider);
-    final planSate = ref.watch(myPlanRequestProvider);
     final clientNotificationState = ref.watch(clientNotificationProvider);
     final unReadCount = clientNotificationState.maybeWhen(
       data: (data) {
@@ -242,6 +241,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
       },
       orElse: () => 0,
     );
+    final planSate = ref.watch(myPlanRequestProvider);
 
     return Scaffold(
       backgroundColor: AppColors.backgroungBg,
@@ -504,167 +504,134 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
           await Future.wait([
             ref.read(clientProfileProvider.future),
             ref.read(getPlanServiceProvider.future),
+            ref.read(myPlanRequestProvider.notifier).refresh(),
           ]);
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.only(left: 16.w, right: 16.w),
-            child: clientProfileState.when(
-              data: (profileData) {
-                final isActivePlan = profileData.data?.isActive ?? false;
+            // child: clientProfileState.when(
+            child: planSate.when(
+              data: (plan) {
+                // final isActivePlan = profileData.data?.isActive ?? false;
 
                 // if (isActivePlan) {
                 //   return ActivePlans(requestUsed: widget.requestUsed);
                 // }
 
-                return planSate.when(
-                  data: (planData) {
-                    final hasPlan = (planData.data?.list?.isNotEmpty ?? false);
+                final isPlanActiveOrSuccess =
+                    plan.data?.list?.any(
+                      (plan) =>
+                          plan.status?.toLowerCase() == "active" ||
+                          plan.status?.toLowerCase() == "success",
+                    ) ??
+                    false;
 
-                    if (isActivePlan && hasPlan) {
-                      return ActivePlans(requestUsed: widget.requestUsed);
-                    }
+                if (isPlanActiveOrSuccess) {
+                  return ActivePlans(requestUsed: widget.requestUsed);
+                }
 
-                    return Column(
-                      children: [
-                        SizedBox(height: 20.h),
-
-                        getPlanServiceState.when(
-                          data: (data) {
-                            return Column(
-                              children: [
-                                SizedBox(height: 20.h),
-                                getPlanServiceState.when(
-                                  data: (data) {
-                                    return ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      padding: EdgeInsets.zero,
-                                      // itemCount: planList.length,
-                                      itemCount: data.data?.length,
-                                      itemBuilder: (context, index) {
-                                        final imageData =
-                                            planList[index % planList.length];
-                                        return Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: 20.h,
-                                          ),
-                                          child: InkWell(
-                                            borderRadius: BorderRadius.circular(
-                                              12.r,
-                                            ),
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      NewPlanDetailScreen(
-                                                        id: data.data![index].id
-                                                            .toString(),
-                                                      ),
-                                                ),
-                                              );
-                                            },
-                                            child: Stack(
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadiusGeometry.circular(
-                                                        12.r,
-                                                      ),
-                                                  child: Image.asset(
-                                                    // planList[index]['image'],
-                                                    imageData['image'],
-                                                    width: double.infinity,
-                                                    height: 160.h,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  left: 15.w,
-                                                  top: 0.h,
-                                                  bottom: 0,
-                                                  child: Container(
-                                                    width: 190.w,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          // planList[index]['title'],
-                                                          data
-                                                                  .data?[index]
-                                                                  .name ??
-                                                              "",
-                                                          style: GoogleFonts.outfit(
-                                                            fontSize: 20.sp,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            color:
-                                                                imageData['titleColor'],
-                                                            letterSpacing: -0.2,
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 5.h),
-                                                        Text(
-                                                          data
-                                                                  .data![index]
-                                                                  .description ??
-                                                              "",
-                                                          maxLines: 3,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: GoogleFonts.parkinsans(
-                                                            fontSize: 14.sp,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            color:
-                                                                imageData['subtitleColor'],
-                                                            letterSpacing: -0.1,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                  error: (error, stackTrace) {
-                                    log(stackTrace.toString());
-                                    return Center(
-                                      child: Text("Something went wrong"),
-                                    );
-                                  },
-                                  loading: () => Center(
-                                    child: CircularProgressIndicator(
-                                      color: AppColors.buttonBg,
+                return Column(
+                  children: [
+                    SizedBox(height: 20.h),
+                    getPlanServiceState.when(
+                      data: (data) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          // itemCount: planList.length,
+                          itemCount: data.data?.length,
+                          itemBuilder: (context, index) {
+                            final imageData = planList[index % planList.length];
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 20.h),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(12.r),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => NewPlanDetailScreen(
+                                        id: data.data![index].id.toString(),
+                                      ),
                                     ),
-                                  ),
+                                  );
+                                },
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius:
+                                          BorderRadiusGeometry.circular(12.r),
+                                      child: Image.asset(
+                                        // planList[index]['image'],
+                                        imageData['image'],
+                                        width: double.infinity,
+                                        height: 160.h,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 15.w,
+                                      top: 0.h,
+                                      bottom: 0,
+                                      child: Container(
+                                        width: 190.w,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              // planList[index]['title'],
+                                              data.data?[index].name ?? "",
+                                              style: GoogleFonts.outfit(
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: imageData['titleColor'],
+                                                letterSpacing: -0.2,
+                                              ),
+                                            ),
+                                            SizedBox(height: 5.h),
+
+                                            Text(
+                                              data.data![index].description ??
+                                                  "",
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.parkinsans(
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color:
+                                                    imageData['subtitleColor'],
+                                                letterSpacing: -0.1,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 20.h),
-                              ],
+                              ),
                             );
                           },
-                          loading: () =>
-                              const Center(child: CircularProgressIndicator()),
-                          error: (e, _) => Center(child: Text(e.toString())),
+                        );
+                      },
+                      error: (error, stackTrace) {
+                        log(stackTrace.toString());
+                        return Center(child: Text("Something went wrong"));
+                      },
+                      loading: () => Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.buttonBg,
                         ),
-                      ],
-                    );
-                  },
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (e, _) => Center(child: Text(e.toString())),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                  ],
                 );
               },
               error: (error, stackTrace) {

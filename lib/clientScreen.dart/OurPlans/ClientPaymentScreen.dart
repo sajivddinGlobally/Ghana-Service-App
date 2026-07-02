@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:dwelleasy_ghana/clientScreen.dart/ClientHomeScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientOurPlanProvider/createPlanServiceRequestProvider.dart';
+import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/Provider/GetMyPlanRequestProvider.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
 import 'package:dwelleasy_ghana/core/utils/pretty.dio.dart';
 import 'package:dwelleasy_ghana/data/ClientModel/getPlanServiceDetailsModel.dart';
@@ -607,6 +608,7 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                               .submit(ref);
 
                           if (success && mounted) {
+                            ref.read(myPlanRequestProvider.notifier).refresh();
                             showPaymentDialog();
                           }
                         } catch (e) {
