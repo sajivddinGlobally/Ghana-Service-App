@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:dwelleasy_ghana/core/utils/key.dart';
+import 'package:dwelleasy_ghana/selectRolScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,11 +78,29 @@ Dio callDio() {
         }
         handler.next(response);
       },
-      onError: (DioException error, handler) {
+      onError: (DioException error, handler) async {
         log("DIO TYPE => ${error.type}");
         log("DIO MESSAGE => ${error.message}");
         log("DIO ERROR => ${error.error}");
         log("DIO RESPONSE => ${error.response?.data}");
+
+        /// Token Expired or Unauthorized
+        if (error.response?.statusCode == 401) {
+          log("========== TOKEN EXPIRED ==========");
+
+          await Hive.box("employeeBox").clear();
+          await Hive.box("clientBox").clear();
+
+          final context = navigatorKey.currentContext;
+
+          if (context != null) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const SelectRoleScreen()),
+              (route) => false,
+            );
+          }
+          return;
+        }
 
         String errorMessage = "Something went wrong";
         if (error.type == DioExceptionType.connectionTimeout) {
