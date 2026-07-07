@@ -55,16 +55,34 @@ Dio callDio() {
         handler.next(options);
       },
 
-      onResponse: (response, handler) {
+      onResponse: (response, handler) async {
         final data = response.data;
         if (data is Map<String, dynamic>) {
-          final message = data["message"];
+          // final message = data["message"];
+          final message = data["message"]?.toString().toLowerCase();
           final error = data["error"];
           if (message != null) {
             log("API Message :- $message");
           }
+          if (error == true && message == "not found") {
+            await Hive.box("employeeBox").clear();
+            await Hive.box("clientBox").clear();
+
+            final context = navigatorKey.currentContext;
+
+            if (context != null) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const SelectRoleScreen()),
+                (route) => false,
+              );
+            }
+
+            return;
+          }
           if (error == true) {
-            showErrorSnackBar(message);
+            // showErrorSnackBar(message);
+            showErrorSnackBar(data["message"]);
 
             return handler.reject(
               DioException(
@@ -83,15 +101,19 @@ Dio callDio() {
         log("DIO MESSAGE => ${error.message}");
         log("DIO ERROR => ${error.error}");
         log("DIO RESPONSE => ${error.response?.data}");
+        final message = error.response?.data["message"]
+            ?.toString()
+            .toLowerCase();
 
         /// Token Expired or Unauthorized
-        if (error.response?.statusCode == 401) {
+        if (error.response?.statusCode == 401 || message == "Not found") {
           log("========== TOKEN EXPIRED ==========");
 
           await Hive.box("employeeBox").clear();
           await Hive.box("clientBox").clear();
 
           final context = navigatorKey.currentContext;
+          log("context : -   $context");
 
           if (context != null) {
             Navigator.of(context).pushAndRemoveUntil(
