@@ -65,6 +65,7 @@ Dio callDio() {
             log("API Message :- $message");
           }
           if (error == true && message == "not found") {
+            //  showErrorSnackBar(data["message"]);
             await Hive.box("employeeBox").clear();
             await Hive.box("clientBox").clear();
 

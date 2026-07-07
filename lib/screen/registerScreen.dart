@@ -253,28 +253,37 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           return;
                         }
                         setState(() {
-                          isLoading = false;
-                        });
-                        final serviceRegister = ref.read(authServiceProvider);
-                        final isSucess = await serviceRegister.registerEmployee(
-                          fullName: fullNameController.text.trim(),
-                          email: emailController.text.trim(),
-                          phoneNumber: phoneController.text.trim(),
-                          serviceId: selectedServiceId.toString(),
-                          password: passwordController.text.trim(),
-                          context: context,
-                        );
-                        setState(() {
                           isLoading = true;
                         });
-                        if (isSucess) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => Loginscreen(),
-                            ),
-                            (route) => false,
-                          );
+                        try {
+                          final serviceRegister = ref.read(authServiceProvider);
+                          final isSucess = await serviceRegister
+                              .registerEmployee(
+                                fullName: fullNameController.text.trim(),
+                                email: emailController.text.trim(),
+                                phoneNumber: phoneController.text.trim(),
+                                serviceId: selectedServiceId.toString(),
+                                password: passwordController.text.trim(),
+                                context: context,
+                              );
+
+                          if (isSucess) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => Loginscreen(),
+                              ),
+                              (route) => false,
+                            );
+                          }
+                        } catch (e) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        } finally {
+                          setState(() {
+                            isLoading = false;
+                          });
                         }
                       },
                       child: isLoading
