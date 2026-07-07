@@ -293,11 +293,12 @@ Widget _registerFormClient({
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       decoration: InputDecoration(
                         counterText: "",
-                        errorStyle: GoogleFonts.outfit(
-                          fontSize: 14.sp,
-                          height: 0,
-                          color: Colors.red,
-                        ),
+                        // errorStyle: GoogleFonts.outfit(
+                        //   fontSize: 14.sp,
+                        //   height: 0,
+                        //   color: Colors.red,
+                        // ),
+                        errorStyle: const TextStyle(height: 0, fontSize: 0),
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
@@ -347,7 +348,7 @@ Widget _registerFormClient({
                             });
                           }
                         });
-                        return null;
+                        return error;
                       },
                     ),
                   ),
