@@ -234,33 +234,6 @@ class _ClientnotificationState extends ConsumerState<Clientnotification> {
                                         letterSpacing: -0.64,
                                       ),
                                     ),
-
-                                    SizedBox(height: 4.h),
-
-                                    RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: "Engineer: ",
-                                            style: GoogleFonts.parkinsans(
-                                              fontSize: 13.sp,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: -0.56,
-                                              color: AppColors.buttonText,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: "Jomo",
-                                            style: GoogleFonts.parkinsans(
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.buttonText,
-                                              fontSize: 13.sp,
-                                              letterSpacing: -0.56,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),

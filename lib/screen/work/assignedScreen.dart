@@ -302,7 +302,10 @@ class _AssignedscreenState extends ConsumerState<Assignedscreen> {
                                         .toString(),
                                   ),
                                 ),
-                              );
+                              ).then((value) {
+                                ref.invalidate(getAssignRequestProvider);
+                              });
+                              ;
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 9.h),

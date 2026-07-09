@@ -361,7 +361,10 @@ class _InProgresScreenState extends ConsumerState<InProgresScreen> {
                                           data.data!.list![index].id ?? "",
                                     ),
                                   ),
-                                );
+                                ).then((value) {
+                                  ref.invalidate(getInProgressProvider);
+                                });
+                                ;
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(vertical: 9.h),
