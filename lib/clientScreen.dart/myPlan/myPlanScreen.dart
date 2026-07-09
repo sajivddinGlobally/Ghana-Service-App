@@ -26,10 +26,20 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
     _scrollController.addListener(_onScroll);
   }
 
+  // void _onScroll() {
+  //   if (_scrollController.position.pixels >=
+  //       _scrollController.position.maxScrollExtent - 200) {
+  //     ref.read(myPlanRequestProvider.notifier).loadNextPage();
+  //   }
+  // }
   void _onScroll() {
+    final notifier = ref.read(myPlanRequestProvider.notifier);
+
+    if (notifier.isLoadingMore || !notifier.hasMoreData) return;
+
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      ref.read(myPlanRequestProvider.notifier).loadNextPage();
+      notifier.loadNextPage();
     }
   }
 

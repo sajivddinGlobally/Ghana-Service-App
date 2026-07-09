@@ -959,10 +959,15 @@ class _ActivePlansState extends ConsumerState<ActivePlans> {
             SizedBox(height: 20.h),
             planSate.when(
               data: (data) {
-                final item =
-                    (data.data?.list != null && data.data!.list!.isNotEmpty)
-                    ? data.data!.list![0]
-                    : null;
+                // final item =
+                //     (data.data?.list != null && data.data!.list!.isNotEmpty)
+                //     ? data.data!.list![0]
+                //     : null;
+                final plans = data.data?.list ?? [];
+                final activePlans = plans
+                    .where((e) => e.status == "success")
+                    .toList();
+                final item = activePlans.isNotEmpty ? activePlans.first : null;
                 return Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(

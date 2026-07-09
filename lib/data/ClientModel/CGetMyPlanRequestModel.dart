@@ -36,12 +36,16 @@ class CGetMyPlanRequestModel {
 
 class Data {
   int? total;
+  int? totalPages;
   List<ListElement>? list;
 
-  Data({this.total, this.list});
+  Data({this.total, this.list,
+  this.totalPages
+  });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     total: json["total"],
+    totalPages: json["totalPages"],
     list: json["list"] == null
         ? []
         : List<ListElement>.from(
@@ -51,6 +55,7 @@ class Data {
 
   Map<String, dynamic> toJson() => {
     "total": total,
+    "totalPages": totalPages,
     "list": list == null
         ? []
         : List<dynamic>.from(list!.map((x) => x.toJson())),

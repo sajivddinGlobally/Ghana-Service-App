@@ -61,8 +61,8 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
             padding: EdgeInsets.only(
               top: 50.h,
               bottom: 49.h,
-              left: 33.w,
-              right: 33.w,
+              left: 30.w,
+              right: 30.w,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -96,7 +96,7 @@ class _ClientpaymentscreenState extends ConsumerState<Clientpaymentscreen> {
                 SizedBox(height: 10.h),
                 Text(
                   // "Your payment has been completed successfully.",
-                  "Please make the payment of ${widget.selectedPlan.currency} ${widget.selectedPlan.priceMonthly} in our office.",
+                  "Please make the payment of ${widget.selectedPlan.currency} ${widget.selectedPlan.priceMonthly} at our office. Your account will be activated immediately as soon as your payment is confirmed.",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.parkinsans(
                     fontSize: 15.sp,
