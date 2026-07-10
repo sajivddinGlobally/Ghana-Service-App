@@ -1,17 +1,11 @@
 import 'dart:developer';
-import 'package:dwelleasy_ghana/clientScreen.dart/ClientProfile/CEditProfileScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/ClientProfile/ClientProfileProvider/CProfileProvider.dart';
-import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientOurPlanDetilesScreen.dart';
-import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/ClientQuickQuoteScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/OurPlans/newPlanDetailScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/customeDrawer.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/provider/serviceReminderProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/serviceReminderScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotification.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotificationProvider/clientNotificationProvider.dart';
-import 'package:dwelleasy_ghana/clientScreen.dart/clientNotification/clientNotificationSettingScreen.dart';
-import 'package:dwelleasy_ghana/clientScreen.dart/clientDrawer/clientPaymentHistory/paymentHistoryScreen.dart';
-import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createRequestProvider/getMyPlanRequestSerivceProvider.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/createService.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/createRequest/myRequest.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/getPlanServiceProvider/getPlanServiceProvider.dart';
@@ -20,16 +14,12 @@ import 'package:dwelleasy_ghana/clientScreen.dart/myPlan/myPlanScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/ClientProfile/CProfileScreen.dart';
 import 'package:dwelleasy_ghana/clientScreen.dart/service/activePlanListScreen.dart';
 import 'package:dwelleasy_ghana/core/constant/appColors.dart';
-import 'package:dwelleasy_ghana/data/provider/getActivePlanProvider.dart';
 import 'package:dwelleasy_ghana/data/provider/getDashbordCountProvider.dart';
-import 'package:dwelleasy_ghana/selectRolScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -181,7 +171,8 @@ class Clienthomescreen extends ConsumerStatefulWidget {
   ConsumerState<Clienthomescreen> createState() => _ClienthomescreenState();
 }
 
-class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
+class _ClienthomescreenState extends ConsumerState<Clienthomescreen>
+    with SingleTickerProviderStateMixin {
   List<Map<String, dynamic>> planList = [
     {
       "image": "assets/ClientImage/plumbing.png",
@@ -228,6 +219,25 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
       "subtitleColor": Colors.white,
     },
   ];
+  bool _isRefreshing = false;
+
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -349,7 +359,6 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
                         builder: (context) => Clientnotification(),
                       ),
                     ).then((_) {
-                      // ref.invalidate(clientReadNotificationProvider);
                       ref.invalidate(clientNotificationProvider);
                     });
                   },
@@ -406,15 +415,7 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
           log(error.toString());
           return PreferredSize(
             preferredSize: Size.fromHeight(90.h),
-            child: Center(
-              child: Text(
-                "Something went wrong",
-                style: GoogleFonts.outfit(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+            child: SizedBox.expand(),
           );
         },
         loading: () => PreferredSize(
@@ -636,7 +637,65 @@ class _ClienthomescreenState extends ConsumerState<Clienthomescreen> {
               },
               error: (error, stackTrace) {
                 log(stackTrace.toString());
-                return Center(child: Text("Something went wrong"));
+                return SizedBox(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height / 1.5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Something went wrong"),
+                      SizedBox(height: 16.h),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.buttonBg,
+                          foregroundColor: AppColors.buttonText,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 24.w,
+                            vertical: 12.h,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.circular(100.r),
+                          ),
+                        ),
+                        onPressed: () async {
+                          _controller.repeat();
+
+                          try {
+                            ref.invalidate(clientProfileProvider);
+                            ref.invalidate(getPlanServiceProvider);
+                            ref.invalidate(getDashbordCountProvider);
+                            ref.invalidate(clientGetServiceRemindersProvider);
+                            ref.invalidate(clientNotificationProvider);
+
+                            await ref
+                                .read(myPlanRequestProvider.notifier)
+                                .refresh();
+
+                            await Future.wait([
+                              ref.read(clientProfileProvider.future),
+                              ref.read(getPlanServiceProvider.future),
+                            ]);
+                          } catch (e) {
+                            debugPrint("Refresh Error: $e");
+                            _controller.stop();
+                            _controller.reset();
+                          } finally {
+                            if (mounted) {
+                              _controller.stop();
+                              _controller.reset();
+                            }
+                          }
+                        },
+                        icon: RotationTransition(
+                          turns: _controller,
+                          child: Icon(Icons.refresh),
+                        ),
+                        label: const Text("Refresh"),
+                      ),
+                    ],
+                  ),
+                );
               },
               loading: () => SizedBox(
                 width: double.infinity,

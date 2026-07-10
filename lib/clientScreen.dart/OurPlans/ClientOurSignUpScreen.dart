@@ -223,15 +223,33 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
 
           setState(() {
             /// Property Details
-            selectBedroom = data.propertyDetails?.bedrooms;
+            // selectBedroom = data.propertyDetails?.bedrooms;
+            selectBedroom = bedroomList.contains(data.propertyDetails?.bedrooms)
+                ? data.propertyDetails?.bedrooms
+                : null;
 
-            selectBathroom = data.propertyDetails?.bathrooms;
+            // selectBathroom = data.propertyDetails?.bathrooms;
+            selectBathroom =
+                bathroomList.contains(data.propertyDetails?.bathrooms)
+                ? data.propertyDetails?.bathrooms
+                : null;
 
-            selectAc = data.propertyDetails?.acUnits;
+            // selectAc = data.propertyDetails?.acUnits;
+            selectAc = acList.contains(data.propertyDetails?.acUnits)
+                ? data.propertyDetails?.acUnits
+                : null;
 
-            selectPropertyType = data.propertyDetails?.propertyType;
+            // selectPropertyType = data.propertyDetails?.propertyType;
+            selectPropertyType =
+                propertyTypeList.contains(data.propertyDetails?.propertyType)
+                ? data.propertyDetails?.propertyType
+                : null;
 
-            selectPropertyAge = data.propertyDetails?.propertyAge;
+            // selectPropertyAge = data.propertyDetails?.propertyAge;
+            selectPropertyAge =
+                propertyAgeList.contains(data.propertyDetails?.propertyAge)
+                ? data.propertyDetails?.propertyAge
+                : null;
 
             final billingDate = data.paymentAndBilling?.preferredBillingDate
                 ?.toString();
@@ -259,7 +277,13 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
             }
 
             /// Payment Details
-            selectPaymentMethod = data.paymentAndBilling?.paymentMethod;
+            // selectPaymentMethod = data.paymentAndBilling?.paymentMethod;
+            selectPaymentMethod =
+                paymentmethordList.contains(
+                  data.paymentAndBilling?.paymentMethod,
+                )
+                ? data.paymentAndBilling?.paymentMethod
+                : null;
 
             mobileMoneyNumberController.text =
                 data.paymentAndBilling?.mobileMoneyNumber ?? "";
@@ -588,7 +612,13 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                                 ),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
-                                    value: selectPlanType,
+                                    // value: selectPlanType,
+                                    value:
+                                        filteredPlans.any(
+                                          (e) => e.id == selectPlanType,
+                                        )
+                                        ? selectPlanType
+                                        : null,
                                     isExpanded: true,
                                     dropdownColor: AppColors.backgroungBg,
                                     icon: Icon(
@@ -744,7 +774,7 @@ class _ClientoursignupscreenState extends ConsumerState<Clientoursignupscreen> {
                           ),
 
                           customCheckBox(
-                            title: "Plan starts after 14 days",
+                            title: "Plan starts after 60 days",
                             value: planStartsAfter14Days,
                             onChanged: (value) {
                               setState(() {
@@ -1245,7 +1275,10 @@ Widget propertyDetiles({
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
-            value: selectname,
+            // value: selectname,
+            value: (selectname != null && listname.contains(selectname))
+                ? selectname
+                : null,
             isExpanded: true,
             dropdownColor: AppColors.backgroungBg,
             icon: Icon(
@@ -1314,7 +1347,10 @@ Widget chooseYourPlan({
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
-            value: selectname,
+            // value: selectname,
+            value: (selectname != null && listname.contains(selectname))
+                ? selectname
+                : null,
             isExpanded: true,
             dropdownColor: AppColors.backgroungBg,
             icon: Icon(

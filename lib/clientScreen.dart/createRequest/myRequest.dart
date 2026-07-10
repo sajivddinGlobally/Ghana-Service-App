@@ -250,7 +250,29 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
       },
       error: (error, stackTrace) {
         log(error.toString());
-        return const Center(child: Text("Something went wrong"));
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Something went wrong"),
+            SizedBox(height: 14.h),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.buttonBg,
+                foregroundColor: AppColors.buttonText,
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadiusGeometry.circular(100.r),
+                ),
+              ),
+              onPressed: () async {
+                ref.invalidate(getServiceRequestProvider(widget.status));
+              },
+              icon: Icon(Icons.refresh),
+              label: const Text("Refresh"),
+            ),
+          ],
+        );
       },
       loading: () {
         return Center(
@@ -517,7 +539,7 @@ class _RequestBodyState extends ConsumerState<RequestBody> {
                       CupertinoPageRoute(
                         builder: (_) => Engineerdetiles(requestId: item.id),
                       ),
-                    ); 
+                    );
                   } else {
                     Navigator.push(
                       context,

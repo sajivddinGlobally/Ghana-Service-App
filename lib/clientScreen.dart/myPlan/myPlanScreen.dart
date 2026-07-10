@@ -223,6 +223,8 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
                 SizedBox(height: 20.h),
                 Expanded(
                   child: RefreshIndicator(
+                    backgroundColor: AppColors.buttonBg,
+                    color: AppColors.buttonText,
                     onRefresh: () async {
                       await ref.read(myPlanRequestProvider.notifier).refresh();
                     },
@@ -525,12 +527,31 @@ class _MyPlanScreenState extends ConsumerState<MyPlanScreen> {
           log(error.toString());
           log(stackTrace.toString());
           return Center(
-            child: Text(
-              "Somthing went wrong",
-              style: GoogleFonts.outfit(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Something went wrong"),
+                SizedBox(height: 14.h),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.buttonBg,
+                    foregroundColor: AppColors.buttonText,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24.w,
+                      vertical: 12.h,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadiusGeometry.circular(100.r),
+                    ),
+                  ),
+                  onPressed: () async {
+                    ref.invalidate(myPlanRequestProvider);
+                  },
+                  icon: Icon(Icons.refresh),
+                  label: const Text("Refresh"),
+                ),
+              ],
             ),
           );
         },
